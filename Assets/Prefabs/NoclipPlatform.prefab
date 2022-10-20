@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3916035407089054872}
   - component: {fileID: 3916035407089054873}
   - component: {fileID: 3916035407089054874}
+  - component: {fileID: 8555594896617413520}
   m_Layer: 3
   m_Name: NoclipPlatform
   m_TagString: NoclipObject
@@ -344,3 +345,15 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &8555594896617413520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3916035407089054875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb8d50be17c0a64c8bdfd605082cdd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
