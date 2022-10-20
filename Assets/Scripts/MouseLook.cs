@@ -13,7 +13,8 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private Transform _playerBody;
 
     //private float _yaw;
-    //private float _pitch;
+    private float _pitch = 0f;
+  
 
 
     // Start is called before the first frame update
@@ -28,19 +29,19 @@ public class MouseLook : MonoBehaviour
     {
         // get mouse input and proportionally modify the sensitivity
         float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * _xSensitivity * _sensitivity * Time.deltaTime;
+        float mouseY = -Input.GetAxisRaw("Mouse Y") * _xSensitivity * _sensitivity * Time.deltaTime;
         
         //calculate the yaw (rotation around y) and the pitch (rotation around x)
         //_yaw += mouseX;
-        //_pitch -= mouseY;
+        _pitch -= mouseY;
         
         //Rotate the entire object (body + camera) around the Y axis
         _playerBody.transform.Rotate(new Vector3(0f, mouseX, 0f));
 
         //Rotate the camera on X axis
-        transform.Rotate(new Vector3(mouseY, 0f, 0f));
-
-
+        _pitch = Mathf.Clamp(_pitch, -90f, 90f);    // Clamping allows to block the rotation 
+        transform.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+        
 
     }
 }
