@@ -29,11 +29,11 @@ public class MouseLook : MonoBehaviour
     {
         // get mouse input and proportionally modify the sensitivity
         float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        float mouseY = -Input.GetAxisRaw("Mouse Y") * _xSensitivity * _sensitivity * Time.deltaTime;
+        float mouseY = -Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
         
         //calculate the yaw (rotation around y) and the pitch (rotation around x)
         //_yaw += mouseX;
-        _pitch -= mouseY;
+        _pitch += mouseY;
         
         //Rotate the entire object (body + camera) around the Y axis
         _playerBody.transform.Rotate(new Vector3(0f, mouseX, 0f));
