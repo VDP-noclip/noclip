@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -564,9 +564,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290a2efe636b0d641bea955e151f908a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSensitivity: 100
-  ySensitivity: 100
-  playerBody: {fileID: 1180251487}
+  _xSensitivity: 100
+  _ySensitivity: 100
+  _sensitivity: 1
+  _playerBody: {fileID: 755389000}
 --- !u!1 &755388999
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,12 +1111,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1180251486}
-  speed: 12
-  gravity: -9.81
-  jumpHeight: 3
-  groundCheck: {fileID: 281615178}
-  groundDistance: 0.4
-  groundMask:
+  _speed: 12
+  _gravity: -9.81
+  _jumpHeight: 3
+  _groundDistance: 0.4
+  _groundCheck: {fileID: 281615178}
+  _groundMask:
     serializedVersion: 2
     m_Bits: 8
 --- !u!1 &1459866112
@@ -3537,7 +3538,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh28342
+  m_Name: pb_Mesh27312
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

@@ -9,12 +9,13 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float _ySensitivity = 100f;
     [SerializeField] private float _sensitivity = 1f;
     
-    private Transform _playerBody;
+    [SerializeField] private Transform _playerBody;
 
-    
+    private float yaw;
+    private float pitch;
     
     private float _xRotation = 0f;
-    // private float yRotation = 0f;
+    // private float _yRotation = 0f;
     
     
     // Start is called before the first frame update
@@ -22,6 +23,8 @@ public class MouseLook : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        yaw = 0f;
+        pitch = 0f;
     }
 
     // Update is called once per frame
@@ -29,15 +32,19 @@ public class MouseLook : MonoBehaviour
     {
         // get mouse input
         float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
+        yaw += Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
+        pitch -= Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
 
-        // yRotation += mouseX;
-        
-        _xRotation -= mouseY;
-        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
+        transform.eulerAngles = new Vector3(pitch, yaw, 0f);
+        // _yRotation += mouseX;
+
+        //_xRotation -= mouseY;
+        //_xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
         // rotate Camera1 and playerBody
-        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+        //transform.localRotation = Quaternion.Euler(0f, mouseX, 0f);
         _playerBody.Rotate(Vector3.up * mouseX);
+
+
     }
 }

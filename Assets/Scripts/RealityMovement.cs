@@ -11,9 +11,9 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private float _jumpHeight = 3f;
     [SerializeField] private float _groundDistance = 0.4f;
 
-    private Transform _groundCheck;
+    [SerializeField] private Transform _groundCheck;
     
-    private LayerMask _groundMask;
+    [SerializeField] private LayerMask _groundMask;
     
     private Vector3 _velocity;
     private bool _isGrounded;
