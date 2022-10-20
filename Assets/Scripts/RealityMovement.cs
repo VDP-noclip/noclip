@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,20 +17,19 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private LayerMask _groundMask;
     
     private Vector3 _velocity;
-    private bool _isGrounded;
-    
-    // Start is called before the first frame update
-    void Start()
+    private Transform _transform;
+
+    private void Awake()
     {
-        
+        _transform = GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        _isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
+        bool isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
 
-        if (_isGrounded && _velocity.y < 0)
+        if (isGrounded && _velocity.y < 0)
         {
             _velocity.y = -2f;
         }
@@ -37,11 +37,11 @@ public class RealityMovement : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        Vector3 move = transform.right * x + transform.forward * z;
+        Vector3 move = _transform.right * x + _transform.forward * z;
 
-        controller.Move(move * _speed * Time.deltaTime);
+        controller.Move(move * (_speed * Time.deltaTime));
 
-        if(Input.GetButtonDown("Jump") && _isGrounded)
+        if(Input.GetButtonDown("Jump") && isGrounded)
         {
             _velocity.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
         }
