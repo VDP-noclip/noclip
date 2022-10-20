@@ -6,16 +6,17 @@ public class RealityMovement : MonoBehaviour
 {
     public CharacterController controller;
 
-    public float speed = 12f;
-    public float gravity = -9.81f;
-    public float jumpHeight = 3f;
+    [SerializeField] private float _speed = 12f;
+    [SerializeField] private float _gravity = -9.81f;
+    [SerializeField] private float _jumpHeight = 3f;
+    [SerializeField] private float _groundDistance = 0.4f;
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
+    private Transform _groundCheck;
     
-    Vector3 velocity;
-    bool isGrounded;
+    private LayerMask _groundMask;
+    
+    private Vector3 _velocity;
+    private bool _isGrounded;
     
     // Start is called before the first frame update
     void Start()
@@ -26,11 +27,11 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        _isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
 
-        if (isGrounded && velocity.y < 0)
+        if (_isGrounded && _velocity.y < 0)
         {
-            velocity.y = -2f;
+            _velocity.y = -2f;
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -38,15 +39,15 @@ public class RealityMovement : MonoBehaviour
 
         Vector3 move = transform.right * x + transform.forward * z;
 
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * _speed * Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if(Input.GetButtonDown("Jump") && _isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            _velocity.y = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
         }
 
-        velocity.y += gravity * Time.deltaTime;
+        _velocity.y += _gravity * Time.deltaTime;
 
-        controller.Move(velocity * Time.deltaTime);
+        controller.Move(_velocity * Time.deltaTime);
     }
 }

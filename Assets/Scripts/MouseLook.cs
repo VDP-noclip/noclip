@@ -5,14 +5,15 @@ using UnityEngine;
 public class MouseLook : MonoBehaviour
 {
     // set mouse sensibility in X and Y axis
-    public float xSensitivity = 100f;
-    public float ySensitivity = 100f;
-
-    public Transform playerBody;
-
-    float sensitivity = 1f;
+    [SerializeField] private float _xSensitivity = 100f;
+    [SerializeField] private float _ySensitivity = 100f;
+    [SerializeField] private float _sensitivity = 1f;
     
-    private float xRotation = 0f;
+    private Transform _playerBody;
+
+    
+    
+    private float _xRotation = 0f;
     // private float yRotation = 0f;
     
     
@@ -27,16 +28,16 @@ public class MouseLook : MonoBehaviour
     void Update()
     {
         // get mouse input
-        float mouseX = Input.GetAxisRaw("Mouse X") * xSensitivity * sensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * ySensitivity * sensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
 
         // yRotation += mouseX;
         
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        _xRotation -= mouseY;
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
         // rotate Camera1 and playerBody
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+        _playerBody.Rotate(Vector3.up * mouseX);
     }
 }
