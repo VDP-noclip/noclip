@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,39 +12,34 @@ public class MouseLook : MonoBehaviour
     
     [SerializeField] private Transform _playerBody;
 
-    private float yaw;
-    private float pitch;
-    
-    private float _xRotation = 0f;
-    // private float _yRotation = 0f;
-    
-    
+    //private float _yaw;
+    //private float _pitch;
+
+
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        yaw = 0f;
-        pitch = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // get mouse input
+        // get mouse input and proportionally modify the sensitivity
         float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        yaw += Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        pitch -= Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * _xSensitivity * _sensitivity * Time.deltaTime;
+        
+        //calculate the yaw (rotation around y) and the pitch (rotation around x)
+        //_yaw += mouseX;
+        //_pitch -= mouseY;
+        
+        //Rotate the entire object (body + camera) around the Y axis
+        _playerBody.transform.Rotate(new Vector3(0f, mouseX, 0f));
 
-        transform.eulerAngles = new Vector3(pitch, yaw, 0f);
-        // _yRotation += mouseX;
+        //Rotate the camera on X axis
+        transform.Rotate(new Vector3(mouseY, 0f, 0f));
 
-        //_xRotation -= mouseY;
-        //_xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
-
-        // rotate Camera1 and playerBody
-        //transform.localRotation = Quaternion.Euler(0f, mouseX, 0f);
-        _playerBody.Rotate(Vector3.up * mouseX);
 
 
     }
