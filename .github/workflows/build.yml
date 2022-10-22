@@ -8,7 +8,7 @@ on:
 
 jobs:
   buildForAllSupportedPlatforms:
-    name: Build noclip for '${{ matrix.targetPlatform }}'
+    name: Build.yml workflow for '${{ matrix.targetPlatform }}'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -28,9 +28,14 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
-      - name: Build Unity project for ${{ matrix.targetPlatform }}
+      - name: Build noclip for '${{ matrix.targetPlatform }}'
         uses: game-ci/unity-builder@v2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
+      - name: Upload noclip build artifact for '${{ matrix.targetPlatform }}'
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
