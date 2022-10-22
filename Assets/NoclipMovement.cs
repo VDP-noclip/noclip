@@ -329,7 +329,15 @@ public class NoclipMovement : MonoBehaviour
             //set isTrigger of all children of Level to true
             foreach (MeshCollider child in children)
             {
-                child.enabled = !child.enabled;
+                //if owner of this meshcollider tag is not nonoclipobject
+                //for i to currentlevel  print ciao
+                for (int i = 1; i <= currentLevel; i++)
+                {
+                    if (child.gameObject.tag != "nonoClipObject" + i)
+                    {
+                        child.enabled = !child.enabled;
+                    }
+                }
             }
 
             //if player touches Cube (12), load objects with tag level2
