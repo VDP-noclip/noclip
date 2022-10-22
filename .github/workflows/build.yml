@@ -34,8 +34,8 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-      - name: Upload noclip build artifact for '${{ matrix.targetPlatform }}'
-        uses: actions/upload-artifact@v2
-        with:
-          name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
+      # - name: Upload noclip build artifact for '${{ matrix.targetPlatform }}'
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Build-${{ matrix.targetPlatform }}
+      #     path: build/${{ matrix.targetPlatform }}
