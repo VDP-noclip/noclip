@@ -25,7 +25,10 @@ public class NoclipMovement : MonoBehaviour
     Vector3 playerToBlock = new Vector3((float)2.22, (float)52.6, (float)-20.76);
     Vector3 runOffset = new Vector3((float)-4.675042, (float)-51.669827, (float)18.08);
     Material originalSkybox;
-
+    float goBackTime = 0;
+    float checkRespawnInterval = 0.5f;  
+    //list of floats
+    List<float> respawnLookAngles = new List<float>();
     void switchLevel(int n)
     {
         if(!noclip && currentLevel == n){
@@ -45,7 +48,7 @@ public class NoclipMovement : MonoBehaviour
                 GameObject.Find("Respawn"+n).GetComponent<MeshRenderer>().material = GameObject.Find("Cube (5)").GetComponent<MeshRenderer>().material;
                 respawnPosition = blockToPlayer(GameObject.Find("Respawn"+(n+1)).GetComponent<Transform>().position);
                 respawnPosition.y = respawnPosition.y + 1.5f;
-                respawnLookAngle = 180;
+                respawnLookAngle = respawnLookAngles[n];
                 //change material of all level1 objects to material of NoclipCube3
                 //change tag of all level1 objects to noclipObject
                 noclipLevel(n);
@@ -123,6 +126,11 @@ public class NoclipMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        respawnLookAngles.Add(45);
+        respawnLookAngles.Add(180);
+        respawnLookAngles.Add(270);
+        respawnLookAngles.Add(135);
+        respawnLookAngles.Add(135);
         originalSkybox = RenderSettings.skybox;
         respawnPosition = new Vector3((float)0.34, (float)60.2, (float)-4.19);
         GameObject.Find("Camera1").transform.Find("Canvas").transform.Find("NoClip").gameObject.SetActive(!GameObject.Find("Camera1").transform.Find("Canvas").transform.Find("NoClip").gameObject.activeSelf);
@@ -139,7 +147,6 @@ public class NoclipMovement : MonoBehaviour
             while(i<99){
                 toggleLevel(i+"");
                 toggleLevel(i+"a");
-                print(i);
                 GameObject[] nonoclipObject = GameObject.FindGameObjectsWithTag("nonoClipObject"+i);
                 foreach (GameObject nonoclipObjects in nonoclipObject)
                 {
@@ -278,7 +285,7 @@ public class NoclipMovement : MonoBehaviour
             if (!noclip)
             {
                 //save current position
-                noclipPos = controller.transform.position;
+                //noclipPos = controller.transform.position;
                 gravity = 0;
                 //disable mesh of Capsule component child of controller
                 controller.GetComponentInChildren<MeshRenderer>().enabled = false;
@@ -288,16 +295,22 @@ public class NoclipMovement : MonoBehaviour
             }
             else
             {
-                controller.transform.position = noclipPos;
+                print(controller.transform.position);
+                //controller.transform.position = noclipPos;
                 gravity = -30f;
                 controller.GetComponentInChildren<MeshRenderer>().enabled = true;
-                controller.transform.position = respawnPosition;
                 //change player rotation y to respawnLookAngle
                 controller.transform.rotation = Quaternion.Euler(0, respawnLookAngle, 0);
                 GameObject.Find("Camera1").GetComponent<MouseLook>().xRotation = 0;
                 //change camera1 rotation x to 0
                 //GameObject.Find("Camera1").transform.rotation = Quaternion.Euler(0, 0, 0);
                 RenderSettings.skybox = originalSkybox;
+                //move player to respawn position
+                //get current time
+                goBackTime = Time.time;
+                print(respawnPosition);
+                controller.transform.position = respawnPosition;
+                print(controller.transform.position);
             }
             noclip = !noclip;
             GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("noclipObject");
@@ -326,6 +339,19 @@ public class NoclipMovement : MonoBehaviour
             //toggle show of text of NoClip in Camera1 canvas
             GameObject.Find("Camera1").transform.Find("Canvas").transform.Find("NoClip").gameObject.SetActive(!GameObject.Find("Camera1").transform.Find("Canvas").transform.Find("NoClip").gameObject.activeSelf);
             GameObject.Find("Camera1").transform.Find("Canvas").transform.Find("Clip").gameObject.SetActive(!GameObject.Find("Camera1").transform.Find("Canvas").transform.Find("Clip").gameObject.activeSelf);
+        }
+        if(goBackTime>0){
+            if(Time.time - goBackTime < checkRespawnInterval){
+                controller.transform.position = respawnPosition;
+                //print "sbagliato" if respawn position - controller.transform.position = 0
+                    print("fixando");
+                if(respawnPosition - controller.transform.position != Vector3.zero){
+                    print("sbagliato");
+                }
+            }
+            else{
+                goBackTime = 0;
+            }
         }
     }
 }
