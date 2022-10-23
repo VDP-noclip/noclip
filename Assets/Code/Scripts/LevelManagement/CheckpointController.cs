@@ -16,7 +16,7 @@ public class CheckpointController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider otherObject)
     {
-        if (otherObject.CompareTag("Player"))
+        if (otherObject.gameObject.name == "RealityPlayer")
         {
             _gameManager.lastCheckPointPos = transform.position;
             Physics.SyncTransforms();
