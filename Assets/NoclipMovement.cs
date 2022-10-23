@@ -48,7 +48,8 @@ public class NoclipMovement : MonoBehaviour
                 GameObject.Find("Respawn"+n).GetComponent<MeshRenderer>().material = GameObject.Find("Cube (5)").GetComponent<MeshRenderer>().material;
                 respawnPosition = blockToPlayer(GameObject.Find("Respawn"+(n+1)).GetComponent<Transform>().position);
                 respawnPosition.y = respawnPosition.y + 1.5f;
-                respawnLookAngle = respawnLookAngles[n];
+                //respawnLookAngle = respawnLookAngles[n];
+                respawnLookAngle = 180;
                 //change material of all level1 objects to material of NoclipCube3
                 //change tag of all level1 objects to noclipObject
                 noclipLevel(n);
@@ -156,8 +157,9 @@ public class NoclipMovement : MonoBehaviour
             }
 
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
+            print(e);
             print("there are "+(i-1)+" levels");
         }
     }
