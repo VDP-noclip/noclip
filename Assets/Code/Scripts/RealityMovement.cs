@@ -1,49 +1,51 @@
+using System;
 using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
     [Header("Speed")]
-    public float walkSpeed;
-    public float sprintSpeed;
+    [SerializeField] private float _walkSpeed = 6f;
+    [SerializeField] private float _sprintSpeed = 10f;
     
     private float _moveSpeed;     // speed intensity
     
     [Header("Drag")]
-    public float groundDrag;    // ground drag
+    [SerializeField] private float _groundDrag = 4f;    // ground drag
     
     [Header("Jump")]
-    public float jumpForce;     // set jump upward force
-    public float jumpCooldown;      // set jump cooldown
-    public float airMultiplier;     // set air movement limitation
+    [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
+    [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
     private bool _readyToJump;      //
 
     [Header("Crouch")]
-    public float crouchSpeed;
-    public float crouchYScale;
+    [SerializeField] private float _crouchSpeed = 2f;
+    [SerializeField] private float _crouchYScale = 0.5f;
     private float _startYScale;
     
     [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;     // set the jump key
-    public KeyCode sprintKey = KeyCode.LeftShift;   // set the sprint key
-    public KeyCode crouchKey = KeyCode.LeftControl;
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;     // set the jump key
+    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;   // set the sprint key
+    [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
     // set the ground check
-    public float playerHeight;
-    public LayerMask ground;
+    [SerializeField] private float _playerHeight = 2f;
+    [SerializeField] private LayerMask _ground;
     private bool _grounded;
     
-    public Transform orientation;
+    [SerializeField] private Transform _orientation;
 
     private float _horizontalInput;
     private float _verticalInput;
 
     private Vector3 _moveDirection;
 
-    private Rigidbody _rb;      // set the rigidbody
+    private Transform _transform;
+    private Rigidbody _rigidbody;      // set the rigidbody
 
     // player states
-    public MovementState state;     // current player state
+    [SerializeField] private MovementState _state;     // current player state
     public enum MovementState       // define player states
     {
         Walking,
@@ -52,22 +54,26 @@ public class RealityMovement : MonoBehaviour
         Air
     }
 
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody>();
+        _transform = GetComponent<Transform>();
+    }
 
     // Start is called before the first frame update
     private void Start()
     {
-        _rb = GetComponent<Rigidbody>();
-        _rb.freezeRotation = true;
+        _rigidbody.freezeRotation = true;
         
         ResetJump(); // set _readyToJump to "true"
 
-        _startYScale = transform.localScale.y;
+        _startYScale = _transform.localScale.y;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        _grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, ground);
+        _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
 
         MyInput();
         StateHandler();
@@ -75,9 +81,9 @@ public class RealityMovement : MonoBehaviour
 
         // handle drag
         if (_grounded)
-            _rb.drag = groundDrag;
+            _rigidbody.drag = _groundDrag;
         else
-            _rb.drag = 0;
+            _rigidbody.drag = 0;
     }
 
     private void FixedUpdate()
@@ -99,20 +105,20 @@ public class RealityMovement : MonoBehaviour
             
             Jump();
             
-            Invoke(nameof(ResetJump), jumpCooldown); // continues to jump if space remains pressed
+            Invoke(nameof(ResetJump), _jumpCooldown); // continues to jump if space remains pressed
         }
         
         // start crouch
         if (_grounded && Input.GetKeyDown(crouchKey))
         {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);   // reduce scale
-            _rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);     // push down
+            _transform.localScale = new Vector3(_transform.localScale.x, _crouchYScale, _transform.localScale.z);   // reduce scale
+            _rigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse);     // push down
         }
         
         // stop crouch
         if (Input.GetKeyUp(crouchKey))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, _startYScale, transform.localScale.z);
+        { 
+            _transform.localScale = new Vector3(_transform.localScale.x, _startYScale, _transform.localScale.z);
         }
     }
 
@@ -122,28 +128,28 @@ public class RealityMovement : MonoBehaviour
         // mode - Crouching
         if (_grounded && Input.GetKey(crouchKey))
         {
-            state = MovementState.Crouching;
-            _moveSpeed = crouchSpeed;
+            _state = MovementState.Crouching;
+            _moveSpeed = _crouchSpeed;
         }
         
         // mode - Sprinting
         else if (_grounded && Input.GetKey(sprintKey))
         {
-            state = MovementState.Sprinting;
-            _moveSpeed = sprintSpeed;
+            _state = MovementState.Sprinting;
+            _moveSpeed = _sprintSpeed;
         }
         
         // mode - Walking
         else if (_grounded)
         {
-            state = MovementState.Walking;
-            _moveSpeed = walkSpeed;
+            _state = MovementState.Walking;
+            _moveSpeed = _walkSpeed;
         }
 
         // mode - Air
         else
         {
-            state = MovementState.Air;
+            _state = MovementState.Air;
         }
     }
 
@@ -151,34 +157,34 @@ public class RealityMovement : MonoBehaviour
     private void MovePlayer()
     {
         // calculate movement direction
-        _moveDirection = orientation.forward * _verticalInput + orientation.right * _horizontalInput;
+        _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
         
         // differentiate movement on the ground and in air
         if(_grounded)
-            _rb.AddForce(_moveSpeed * 10f * _moveDirection.normalized, ForceMode.Force);
+            _rigidbody.AddForce(_moveSpeed * 10f * _moveDirection.normalized, ForceMode.Force);
         else if(!_grounded)
-            _rb.AddForce(_moveSpeed * airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
+            _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
     }
 
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+        Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
         // limit velocity if needed
         if (flatVel.magnitude > _moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * _moveSpeed;
-            _rb.velocity = new Vector3(limitedVel.x, _rb.velocity.y, limitedVel.z); // apply the new velocity to rb
+            _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
         }
     }
 
     private void Jump()
     {
         // reset y velocity
-        _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+        _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
         // create an upward impulse force
-        _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        _rigidbody.AddForce(_transform.up * _jumpForce, ForceMode.Impulse);
     }
 
     private void ResetJump()

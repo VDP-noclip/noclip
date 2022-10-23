@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -160,7 +160,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh27374
+  m_Name: pb_Mesh27388
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -759,11 +759,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290a2efe636b0d641bea955e151f908a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 464624214}
+  _orientation: {fileID: 464624214}
   _xSensitivity: 100
   _ySensitivity: 100
   _sensitivity: 5
-  _playerBody: {fileID: 1180251487}
 --- !u!1001 &677904020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1311,7 +1310,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-78760
+  m_Name: pb_Mesh-1264
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1582,22 +1581,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb93d34f3c583746880fd00aeff3ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 6
-  sprintSpeed: 10
-  groundDrag: 4
-  jumpForce: 8
-  jumpCooldown: 0.25
-  airMultiplier: 0.4
-  crouchSpeed: 2
-  crouchYScale: 0.5
+  _walkSpeed: 6
+  _sprintSpeed: 10
+  _groundDrag: 4
+  _jumpForce: 8
+  _jumpCooldown: 0.25
+  _airMultiplier: 0.4
+  _crouchSpeed: 2
+  _crouchYScale: 0.5
   jumpKey: 32
   sprintKey: 304
   crouchKey: 306
-  playerHeight: 2
-  ground:
+  _playerHeight: 2
+  _ground:
     serializedVersion: 2
     m_Bits: 8
-  orientation: {fileID: 464624214}
+  _orientation: {fileID: 464624214}
   state: 0
 --- !u!1001 &1303858550
 PrefabInstance:
@@ -2001,4 +2000,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a469d796d4a334547ab286ab79812a35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraPosition: {fileID: 93596677}
+  _cameraPosition: {fileID: 93596677}

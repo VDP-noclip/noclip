@@ -6,7 +6,7 @@ using UnityEngine;
 public class MouseLook : MonoBehaviour
 {
     // link camera to body
-    public Transform orientation;
+    [SerializeField] private Transform _orientation;
     
     
     // set mouse sensibility in X and Y axis
@@ -14,12 +14,16 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float _ySensitivity = 100f;
     [SerializeField] private float _sensitivity = 1f;
     
-    [SerializeField] private Transform _playerBody;
+    private Transform _transform;
 
     private float _yRotation = 0f; // yaw movement variable
     private float _xRotation = 0f; // pitch movement variable
-  
 
+
+    private void Awake()
+    {
+        _transform = GetComponent<Transform>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +46,7 @@ public class MouseLook : MonoBehaviour
         
         // rotate camera and orientation
         transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
-        orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+        _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
         
         
         /*
