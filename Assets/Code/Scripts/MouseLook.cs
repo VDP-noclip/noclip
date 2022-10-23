@@ -1,13 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
     // link camera to body
     [SerializeField] private Transform _orientation;
-    
     
     // set mouse sensibility in X and Y axis
     [SerializeField] private float _xSensitivity = 100f;
@@ -20,8 +16,7 @@ public class MouseLook : MonoBehaviour
 
     private float _yRotation = 0f; // yaw movement variable
     private float _xRotation = 0f; // pitch movement variable
-
-
+    
     private void Awake()
     {
         _transform = GetComponent<Transform>();
@@ -51,16 +46,6 @@ public class MouseLook : MonoBehaviour
             // rotate camera and orientation
             _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
             _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
-        
-        
-            /*
-            //Rotate the entire object (body + camera) around the Y axis
-            _playerBody.transform.Rotate(new Vector3(0f, mouseX, 0f));
-    
-            //Rotate the camera on X axis
-             
-            transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
-            */
         }
     }
 
