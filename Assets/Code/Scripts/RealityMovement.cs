@@ -90,7 +90,7 @@ public class RealityMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
-        Debug.Log(_moveSpeed);
+        //Debug.Log(_moveSpeed);
     }
 
     // 
