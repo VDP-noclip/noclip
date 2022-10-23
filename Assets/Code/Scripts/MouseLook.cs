@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    // link camera to body
+    public Transform orientation;
+    
+    
     // set mouse sensibility in X and Y axis
     [SerializeField] private float _xSensitivity = 100f;
     [SerializeField] private float _ySensitivity = 100f;
@@ -12,8 +16,8 @@ public class MouseLook : MonoBehaviour
     
     [SerializeField] private Transform _playerBody;
 
-    //private float _yaw;
-    private float _pitch = 0f;
+    private float _yRotation = 0f; // yaw movement variable
+    private float _xRotation = 0f; // pitch movement variable
   
 
 
@@ -29,19 +33,26 @@ public class MouseLook : MonoBehaviour
     {
         // get mouse input and proportionally modify the sensitivity
         float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        float mouseY = - Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
         
-        //calculate the yaw (rotation around y) and the pitch (rotation around x)
-        //_yaw += mouseX;
-        _pitch += mouseY;
+        //calculate the rotation in both axis
+        _yRotation += mouseX;
+        _xRotation -= mouseY;
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
         
+        // rotate camera and orientation
+        transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+        
+        
+        /*
         //Rotate the entire object (body + camera) around the Y axis
         _playerBody.transform.Rotate(new Vector3(0f, mouseX, 0f));
 
         //Rotate the camera on X axis
-        _pitch = Mathf.Clamp(_pitch, -90f, 90f);    // Clamping allows to block the rotation 
-        transform.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
-        
+         
+        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
+        */
 
     }
 }
