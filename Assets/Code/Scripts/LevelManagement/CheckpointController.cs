@@ -6,14 +6,17 @@ using UnityEngine;
 public class CheckpointController : MonoBehaviour
 {
     private GameManager _gameManager;
-
+    /*
+     * CheckpointController checks if the player has collided with a checkpoint.
+     * If a new checkpoint is hit, then it'll be overwritten.
+     */
     void Start()
     {
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider otherObject)
     {
-        if (other.CompareTag("Player"))
+        if (otherObject.CompareTag("Player"))
         {
             _gameManager.lastCheckPointPos = transform.position;
             Physics.SyncTransforms();
