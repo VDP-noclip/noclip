@@ -51,6 +51,8 @@ public class RealityMovement : MonoBehaviour
 
     private Transform _transform;
     private Rigidbody _rigidbody;      // set the rigidbody
+    private NoclipManager _noclipManager;
+    private bool _touchingNoclipEnabler;
 
     // player states
     [SerializeField] private MovementState _state;     // current player state
@@ -59,6 +61,7 @@ public class RealityMovement : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
+        _noclipManager = GetComponent<NoclipManager>();
     }
 
     // Start is called before the first frame update
@@ -85,12 +88,39 @@ public class RealityMovement : MonoBehaviour
             _rigidbody.drag = _groundDrag;
         else
             _rigidbody.drag = 0;
+        
+        if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
+        {
+            if (_noclipManager.NoclipEnabled)
+            {
+                _noclipManager.DisableNoclip();
+            }
+            else
+            {
+                _noclipManager.EnableNoclip();
+            }
+        }
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
         //Debug.Log(_moveSpeed);
+    }
+    
+    void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("NoclipEnabler"))
+        {
+            _touchingNoclipEnabler = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("NoclipEnabler"))
+        {
+            _touchingNoclipEnabler = false;
+        }
     }
 
     // 
@@ -191,5 +221,14 @@ public class RealityMovement : MonoBehaviour
     private void ResetJump()
     {
         _readyToJump = true;
+    }
+    
+    /// <summary>
+    /// Check if we can call noclip method. If we are on the platform, we can call the method to enable/disable the
+    /// noclip mode!
+    /// </summary>
+    private bool CanCallNoclip()
+    {
+        return _touchingNoclipEnabler;
     }
 }
