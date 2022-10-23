@@ -35,7 +35,10 @@ public class RealityMovement : MonoBehaviour
     private bool _grounded;
     
     [SerializeField] private Transform _orientation;
-
+    
+    // It's true if is the realbody, it's false if is the noclip body
+    private bool _currentPlayerBody = true;
+    
     private float _horizontalInput;
     private float _verticalInput;
 
@@ -73,23 +76,32 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
+        if (_currentPlayerBody)
+        {
+            _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
 
-        MyInput();
-        StateHandler();
-        SpeedControl();
+            MyInput();
+            StateHandler();
+            SpeedControl();
 
-        // handle drag
-        if (_grounded)
-            _rigidbody.drag = _groundDrag;
-        else
-            _rigidbody.drag = 0;
+            // handle drag
+            if (_grounded)
+                _rigidbody.drag = _groundDrag;
+            else
+                _rigidbody.drag = 0;
+        }
+        
     }
 
     private void FixedUpdate()
     {
         MovePlayer();
-        Debug.Log(_moveSpeed);
+        //Debug.Log(_moveSpeed);
+    }
+
+    public void ActivatePlayer(bool active)
+    {
+        _currentPlayerBody = active;
     }
 
     // 
