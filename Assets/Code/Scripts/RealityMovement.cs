@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
+    public enum MovementState       // define player states
+    {
+        Walking,
+        Sprinting,
+        Crouching,
+        Air
+    }
+    
     [Header("Speed")]
     [SerializeField] private float _walkSpeed = 6f;
     [SerializeField] private float _sprintSpeed = 10f;
@@ -46,13 +54,6 @@ public class RealityMovement : MonoBehaviour
 
     // player states
     [SerializeField] private MovementState _state;     // current player state
-    public enum MovementState       // define player states
-    {
-        Walking,
-        Sprinting,
-        Crouching,
-        Air
-    }
 
     private void Awake()
     {
