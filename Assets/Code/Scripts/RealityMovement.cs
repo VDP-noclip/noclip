@@ -100,7 +100,7 @@ public class RealityMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
-        Debug.Log(_moveSpeed);
+        //Debug.Log(_moveSpeed);
     }
 
     public void ActivatePlayer(bool active)

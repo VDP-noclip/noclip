@@ -14,7 +14,7 @@ public class CameraManager : MonoBehaviour
     
     [SerializeField] private GameObject _noClipPlayer;
     [SerializeField] private GameObject _noClipPlayerCamera;
-    private RealityMovement _noClipPlayerMovement;
+    private NoClipMovement _noClipPlayerMovement;
     private MouseLook _noClipMouseLook;
 
 
@@ -24,7 +24,7 @@ public class CameraManager : MonoBehaviour
     private void Awake()
     {
         _realPlayerMovement = _realPlayer.GetComponent<RealityMovement>();
-        _noClipPlayerMovement = _noClipPlayer.GetComponent<RealityMovement>();
+        _noClipPlayerMovement = _noClipPlayer.GetComponent<NoClipMovement>();
 
         _realMouseLook = _realPlayerCamera.GetComponent<MouseLook>();
         _noClipMouseLook = _noClipPlayerCamera.GetComponent<MouseLook>();
