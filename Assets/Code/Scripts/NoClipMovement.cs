@@ -21,7 +21,7 @@ public class NoClipMovement : MonoBehaviour
 
     private Vector3 _moveDirection;
     
-    // It's true if is the realbody, it's false if is the noclip body
+    // It's true if is the realbody, it's false if it is the noclip body
     private bool _currentPlayerBody = true;
     
     private Vector3 _velocity;
