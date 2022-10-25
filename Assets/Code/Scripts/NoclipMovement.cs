@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoClipMovement : MonoBehaviour
+public class NoclipMovement : MonoBehaviour
 {
 
     [SerializeField]
