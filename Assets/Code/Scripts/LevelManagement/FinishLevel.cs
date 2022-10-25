@@ -11,7 +11,7 @@ public class FinishLevel : MonoBehaviour
 {
     private void OnTriggerEnter(Collider otherObject)
     {
-        if (otherObject.CompareTag("Player"))
+        if (otherObject.CompareTag("RealityPlayer"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
