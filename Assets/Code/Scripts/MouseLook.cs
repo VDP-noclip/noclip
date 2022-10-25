@@ -2,16 +2,22 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    [SerializeField]
+    [Tooltip("The script is currently active")]
+    private bool _activeScript = true;
+    
     // link camera to body
+    [Tooltip("The script is currently active")]
     [SerializeField] private Transform _orientation;
     
     // set mouse sensibility in X and Y axis
-    [SerializeField] private float _xSensitivity = 100f;
-    [SerializeField] private float _ySensitivity = 100f;
+    [Tooltip("Set the mouse sensitivity")]
+    [SerializeField] private float _xSensitivity = 50f;
+    [SerializeField] private float _ySensitivity = 50f;
     [SerializeField] private float _sensitivity = 1f;
 
     // It's true if the camera is active, false otherwise
-    private bool _active;
+    private bool _activeCurrently;
     private Transform _transform;
 
     private float _yRotation = 0f; // yaw movement variable
@@ -32,7 +38,12 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_active)
+        if (!_activeScript)
+        {
+            return;
+        }
+        
+        if (_activeCurrently)
         {
             // get mouse input and proportionally modify the sensitivity
             float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
@@ -51,6 +62,6 @@ public class MouseLook : MonoBehaviour
 
     public void ActivateMouseLook(bool active)
     {
-        _active = active;
+        _activeCurrently = active;
     }
 }
