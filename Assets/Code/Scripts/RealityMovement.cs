@@ -1,16 +1,7 @@
-using System;
 using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
-    private enum MovementState       // define player states
-    {
-        Walking,
-        Sprinting,
-        Crouching,
-        Air
-    }
-    
     [Header("Speed")]
     [SerializeField] private float _walkSpeed = 6f;
     [SerializeField] private float _sprintSpeed = 10f;
@@ -24,7 +15,7 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private float _jumpForce = 8f;     // set jump upward force
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
-    private bool _readyToJump;      //
+    private bool _readyToJump;
 
     [Header("Crouch")]
     [SerializeField] private float _crouchSpeed = 2f;
@@ -36,14 +27,22 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;   // set the sprint key
     [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
 
-    [Header("Ground Check")]
+    [Header("Ground check")]
     // set the ground check
     [SerializeField] private float _playerHeight = 2f;
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
-    
-    [SerializeField] private Transform _orientation;
 
+    [Header("Slope handling")]
+    [SerializeField] public float _maxSlopeAngle;
+    private RaycastHit slopeHit;
+    private bool _exitingSlope;
+
+    [SerializeField] private Transform _orientation;
+    
+    // It's true if is the realbody, it's false if is the noclip body
+    private bool _currentPlayerBody = true;
+    
     private float _horizontalInput;
     private float _verticalInput;
 
@@ -57,6 +56,14 @@ public class RealityMovement : MonoBehaviour
     // player states
     [SerializeField] private MovementState _state;     // current player state
 
+    private enum MovementState       // define player states
+    {
+        Walking,
+        Sprinting,
+        Crouching,
+        Air
+    }
+    
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -77,27 +84,30 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
-
-        UserInput();
-        StateHandler();
-        SpeedControl();
-
-        // handle drag
-        if (_grounded)
-            _rigidbody.drag = _groundDrag;
-        else
-            _rigidbody.drag = 0;
-        
-        if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
+        if (_currentPlayerBody)
         {
-            if (_noclipManager.NoclipEnabled)
-            {
-                _noclipManager.DisableNoclip();
-            }
+            _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
+
+            UserInput();
+            StateHandler();
+            SpeedControl();
+
+            // handle drag
+            if (_grounded)
+                _rigidbody.drag = _groundDrag;
             else
+                _rigidbody.drag = 0;
+
+            if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
             {
-                _noclipManager.EnableNoclip();
+                if (_noclipManager.NoclipEnabled)
+                {
+                    _noclipManager.DisableNoclip();
+                }
+                else
+                {
+                    _noclipManager.EnableNoclip();
+                }
             }
         }
     }
@@ -108,13 +118,18 @@ public class RealityMovement : MonoBehaviour
         //Debug.Log(_moveSpeed);
     }
     
+    public void ActivatePlayer(bool active)
+    {
+        _currentPlayerBody = active;
+    }
+    
     void OnTriggerEnter(Collider other) {
         if (other.CompareTag("NoclipEnabler"))
         {
             _touchingNoclipEnabler = true;
         }
     }
-
+    
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("NoclipEnabler"))
@@ -190,27 +205,52 @@ public class RealityMovement : MonoBehaviour
         // calculate movement direction
         _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
         
+        // on slope
+        if (OnSlope() && !_exitingSlope)
+        {
+            _rigidbody.AddForce(GetSlopeMoveDirection() * _moveSpeed * 20f, ForceMode.Force);
+
+            if (_rigidbody.velocity.y > 0)
+                _rigidbody.AddForce(Vector3.down * 80f, ForceMode.Force);
+        }
+        
         // differentiate movement on the ground and in air
         if (_grounded)
             _rigidbody.AddForce(_moveSpeed * 10f * _moveDirection.normalized, ForceMode.Force);
         else
             _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
+        
+        // turn gravity off while on slope
+        _rigidbody.useGravity = !OnSlope();
+        
     }
 
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-        
-        // limit velocity if needed
-        if (flatVel.magnitude > _moveSpeed)
+        // limiting speed on slope
+        if (OnSlope() && !_exitingSlope)
         {
-            Vector3 limitedVel = flatVel.normalized * _moveSpeed;
-            _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
+            if (_rigidbody.velocity.magnitude > _moveSpeed)
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _moveSpeed;
+        }
+        // limiting speed on ground or in air
+        else
+        {
+            Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
+        
+            // limit velocity if needed
+            if (flatVel.magnitude > _moveSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * _moveSpeed;
+                _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
+            }
         }
     }
 
     private void Jump()
     {
+        _exitingSlope = true;
+        
         // reset y velocity
         _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
@@ -221,6 +261,23 @@ public class RealityMovement : MonoBehaviour
     private void ResetJump()
     {
         _readyToJump = true;
+        
+        _exitingSlope = false;
+    }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, _playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < _maxSlopeAngle && angle != 0;
+        }
+        return false;
+    }
+    
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(_moveDirection, slopeHit.normal).normalized;
     }
     
     /// <summary>

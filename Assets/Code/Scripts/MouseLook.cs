@@ -1,30 +1,33 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    [SerializeField]
+    [Tooltip("The script is currently active")]
+    private bool _activeScript = true;
+    
     // link camera to body
+    [Tooltip("The script is currently active")]
     [SerializeField] private Transform _orientation;
     
-    
     // set mouse sensibility in X and Y axis
-    [SerializeField] private float _xSensitivity = 100f;
-    [SerializeField] private float _ySensitivity = 100f;
+    [Tooltip("Set the mouse sensitivity")]
+    [SerializeField] private float _xSensitivity = 50f;
+    [SerializeField] private float _ySensitivity = 50f;
     [SerializeField] private float _sensitivity = 1f;
-    
+
+    // It's true if the camera is active, false otherwise
+    private bool _activeCurrently;
     private Transform _transform;
 
     private float _yRotation = 0f; // yaw movement variable
     private float _xRotation = 0f; // pitch movement variable
-
-
+    
     private void Awake()
     {
         _transform = GetComponent<Transform>();
     }
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -35,28 +38,30 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // get mouse input and proportionally modify the sensitivity
-        float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
+        if (!_activeScript)
+        {
+            return;
+        }
         
-        //calculate the rotation in both axis
-        _yRotation += mouseX;
-        _xRotation -= mouseY;
-        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
+        if (_activeCurrently)
+        {
+            // get mouse input and proportionally modify the sensitivity
+            float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
         
-        // rotate camera and orientation
-        _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
-        _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+            //calculate the rotation in both axis
+            _yRotation += mouseX;
+            _xRotation -= mouseY;
+            _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
         
-        
-        /*
-        //Rotate the entire object (body + camera) around the Y axis
-        _playerBody.transform.Rotate(new Vector3(0f, mouseX, 0f));
+            // rotate camera and orientation
+            _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+        }
+    }
 
-        //Rotate the camera on X axis
-         
-        transform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
-        */
-
+    public void ActivateMouseLook(bool active)
+    {
+        _activeCurrently = active;
     }
 }
