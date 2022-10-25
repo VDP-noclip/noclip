@@ -52,8 +52,8 @@ public class RealityMovement : MonoBehaviour
     private Rigidbody _rigidbody;      // set the rigidbody
 
     // player states
-    private MovementState _state;     // current player state
-    public enum MovementState       // define player states
+    [SerializeField] private MovementState _state;     // current player state
+    private enum MovementState       // define player states
     {
         Walking,
         Sprinting,

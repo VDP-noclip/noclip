@@ -8,7 +8,11 @@ using UnityEditor;
 
 public class MenuController : MonoBehaviour
 {
-
+    /*
+     * This is the Menu Controller: a centralized structure where every menu element resides.
+     * This implies sliders, buttons, popups and text. It also applies eventual modified settings (es.: SetResolution).
+     */
+    
     [Header("Gameplay Settings")] 
     [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
     [SerializeField] private Slider controllerSensitivitySlider = null;
@@ -51,6 +55,7 @@ public class MenuController : MonoBehaviour
 
     private Resolution[] resolutions;
 
+    //When the Menu starts the game will iterate through various available resolutions. When done, it'll set the settings' dropdown menu (graphics) to whathever resolution has been found.
     private void Start()
     {
         resolutions = Screen.resolutions;
@@ -75,20 +80,14 @@ public class MenuController : MonoBehaviour
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
     }
-
-    public void SetResolution(int resolutionIndex)
-    {
-        Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
     
-    //Start a new game
+    //Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
     public void StartGameDialogYes()
     {
         SceneManager.LoadScene(_newGameLevel);
     }
 
-    //Load a previously saved game
+    //Loads a previously saved level. When a "save" feature will be added, this will finally work. For now, it's a placeholder.
     public void ResumeGameDialogYes()
     {
         if (PlayerPrefs.HasKey("SavedLevel"))
@@ -102,29 +101,64 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    //Quits the game.
     public void QuitGameButton()
     {
         Application.Quit();
     }
 
+    /*
+     * Various setters.
+     * These change the visual side of the menu, for example the amount of brightness shown in numbers or if fullscreen is checked or not.
+     */
+    public void SetResolution(int resolutionIndex)
+    {
+        Resolution resolution = resolutions[resolutionIndex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+    public void SetBrightness(float brightness)
+    {
+        _brightnessLevel = brightness;
+        brightnessTextValue.text = brightness.ToString("0.0");
+    }
+    public void SetFullScreen(bool isFullscreen)
+    {
+        _isFullScreen = isFullscreen;
+    }
+    public void SetQuality(int qualityIndex)
+    {
+        _qualityLevel = qualityIndex;
+    }
     public void SetVolume(float _volume)
     {
         AudioListener.volume = _volume;
         volumeTextValue.text = _volume.ToString("0.0");
     }
-
-    public void VolumeApply()
-    {
-        PlayerPrefs.SetFloat("masterVolume", AudioListener.volume);
-        StartCoroutine(ConfirmationBox());
-    }
-
     public void SetControllerSensitivity(float _sensitivity)
     {
         mainControllerSensitivity = Mathf.RoundToInt(_sensitivity);
         controllerSensitivityTextValue.text = _sensitivity.ToString("0");
     }
+    
+    //Applies changes.
+    public void GraphicsApply()
+    {
+        PlayerPrefs.SetFloat("masterBrightness", _brightnessLevel);
+        //Insert brigthness change here
+        
+        PlayerPrefs.SetInt("masterQuality", _qualityLevel);
+        QualitySettings.SetQualityLevel(_qualityLevel);
+        
+        PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
+        Screen.fullScreen = _isFullScreen;
 
+        StartCoroutine(ConfirmationBox());
+    }
+    public void VolumeApply()
+    {
+        PlayerPrefs.SetFloat("masterVolume", AudioListener.volume);
+        StartCoroutine(ConfirmationBox());
+    }
     public void GameplayApply()
     {
         if (invertYToggle.isOn)
@@ -140,36 +174,7 @@ public class MenuController : MonoBehaviour
         StartCoroutine(ConfirmationBox());
     }
 
-    public void SetBrightness(float brightness)
-    {
-        _brightnessLevel = brightness;
-        brightnessTextValue.text = brightness.ToString("0.0");
-    }
-
-    public void SetFullScreen(bool isFullscreen)
-    {
-        _isFullScreen = isFullscreen;
-    }
-
-    public void SetQuality(int qualityIndex)
-    {
-        _qualityLevel = qualityIndex;
-    }
-
-    public void GraphicsApply()
-    {
-        PlayerPrefs.SetFloat("masterBrightness", _brightnessLevel);
-        //Insert brigthness change here
-        
-        PlayerPrefs.SetInt("masterQuality", _qualityLevel);
-        QualitySettings.SetQualityLevel(_qualityLevel);
-        
-        PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
-        Screen.fullScreen = _isFullScreen;
-
-        StartCoroutine(ConfirmationBox());
-    }
-
+    //When prompted, the player can reset various settings' values. This button changes based on the menutype it's given.
     public void ResetButton(string MenuType)
     {
         if (MenuType == "Audio")
@@ -177,6 +182,7 @@ public class MenuController : MonoBehaviour
             AudioListener.volume = defaultVolume;
             volumeSlider.value = defaultVolume;
             volumeTextValue.text = defaultVolume.ToString("0.0");
+            
             VolumeApply();
         }
 
@@ -186,12 +192,12 @@ public class MenuController : MonoBehaviour
             controllerSensitivitySlider.value = defaultSensitivity;
             mainControllerSensitivity = defaultSensitivity;
             invertYToggle.isOn = false;
+            
             GameplayApply();
         }
 
         if (MenuType == "Graphics")
         {
-            //Reset brightness value
             brightnessSlider.value = defaultBrightness;
             brightnessTextValue.text = defaultBrightness.ToString("0.0");
 
@@ -204,10 +210,12 @@ public class MenuController : MonoBehaviour
             Resolution currentResolution = Screen.currentResolution;
             Screen.SetResolution(currentResolution.width, currentResolution.height, Screen.fullScreen);
             resolutionDropdown.value = resolutions.Length;
+            
             GraphicsApply();
         }
     }
-
+    
+    //Returns an image on the bottom-left. Lets the player know settings have changed.
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
