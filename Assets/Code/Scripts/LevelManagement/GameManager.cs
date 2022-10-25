@@ -20,8 +20,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        _lastCheckPointPos = GameObject.FindGameObjectWithTag("SpawnPlatform").transform.position;
+        
+        // Important: use the position of RealityPlayer and not the SpawnPlatform!
+        _lastCheckPointPos = GameObject.FindGameObjectWithTag("RealityPlayer").transform.position;
     }
 
     public void SetLastCheckpointPos(Vector3 pos)
