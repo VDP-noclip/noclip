@@ -1,24 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerSpawner: MonoBehaviour
+/// <summary>
+/// PlayerSpawner handles where Player should spawn after hitting certain objects.
+/// For now, when the Player collides with a trigger object, he respawns in the last saved checkpoint.
+/// Note: checkpoints for now are volatile, meaning that closing the game will erase them.
+/// </summary>
+public class OutOfBoundsController: MonoBehaviour
 {
     private GameManager _gameManager;
-    
-    [SerializeField] private Transform player;
-    
-    /*
-     *  PlayerSpawner handles where Player should spawn after hitting certain objects.
-     *  For now, when the Player collides with a trigger object, he respawns in the last saved checkpoint.
-     *  Note: checkpoints for now are volatile, meaning that closing the game will erase them.
-     */
-    
-    void Start()
+    private GameObject _realityPlayer;
+
+    private void Awake()
     {
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        player.transform.position = _gameManager.lastCheckPointPos;
+        _realityPlayer = GameObject.FindGameObjectWithTag("RealityPlayer");
+    }
+
+    void Start()
+    {
+        _realityPlayer.transform.position = _gameManager.GetSpawningPosition();
         Physics.SyncTransforms();
     }
 
