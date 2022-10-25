@@ -50,9 +50,12 @@ public class RealityMovement : MonoBehaviour
 
     private Transform _transform;
     private Rigidbody _rigidbody;      // set the rigidbody
+    private NoclipManager _noclipManager;
+    private bool _touchingNoclipEnabler;
 
     // player states
     [SerializeField] private MovementState _state;     // current player state
+
     private enum MovementState       // define player states
     {
         Walking,
@@ -60,11 +63,12 @@ public class RealityMovement : MonoBehaviour
         Crouching,
         Air
     }
-
+    
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
+        _noclipManager = GetComponent<NoclipManager>();
     }
 
     // Start is called before the first frame update
@@ -84,7 +88,7 @@ public class RealityMovement : MonoBehaviour
         {
             _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
 
-            MyInput();
+            UserInput();
             StateHandler();
             SpeedControl();
 
@@ -93,8 +97,19 @@ public class RealityMovement : MonoBehaviour
                 _rigidbody.drag = _groundDrag;
             else
                 _rigidbody.drag = 0;
+
+            if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
+            {
+                if (_noclipManager.NoclipEnabled)
+                {
+                    _noclipManager.DisableNoclip();
+                }
+                else
+                {
+                    _noclipManager.EnableNoclip();
+                }
+            }
         }
-        
     }
 
     private void FixedUpdate()
@@ -102,14 +117,29 @@ public class RealityMovement : MonoBehaviour
         MovePlayer();
         //Debug.Log(_moveSpeed);
     }
-
+    
     public void ActivatePlayer(bool active)
     {
         _currentPlayerBody = active;
     }
+    
+    void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("NoclipEnabler"))
+        {
+            _touchingNoclipEnabler = true;
+        }
+    }
+    
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("NoclipEnabler"))
+        {
+            _touchingNoclipEnabler = false;
+        }
+    }
 
     // 
-    private void MyInput()
+    private void UserInput()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
         _verticalInput = Input.GetAxisRaw("Vertical");
@@ -185,9 +215,9 @@ public class RealityMovement : MonoBehaviour
         }
         
         // differentiate movement on the ground and in air
-        if(_grounded)
+        if (_grounded)
             _rigidbody.AddForce(_moveSpeed * 10f * _moveDirection.normalized, ForceMode.Force);
-        else if(!_grounded)
+        else
             _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
         
         // turn gravity off while on slope
@@ -248,5 +278,14 @@ public class RealityMovement : MonoBehaviour
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDirection, slopeHit.normal).normalized;
+    }
+    
+    /// <summary>
+    /// Check if we can call noclip method. If we are on the platform, we can call the method to enable/disable the
+    /// noclip mode!
+    /// </summary>
+    private bool CanCallNoclip()
+    {
+        return _touchingNoclipEnabler;
     }
 }
