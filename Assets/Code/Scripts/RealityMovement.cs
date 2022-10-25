@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
-    public enum MovementState       // define player states
+    private enum MovementState       // define player states
     {
         Walking,
         Sprinting,
