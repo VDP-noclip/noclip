@@ -76,7 +76,7 @@ public class RealityMovement : MonoBehaviour
     {
         _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
 
-        MyInput();
+        UserInput();
         StateHandler();
         SpeedControl();
 
@@ -94,7 +94,7 @@ public class RealityMovement : MonoBehaviour
     }
 
     // 
-    private void MyInput()
+    private void UserInput()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
         _verticalInput = Input.GetAxisRaw("Vertical");
