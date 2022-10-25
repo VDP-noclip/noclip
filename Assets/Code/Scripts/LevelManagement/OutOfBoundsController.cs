@@ -33,7 +33,7 @@ public class OutOfBoundsController: MonoBehaviour
     
     private void OnTriggerEnter(Collider otherObject)
     {
-        if (otherObject.gameObject.name == "RealityPlayer")
+        if (otherObject.CompareTag("RealityPlayer"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
