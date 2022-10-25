@@ -5,69 +5,112 @@ using UnityEngine;
 
 public class NoClipMovement : MonoBehaviour
 {
-    [SerializeField] private CharacterController _controller;
-    [SerializeField] private Transform _orientation;
 
-    [SerializeField] private float _speed = 12f;
-    [SerializeField] private float _gravity = -9.81f;
-    [SerializeField] private float _groundDistance = 0.4f;
+    [SerializeField]
+    [Tooltip("The script is currently active")]
+    private bool _active = true;
 
-    [SerializeField] private Transform _groundCheck;
-    
-    [SerializeField] private LayerMask _groundMask;
-    
-    private float _horizontalInput;
-    private float _verticalInput;
+    [Space]
 
-    private Vector3 _moveDirection;
+    [SerializeField]
+    [Tooltip("Camera movement by 'W','A','S','D','Q','E' keys is active")]
+    private bool _enableMovement = true;
+
+    [SerializeField]
+    [Tooltip("Camera movement speed")]
+    private float _movementSpeed = 10f;
     
-    // It's true if is the realbody, it's false if it is the noclip body
-    private bool _currentPlayerBody = true;
+    [SerializeField]
+    [Tooltip("Speed of the quick camera movement when holding the 'Left Shift' key")]
+    private float _boostedSpeed = 50f;
     
-    private Vector3 _velocity;
+    [SerializeField]
+    [Tooltip("Boost speed")]
+    private KeyCode _boostSpeed = KeyCode.LeftShift;
+    
+    [SerializeField]
+    [Tooltip("Move up")]
+    private KeyCode _moveUp = KeyCode.E;
+
+    [SerializeField]
+    [Tooltip("Move down")]
+    private KeyCode _moveDown = KeyCode.Q;
+    
+    [Space]
+
+    [SerializeField]
+    [Tooltip("Acceleration at camera movement is active")]
+    private bool _enableSpeedAcceleration = true;
+
+    [SerializeField]
+    [Tooltip("Rate which is applied during camera movement")]
+    private float _speedAccelerationFactor = 1.5f;
+    
     private Transform _transform;
-
+    
+    private Vector3 _initRotation;
+    
+    private float _currentIncrease = 1;
+    private float _currentIncreaseMem = 0;
+    
     private void Awake()
     {
         _transform = GetComponent<Transform>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_currentPlayerBody)
+        if (!_active)
+            return;
+        
+        if (_enableMovement)
         {
-            bool isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
+            Vector3 deltaPosition = Vector3.zero;
+            float currentSpeed = _movementSpeed;
 
-            if (isGrounded && _velocity.y < 0)
-            {
-                _velocity.y = -2f;
-            }
+            if (Input.GetKey(_boostSpeed))
+                currentSpeed = _boostedSpeed;
 
-            _horizontalInput = Input.GetAxisRaw("Horizontal");
-            _verticalInput = Input.GetAxisRaw("Vertical");
+            if (Input.GetKey(KeyCode.W))
+                deltaPosition += _transform.forward;
 
-            Vector3 move = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
+            if (Input.GetKey(KeyCode.S))
+                deltaPosition -= _transform.forward;
 
-            _controller.Move(move * (_speed * Time.deltaTime));
+            if (Input.GetKey(KeyCode.A))
+                deltaPosition -= _transform.right;
 
-            _velocity.y += _gravity * Time.deltaTime;
+            if (Input.GetKey(KeyCode.D))
+                deltaPosition += _transform.right;
 
-            _controller.Move(_velocity * Time.deltaTime);
+            if (Input.GetKey(_moveUp))
+                deltaPosition += transform.up;
+
+            if (Input.GetKey(_moveDown))
+                deltaPosition -= transform.up;
+            
+            // Calc acceleration
+            CalculateCurrentIncrease(deltaPosition != Vector3.zero);
+
+            transform.position += deltaPosition * currentSpeed * _currentIncrease;
+            
         }
-
     }
     
-    public void ActivatePlayer(bool active)
+    private void CalculateCurrentIncrease(bool moving)
     {
-        _currentPlayerBody = active;
+        _currentIncrease = Time.deltaTime;
+
+        if (!_enableSpeedAcceleration || _enableSpeedAcceleration && !moving)
+        {
+            _currentIncreaseMem = 0;
+            return;
+        }
+
+        _currentIncreaseMem += Time.deltaTime * (_speedAccelerationFactor - 1);
+        _currentIncrease = Time.deltaTime + Mathf.Pow(_currentIncreaseMem, 3) * Time.deltaTime;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("RealityObject"))
-        {
-            Debug.Log("RealBody collieded");
-        }
-    }
 }
