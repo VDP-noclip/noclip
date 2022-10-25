@@ -161,9 +161,9 @@ public class RealityMovement : MonoBehaviour
         _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
         
         // differentiate movement on the ground and in air
-        if(_grounded)
+        if (_grounded)
             _rigidbody.AddForce(_moveSpeed * 10f * _moveDirection.normalized, ForceMode.Force);
-        else if(!_grounded)
+        else
             _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
     }
 
