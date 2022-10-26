@@ -1,4 +1,4 @@
-![Build](https://github.com/github/docs/actions/workflows/build.yml/badge.svg?branch=develop)
+![Build](https://github.com/VDP-noclip/noclip/actions/workflows/build.yml/badge.svg?branch=develop)
 
 # noclip
 
