@@ -47,8 +47,12 @@ public class NoclipMovement : MonoBehaviour
     private float _speedAccelerationFactor = 1.5f;
     
     private Transform _transform;
+    private CameraManager _cameraManager;
     
+    
+    // These positions depends o the level 
     private Vector3 _initRotation;
+    private Vector3 _initPosition;
     
     private float _currentIncrease = 1;
     private float _currentIncreaseMem = 0;
@@ -56,7 +60,14 @@ public class NoclipMovement : MonoBehaviour
     private void Awake()
     {
         _transform = GetComponent<Transform>();
-        
+        _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+
+    }
+
+    private void Start()
+    {
+        _initRotation = _transform.eulerAngles;
+        _initPosition = _transform.position;
     }
 
     // Update is called once per frame
@@ -98,7 +109,17 @@ public class NoclipMovement : MonoBehaviour
             
         }
     }
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("RealityPlayer"))
+        {
+            _cameraManager.SwitchCamera();
+            _transform.position = _initPosition;
+            _transform.eulerAngles = _initRotation;
+        }
+    }
+
     private void CalculateCurrentIncrease(bool moving)
     {
         _currentIncrease = Time.deltaTime;
