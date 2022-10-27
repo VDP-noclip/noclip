@@ -60,6 +60,9 @@ public class RealityMovement : MonoBehaviour
     //TOREMOVE reality body capsule collider to change its material and fix sticking to walls
     //private CapsuleCollider _realityBodyCollider;
 
+    //slope gravity vector3
+    private Vector3 _slopeGravity = Vector3.zero;
+    private bool BodyOnSlope = false;
     private enum MovementState       // define player states
     {
         Walking,
@@ -71,6 +74,7 @@ public class RealityMovement : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.AddForce(_slopeGravity, ForceMode.Force);
         _transform = GetComponent<Transform>();
         _noclipManager = GetComponent<NoclipManager>();
 
@@ -228,6 +232,7 @@ public class RealityMovement : MonoBehaviour
         // calculate movement direction
         _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
         
+        /* Tizio - Stefano can you tell me how this works?
         // on slope
         if (OnSlope() && !_exitingSlope)
         {
@@ -235,7 +240,7 @@ public class RealityMovement : MonoBehaviour
 
             if (_rigidbody.velocity.y > 0)
                 _rigidbody.AddForce(Vector3.down * 80f, ForceMode.Force);
-        }
+        }*/
         
         // differentiate movement on the ground and in air
         if (_grounded)
@@ -244,9 +249,41 @@ public class RealityMovement : MonoBehaviour
             _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
         
         // turn gravity off while on slope
-        //tizio: it is actually better to change the friction to avoid side effects
-        _rigidbody.useGravity = !OnSlope();
+        //tizio: it is actually better to change the friction instead, to avoid side effects
+        //_rigidbody.useGravity = !OnSlope();
+
+        SlopeHandler();
         
+    }
+
+    private void SlopeHandler() //works up to 45 degrees because above something strange happens with cosine, ANYWAY player is not supposed to climb such slopes, he's not a steinbock
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, _playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            //debug angle
+            Debug.Log("slope angle: " + angle);
+            if(angle > 0 && angle < 45 && angle < _maxSlopeAngle && !BodyOnSlope){
+                BodyOnSlope = true;
+                _slopeGravity = slopeHit.normal * Physics.gravity.magnitude;
+                //Debug.Log("_slopeGravity: " + _slopeGravity.magnitude);
+                _rigidbody.useGravity = false;
+            }
+            else if (!BodyOnSlope){
+                BodyOnSlope = false;
+                _slopeGravity = Vector3.zero;
+                _rigidbody.useGravity = true;
+            }
+            else{
+                //player probably on slope with slopegravity already applied
+            }
+            //the lack of gravity makes the player slide more when the surface is more inclined
+        }
+        else{
+            BodyOnSlope = false;
+            _slopeGravity = Vector3.zero;
+            _rigidbody.useGravity = true;
+        }
     }
 
     private void SpeedControl()
