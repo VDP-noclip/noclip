@@ -36,22 +36,23 @@ public class NoclipMovement : MonoBehaviour
     [Tooltip("Move down")]
     private KeyCode _moveDown = KeyCode.Q;
     
-    [Space]
-
+    /*[Space]
+    
     [SerializeField]
     [Tooltip("Acceleration at camera movement is active")]
     private bool _enableSpeedAcceleration = true;
-
+    
     [SerializeField]
     [Tooltip("Rate which is applied during camera movement")]
     private float _speedAccelerationFactor = 1.5f;
+    
+    private float _currentIncrease = 1;
+    private float _currentIncreaseMem = 0;*/
     
     private Transform _transform;
     
     private Vector3 _initRotation;
     
-    private float _currentIncrease = 1;
-    private float _currentIncreaseMem = 0;
     
     private void Awake()
     {
@@ -92,13 +93,14 @@ public class NoclipMovement : MonoBehaviour
                 deltaPosition -= transform.up;
             
             // Calc acceleration
-            CalculateCurrentIncrease(deltaPosition != Vector3.zero);
-
-            transform.position += deltaPosition * currentSpeed * _currentIncrease;
+            //CalculateCurrentIncrease(deltaPosition != Vector3.zero);
+            //_transform.position += deltaPosition * (currentSpeed * _currentIncrease);
+            _transform.position += deltaPosition * (currentSpeed * Time.deltaTime);
             
         }
     }
     
+    /*
     private void CalculateCurrentIncrease(bool moving)
     {
         _currentIncrease = Time.deltaTime;
@@ -111,6 +113,6 @@ public class NoclipMovement : MonoBehaviour
 
         _currentIncreaseMem += Time.deltaTime * (_speedAccelerationFactor - 1);
         _currentIncrease = Time.deltaTime + Mathf.Pow(_currentIncreaseMem, 3) * Time.deltaTime;
-    }
+    }*/
 
 }
