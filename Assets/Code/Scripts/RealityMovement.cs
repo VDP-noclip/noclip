@@ -269,7 +269,7 @@ public class RealityMovement : MonoBehaviour
             float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
             _groundedOnSlope = true;
             //debug angle
-            Debug.Log("slope angle: " + angle);
+            //Debug.Log("slope angle: " + angle);
             if(angle > 0 && angle < _maxSlopeAngle && !_bodyOnSlope){
                 _bodyOnSlope = true;
                 _slopeGravity = _slopeHit.normal * Physics.gravity.magnitude;
@@ -291,8 +291,8 @@ public class RealityMovement : MonoBehaviour
             _groundDrag = 8;
         }
         //log _grounded
-        Debug.Log("grounded: " + _grounded);
-        Debug.Log("groundedonslope: " + _groundedOnSlope);
+        //Debug.Log("grounded: " + _grounded);
+        //Debug.Log("groundedonslope: " + _groundedOnSlope);
     }
 
     private void SpeedControl()
