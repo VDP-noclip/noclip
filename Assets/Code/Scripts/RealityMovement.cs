@@ -35,7 +35,7 @@ public class RealityMovement : MonoBehaviour
 
     [Header("Slope handling")]
     [SerializeField] public float _maxSlopeAngle;
-    private RaycastHit slopeHit;
+    private RaycastHit _slopeHit;
     private bool _exitingSlope;
 
     [SerializeField] private Transform _orientation;
@@ -62,7 +62,10 @@ public class RealityMovement : MonoBehaviour
 
     //slope gravity vector3
     private Vector3 _slopeGravity = Vector3.zero;
-    private bool BodyOnSlope = false;
+    private bool _bodyOnSlope = false;
+    private bool _groundedOnSlope= false;
+
+    public bool Grounded;
     private enum MovementState       // define player states
     {
         Walking,
@@ -97,6 +100,7 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        Grounded = _grounded;
         if (_currentPlayerBody)
         {
             _grounded = Physics.Raycast(_transform.position, Vector3.down, _playerHeight * 0.5f + 0.2f, _ground);
@@ -106,7 +110,9 @@ public class RealityMovement : MonoBehaviour
             SpeedControl();
 
             // handle drag
-            if (_grounded)
+            if (_grounded || _groundedOnSlope) //needed to make slopes higher than 45 degrees feel not slippery but to jump there UserInput should be modified
+            //IMPORTANT slopes higher than about 80 degrees are fundamentally broken because they enable drag free movement but are still generating binding reaction (reazione vincolare), that is because the function that checks if player is on a slope doesn't return a normal vector if the slope angle is that high.
+            //80 degrees slopes and walls are different because there is no way to exploit a wall to accelerate while in air
             {
                 _rigidbody.drag = _groundDrag;
                 //Frictionless(false);
@@ -171,7 +177,7 @@ public class RealityMovement : MonoBehaviour
         _verticalInput = Input.GetAxisRaw("Vertical");
         
         // when to jump
-        if (Input.GetKey(jumpKey) && _readyToJump && _grounded)
+        if (Input.GetKey(jumpKey) && _readyToJump && _grounded) //_grounded is true up to 45 degrees, so _groundedOnSlope together with slope angle should be checked to jump at higher slopes
         {
             _readyToJump = false;
             
@@ -258,32 +264,35 @@ public class RealityMovement : MonoBehaviour
 
     private void SlopeHandler() //works up to 45 degrees because above something strange happens with cosine, ANYWAY player is not supposed to climb such slopes, he's not a steinbock
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, _playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
         {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
+            _groundedOnSlope = true;
             //debug angle
             Debug.Log("slope angle: " + angle);
-            if(angle > 0 && angle < 45 && angle < _maxSlopeAngle && !BodyOnSlope){
-                BodyOnSlope = true;
-                _slopeGravity = slopeHit.normal * Physics.gravity.magnitude;
+            if(angle > 0 && angle < _maxSlopeAngle && !_bodyOnSlope){
+                _bodyOnSlope = true;
+                _slopeGravity = _slopeHit.normal * Physics.gravity.magnitude;
                 //Debug.Log("_slopeGravity: " + _slopeGravity.magnitude);
                 _rigidbody.useGravity = false;
             }
-            else if (!BodyOnSlope){
-                BodyOnSlope = false;
+            else if (!_bodyOnSlope){
+                _bodyOnSlope = false;
                 _slopeGravity = Vector3.zero;
                 _rigidbody.useGravity = true;
-            }
-            else{
-                //player probably on slope with slopegravity already applied
             }
             //the lack of gravity makes the player slide more when the surface is more inclined
         }
         else{
-            BodyOnSlope = false;
+            _groundedOnSlope = false;
+            _bodyOnSlope = false;
             _slopeGravity = Vector3.zero;
             _rigidbody.useGravity = true;
+            _groundDrag = 8;
         }
+        //log _grounded
+        Debug.Log("grounded: " + _grounded);
+        Debug.Log("groundedonslope: " + _groundedOnSlope);
     }
 
     private void SpeedControl()
@@ -328,9 +337,9 @@ public class RealityMovement : MonoBehaviour
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, _playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
         {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
             //debug angle
             //Debug.Log(angle);
             return angle < _maxSlopeAngle && angle != 0;
@@ -341,7 +350,7 @@ public class RealityMovement : MonoBehaviour
     
     private Vector3 GetSlopeMoveDirection()
     {
-        return Vector3.ProjectOnPlane(_moveDirection, slopeHit.normal).normalized;
+        return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
     }
     
     /// <summary>
