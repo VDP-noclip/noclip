@@ -56,6 +56,10 @@ public class RealityMovement : MonoBehaviour
     // player states
     [SerializeField] private MovementState _state;     // current player state
 
+    //sticking problem with walls was solved by removing collider friction alltogether and reliying only on RealityPlayer's drag, aka how it was probably intended from the beginning
+    //TOREMOVE reality body capsule collider to change its material and fix sticking to walls
+    //private CapsuleCollider _realityBodyCollider;
+
     private enum MovementState       // define player states
     {
         Walking,
@@ -69,6 +73,11 @@ public class RealityMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
         _noclipManager = GetComponent<NoclipManager>();
+
+        //TOREMOVE
+        //_realityBodyCollider = GetComponentInChildren<CapsuleCollider>();
+        //set reality body collider material to no_friction material in Assets/Physic Materials
+        //_realityBodyCollider.material = (PhysicMaterial) Resources.Load("Physic Materials/no_friction");
     }
 
     // Start is called before the first frame update
@@ -94,10 +103,15 @@ public class RealityMovement : MonoBehaviour
 
             // handle drag
             if (_grounded)
+            {
                 _rigidbody.drag = _groundDrag;
+                //Frictionless(false);
+            }
             else
+            {
                 _rigidbody.drag = 0;
-
+                //Frictionless(true); //you still can't walk close to walls :-)
+            }
             if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
             {
                 if (_noclipManager.NoclipEnabled)
@@ -112,6 +126,14 @@ public class RealityMovement : MonoBehaviour
         }
     }
 
+    /*private void Frictionless(bool frictionless) //TOREMOVE
+    {
+        if (frictionless)
+            _realityBodyCollider.material = (PhysicMaterial) Resources.Load("Physic Materials/no_friction");
+        else
+            _realityBodyCollider.material = (PhysicMaterial) Resources.Load("Physic Materials/default");
+    }*/
+
     private void FixedUpdate()
     {
         MovePlayer();
@@ -122,7 +144,7 @@ public class RealityMovement : MonoBehaviour
     {
         _currentPlayerBody = active;
     }
-    
+
     void OnTriggerEnter(Collider other) {
         if (other.CompareTag("NoclipEnabler"))
         {
@@ -167,6 +189,7 @@ public class RealityMovement : MonoBehaviour
             _transform.localScale = new Vector3(_transform.localScale.x, _startYScale, _transform.localScale.z);
         }
     }
+    
 
 
     private void StateHandler()
@@ -221,6 +244,7 @@ public class RealityMovement : MonoBehaviour
             _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
         
         // turn gravity off while on slope
+        //tizio: it is actually better to change the friction to avoid side effects
         _rigidbody.useGravity = !OnSlope();
         
     }
@@ -270,7 +294,10 @@ public class RealityMovement : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, _playerHeight * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            //debug angle
+            //Debug.Log(angle);
             return angle < _maxSlopeAngle && angle != 0;
+            //the lack of gravity makes the player slide more when the surface is more inclined
         }
         return false;
     }
