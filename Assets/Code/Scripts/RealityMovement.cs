@@ -64,6 +64,7 @@ public class RealityMovement : MonoBehaviour
     private Vector3 _slopeGravity = Vector3.zero;
     private bool _bodyOnSlope = false;
     private bool _groundedOnSlope= false;
+    private bool _touchingWall = false;
 
     [SerializeField] private bool Grounded;
     private enum MovementState       // define player states
@@ -119,8 +120,12 @@ public class RealityMovement : MonoBehaviour
             }
             else
             {
-                _rigidbody.drag = 0;
-                //Frictionless(true); //you still can't walk close to walls :-)
+                /*if(_touchingWall){
+                    _rigidbody.drag = _groundDrag/2;
+                    _touchingWall = false; //consume touchingwall event
+                }
+                else*/
+                    _rigidbody.drag = 0;
             }
             if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
             {
@@ -169,6 +174,15 @@ public class RealityMovement : MonoBehaviour
             _touchingNoclipEnabler = false;
         }
     }
+    
+    /*private void OnCollisionStay(Collision collision) {
+        //if colliding with a ground object set drag to ground drag
+        //collision.gameObject Layer get name
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            _touchingWall = true;
+        }
+    }*/
 
     // 
     private void UserInput()
@@ -264,6 +278,10 @@ public class RealityMovement : MonoBehaviour
 
     private void SlopeHandler() //works up to 45 degrees because above something strange happens with cosine, ANYWAY player is not supposed to climb such slopes, he's not a steinbock
     {
+        /*if(_touchingWall){
+            _rigidbody.drag = _groundDrag/2;
+            _touchingWall = false; //consume touchingwall event
+        }*/
         if (Physics.Raycast(_transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
@@ -288,7 +306,7 @@ public class RealityMovement : MonoBehaviour
             _bodyOnSlope = false;
             _slopeGravity = Vector3.zero;
             _rigidbody.useGravity = true;
-            _groundDrag = 8;
+            //_groundDrag = 8;
         }
         //log _grounded
         //Debug.Log("grounded: " + _grounded);
