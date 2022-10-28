@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     public void SetLastCheckpointPos(Vector3 pos)
     {
+        Debug.Log("Setting new checkpoint");
         _lastCheckPointPos = pos;
     }
 

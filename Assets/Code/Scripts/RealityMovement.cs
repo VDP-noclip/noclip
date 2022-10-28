@@ -13,6 +13,7 @@ public class RealityMovement : MonoBehaviour
     
     [Header("Jump")]
     [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [SerializeField] private float _gravity = 20f;      // set gravity
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
     private bool _readyToJump;
@@ -74,6 +75,9 @@ public class RealityMovement : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        //get gravity vector
+        Physics.gravity = Vector3.up * -_gravity;
+        
         _rigidbody.freezeRotation = true;
         
         ResetJump(); // set _readyToJump to "true"

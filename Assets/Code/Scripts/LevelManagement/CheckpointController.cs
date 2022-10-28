@@ -10,6 +10,7 @@ using UnityEngine;
 public class CheckpointController : MonoBehaviour
 {
     private GameManager _gameManager;
+    [SerializeField] private GameObject _gameObject;
 
     void Awake()
     {
@@ -20,8 +21,16 @@ public class CheckpointController : MonoBehaviour
     {
         if (otherObject.CompareTag("RealityPlayer"))
         {
+            Debug.Log("you entered checkpoint: " + gameObject.name);
             _gameManager.SetLastCheckpointPos(transform.position);
             Physics.SyncTransforms();
+            ChangeBlockColor();
         }
     }
+
+    private void ChangeBlockColor(){
+        //change color of _gameObject
+        _gameObject.GetComponent<Renderer>().material.color = Color.green;
+    }
+
 }

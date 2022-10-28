@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class OutOfBoundsController: MonoBehaviour
 {
     private GameManager _gameManager;
-    private GameObject _realityPlayer;
+    [SerializeField] private GameObject _realityPlayer;
 
     private void Awake()
     {
@@ -33,9 +33,15 @@ public class OutOfBoundsController: MonoBehaviour
     
     private void OnTriggerEnter(Collider otherObject)
     {
-        if (otherObject.CompareTag("RealityPlayer"))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        RespawnPlayer();
+    }
+
+    private void RespawnPlayer()
+    {
+        //get parent of reality player
+        GameObject allPlayer = _realityPlayer.transform.parent.gameObject;
+        //and move it to the last checkpoint
+        allPlayer.transform.position = _gameManager.GetSpawningPosition();
+        Physics.SyncTransforms();
     }
 }
