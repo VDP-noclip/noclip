@@ -34,7 +34,7 @@ public class RealityMovement : MonoBehaviour
     private bool _grounded;
 
     [Header("Slope handling")]
-    [SerializeField] public float _maxSlopeAngle;
+    [SerializeField] private float _maxSlopeAngle;
     private RaycastHit _slopeHit;
     private bool _exitingSlope;
 
@@ -65,7 +65,7 @@ public class RealityMovement : MonoBehaviour
     private bool _bodyOnSlope = false;
     private bool _groundedOnSlope= false;
 
-    public bool Grounded;
+    [SerializeField] private bool Grounded;
     private enum MovementState       // define player states
     {
         Walking,
@@ -264,7 +264,7 @@ public class RealityMovement : MonoBehaviour
 
     private void SlopeHandler() //works up to 45 degrees because above something strange happens with cosine, ANYWAY player is not supposed to climb such slopes, he's not a steinbock
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(_transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
             _groundedOnSlope = true;
@@ -337,7 +337,7 @@ public class RealityMovement : MonoBehaviour
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(_transform.position, Vector3.down, out _slopeHit, _playerHeight * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
             //debug angle
