@@ -630,8 +630,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _walkSpeed: 6
   _sprintSpeed: 12
-  _groundDrag: 4
-  _jumpForce: 8
+  _groundDrag: 8
+  _jumpForce: 10
   _jumpCooldown: 0.25
   _airMultiplier: 0.4
   _crouchSpeed: 2
@@ -643,7 +643,7 @@ MonoBehaviour:
   _ground:
     serializedVersion: 2
     m_Bits: 8
-  _maxSlopeAngle: 0
+  _maxSlopeAngle: 60
   _orientation: {fileID: 7238088810028651136}
   _state: 0
   Grounded: 0
