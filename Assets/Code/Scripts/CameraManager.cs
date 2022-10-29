@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-
     
     [SerializeField] private GameObject _realPlayer;
     [SerializeField] private GameObject _realPlayerCamera;
@@ -46,14 +45,18 @@ public class CameraManager : MonoBehaviour
     {
         if (Input.GetKeyDown(_activation))
         {
-            _realPlayerCamera.SetActive(!_activeRealPlayer);
-            _realPlayerMovement.ActivatePlayer(!_activeRealPlayer);
-            _realMouseLook.ActivateMouseLook(!_activeRealPlayer);
-            
-            _noClipPlayerCamera.SetActive(_activeRealPlayer);
-            _noClipMouseLook.ActivateMouseLook(_activeRealPlayer);
-            
-            _activeRealPlayer = !_activeRealPlayer;
+            SwitchCamera();
         }
+    }
+    public void SwitchCamera()
+    {
+        _realPlayerCamera.SetActive(!_activeRealPlayer);
+        _realPlayerMovement.ActivatePlayer(!_activeRealPlayer);
+        _realMouseLook.ActivateMouseLook(!_activeRealPlayer);
+            
+        _noClipPlayerCamera.SetActive(_activeRealPlayer);
+        _noClipMouseLook.ActivateMouseLook(_activeRealPlayer);
+            
+        _activeRealPlayer = !_activeRealPlayer;
     }
 }
