@@ -49,14 +49,16 @@ public class NoclipMovement : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+        _initRotation = _transform.eulerAngles;
+        _initPosition = _transform.position;
 
     }
 
-    private void Start()
+    /*private void Start()
     {
         _initRotation = _transform.eulerAngles;
         _initPosition = _transform.position;
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
@@ -103,6 +105,12 @@ public class NoclipMovement : MonoBehaviour
             _transform.position = _initPosition;
             _transform.eulerAngles = _initRotation;
         }
+    }
+
+    public void SetRespownPosition(Vector3 position, Vector3 orientation)
+    {
+        _initPosition = position;
+        _initRotation = orientation;
     }
 
 }

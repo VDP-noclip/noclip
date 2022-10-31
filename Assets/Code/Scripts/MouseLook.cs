@@ -55,8 +55,15 @@ public class MouseLook : MonoBehaviour
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
         
             // rotate camera and orientation
-            _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+            /*This order is needed because if the object is the same, the second assign value overwrites the values of the first one.
+            If the object is different, the order is irrelevant*/
             _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+            _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+            
+            
+                
+            
+            
         }
     }
 

@@ -37,8 +37,7 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private float _maxSlopeAngle;
     private RaycastHit _slopeHit;
     private bool _exitingSlope;
-
-    [SerializeField] private Transform _orientation;
+    
     
     // It's true if is the realbody, it's false if is the noclip body
     private bool _currentPlayerBody = true;
@@ -109,7 +108,9 @@ public class RealityMovement : MonoBehaviour
 
             // handle drag
             if (_grounded || _groundedOnSlope) //needed to make slopes higher than 45 degrees feel not slippery but to jump there UserInput should be modified
-            //IMPORTANT slopes higher than about 80 degrees are fundamentally broken because they enable drag free movement but are still generating binding reaction (reazione vincolare), that is because the function that checks if player is on a slope doesn't return a normal vector if the slope angle is that high.
+            //IMPORTANT slopes higher than about 80 degrees are fundamentally broken because they enable drag free movement
+            //but are still generating binding reaction (reazione vincolare), that is because the function that checks
+            //if player is on a slope doesn't return a normal vector if the slope angle is that high.
             //80 degrees slopes and walls are different because there is no way to exploit a wall to accelerate while in air
             {
                 _rigidbody.drag = _groundDrag;
@@ -221,7 +222,7 @@ public class RealityMovement : MonoBehaviour
     private void MovePlayer()
     {
         // calculate movement direction
-        _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
+        _moveDirection = _rigidbody.transform.forward * _verticalInput + _rigidbody.transform.right * _horizontalInput;
         
         /* Tizio - Stefano can you tell me how this works?
         // on slope
