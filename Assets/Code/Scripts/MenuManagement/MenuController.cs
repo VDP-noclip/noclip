@@ -90,6 +90,7 @@ public class MenuController : MonoBehaviour
     //  Loads a previously saved level. When a "save" feature will be added, this will finally work. For now, it's a placeholder.
     public void ResumeGameDialogYes()
     {
+        // From a design perspective, when a saved level is found the resume button should become more visible. This will be dealt with when polishing.
         if (PlayerPrefs.HasKey("SavedLevel"))
         {
             levelToLoad = PlayerPrefs.GetString("SavedLevel");
