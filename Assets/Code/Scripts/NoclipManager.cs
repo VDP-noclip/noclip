@@ -15,6 +15,7 @@ public class NoclipManager : MonoBehaviour
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
         _noclipObjControllers = noclipObjects.Select(
             obj => obj.GetComponent<NoclipObjController>()).ToList();
+        //disable mesh renderer of this object
     }
 
     public void EnableNoclip()
@@ -32,7 +33,7 @@ public class NoclipManager : MonoBehaviour
     public void Update()
     {
         // For debug purposes
-        if (Application.isEditor && Input.GetKeyDown(KeyCode.N))
+        if (Application.isEditor && Input.GetKeyDown(KeyCode.E))
         {
             if (NoclipEnabled) EnableNoclip();
             if (!NoclipEnabled) DisableNoclip();

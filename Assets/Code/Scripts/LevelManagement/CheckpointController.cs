@@ -11,7 +11,7 @@ public class CheckpointController : MonoBehaviour
 {
     private GameManager _gameManager;
     [SerializeField] private GameObject _gameObject;
-
+    private bool _checkpointEnabled = false;
     void Awake()
     {
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -19,18 +19,26 @@ public class CheckpointController : MonoBehaviour
     
     private void OnTriggerEnter(Collider otherObject)
     {
-        if (otherObject.CompareTag("RealityPlayer"))
-        {
-            Debug.Log("you entered checkpoint: " + gameObject.name);
-            _gameManager.SetLastCheckpointPos(transform.position);
-            Physics.SyncTransforms();
-            ChangeBlockColor();
+        if(_checkpointEnabled){
+            if (otherObject.CompareTag("RealityPlayer"))
+            {
+                _checkpointEnabled = false;
+                Debug.Log("you entered checkpoint: " + gameObject.name);
+                _gameManager.SetLastCheckpointPos(transform.position);
+                _gameManager.ActivateNextCheckpoint();
+                Physics.SyncTransforms();
+                CheckpointReached();
+            }
         }
     }
 
-    private void ChangeBlockColor(){
+    private void CheckpointReached(){
         //change color of _gameObject
         _gameObject.GetComponent<Renderer>().material.color = Color.green;
     }
 
+    public void ActivateCheckpoint(){
+        _checkpointEnabled = true;
+        _gameObject.GetComponent<Renderer>().material.color = Color.red;
+    }
 }
