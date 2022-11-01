@@ -54,6 +54,11 @@ public class CameraManager : MonoBehaviour
             _noClipMouseLook.ActivateMouseLook(_activeRealPlayer);
             
             _activeRealPlayer = !_activeRealPlayer;
+            if (_activeRealPlayer){
+                //move noclipcamera to realplayercamera
+                _noClipPlayerCamera.transform.position = _realPlayerCamera.transform.position;
+                _noClipPlayerCamera.transform.rotation = _realPlayerCamera.transform.rotation;  
+            }
         }
     }
 }
