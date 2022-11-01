@@ -8,10 +8,10 @@ using UnityEditor;
 
 public class MenuController : MonoBehaviour
 {
-    /*
-     * This is the Menu Controller: a centralized structure where every menu element resides.
-     * This implies sliders, buttons, popups and text. It also applies eventual modified settings (es.: SetResolution).
-     */
+    /// <summary>
+    /// This is the Menu Controller: a centralized structure where every menu element resides.
+    /// This implies sliders, buttons, popups and text. It also applies eventual modified settings (es.: SetResolution).
+    /// </summary>
     
     [Header("Gameplay Settings")] 
     [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
@@ -55,7 +55,7 @@ public class MenuController : MonoBehaviour
 
     private Resolution[] resolutions;
 
-    //When the Menu starts the game will iterate through various available resolutions. When done, it'll set the settings' dropdown menu (graphics) to whathever resolution has been found.
+    //  When the Menu starts the game will iterate through various available resolutions. When done, it'll set the settings' dropdown menu (graphics) to whathever resolution has been found.
     private void Start()
     {
         resolutions = Screen.resolutions;
@@ -81,19 +81,28 @@ public class MenuController : MonoBehaviour
         resolutionDropdown.RefreshShownValue();
     }
     
-    //Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
+    //  Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
     public void StartGameDialogYes()
     {
         SceneManager.LoadScene(_newGameLevel);
     }
 
-    //Loads a previously saved level. When a "save" feature will be added, this will finally work. For now, it's a placeholder.
+    //  Loads a previously saved level. When a "save" feature will be added, this will finally work. For now, it's a placeholder.
     public void ResumeGameDialogYes()
     {
+        // From a design perspective, when a saved level is found the resume button should become more visible. This will be dealt with when polishing.
         if (PlayerPrefs.HasKey("SavedLevel"))
         {
             levelToLoad = PlayerPrefs.GetString("SavedLevel");
-            SceneManager.LoadScene(levelToLoad);
+            
+            if (Application.CanStreamedLevelBeLoaded(levelToLoad))
+            {
+                SceneManager.LoadScene(levelToLoad);
+            }
+            else
+            {
+                noSavedGameDialog.SetActive(true);
+            }
         }
         else
         {
@@ -101,16 +110,13 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    //Quits the game.
+    //  Quits the game.
     public void QuitGameButton()
     {
         Application.Quit();
     }
 
-    /*
-     * Various setters.
-     * These change the visual side of the menu, for example the amount of brightness shown in numbers or if fullscreen is checked or not.
-     */
+    //  Various setters; these change the visual side of the menu, for example the amount of brightness shown in numbers or if fullscreen is checked or not.
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
@@ -140,7 +146,7 @@ public class MenuController : MonoBehaviour
         controllerSensitivityTextValue.text = _sensitivity.ToString("0");
     }
     
-    //Applies changes.
+    //  Applies changes.
     public void GraphicsApply()
     {
         PlayerPrefs.SetFloat("masterBrightness", _brightnessLevel);
@@ -174,7 +180,7 @@ public class MenuController : MonoBehaviour
         StartCoroutine(ConfirmationBox());
     }
 
-    //When prompted, the player can reset various settings' values. This button changes based on the menutype it's given.
+    //  When prompted, the player can reset various settings' values. This button changes based on the menutype it's given.
     public void ResetButton(string MenuType)
     {
         if (MenuType == "Audio")
@@ -215,7 +221,7 @@ public class MenuController : MonoBehaviour
         }
     }
     
-    //Returns an image on the bottom-left. Lets the player know settings have changed.
+    //  Returns an image on the bottom-left. Lets the player know settings have changed.
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);

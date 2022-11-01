@@ -7,11 +7,11 @@ using TMPro;
 
 public class LoadPrefs : MonoBehaviour
 {
-    /*
-     * LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
-     * If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
-     * Note: in some cases there are functions missing.
-     */
+    /// <summary>
+    /// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
+    /// If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
+    /// Note: in some cases there are functions missing.
+    /// </summary>
     
     [Header("General Settings")] 
     [SerializeField] private bool canUse = false;
@@ -85,7 +85,7 @@ public class LoadPrefs : MonoBehaviour
 
                 brightnessTextValue.text = localBrightness.ToString("0.0");
                 brightnessSlider.value = localBrightness;
-                //To do: change brightness handler
+                //  To do: change brightness handler
             }
 
             if (PlayerPrefs.HasKey("masterSensitivity"))
@@ -102,13 +102,13 @@ public class LoadPrefs : MonoBehaviour
                 if (PlayerPrefs.GetInt("masterInvertY") == 1)
                 {
                     invertYToggle.isOn = true;
-                    //To do: Invert Y handler
+                    //  To do: Invert Y handler
                 }
 
                 else
                 {
                     invertYToggle.isOn = false;
-                    //To do: Invert Y handler
+                    //  To do: Invert Y handler
                 }
             }
         }

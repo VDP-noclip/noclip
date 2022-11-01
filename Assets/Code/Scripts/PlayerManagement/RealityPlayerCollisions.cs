@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RealityPlayerCollisions : MonoBehaviour
 {
@@ -41,6 +42,15 @@ public class RealityPlayerCollisions : MonoBehaviour
         else if (other.CompareTag("OutOfBounds"))
         {
             _respawningManager.RespawnAllTransforms();
+        }
+        else if (other.CompareTag("ProgressSaver"))
+        {
+            Debug.Log("I'm saving this scene: " + SceneManager.GetActiveScene().name);
+            PlayerPrefs.SetString("SavedLevel", SceneManager.GetActiveScene().name);
+        }
+        else if (other.CompareTag(("GoalPlatform")))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
     
