@@ -14,9 +14,6 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private GameObject _noClipPlayerCamera;
     private MouseLook _noClipMouseLook;
 
-
-    [SerializeField] private KeyCode _activation = KeyCode.P;
-
     private bool _activeRealPlayer;
     private void Awake()
     {
@@ -39,15 +36,7 @@ public class CameraManager : MonoBehaviour
         
         _activeRealPlayer = true;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(_activation))
-        {
-            SwitchCamera();
-        }
-    }
+    
     public void SwitchCamera()
     {
         _realPlayerCamera.SetActive(!_activeRealPlayer);
