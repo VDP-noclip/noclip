@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
         //print all checkpoints
         foreach (var checkpoint in _checkpointIndexPointer)
         {
-            Debug.Log(checkpoint);
+            //Debug.Log(checkpoint);
         }
         ActivateNextCheckpoint();
     }
@@ -54,6 +54,12 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Setting new checkpoint");
         _lastCheckPointPos = pos;
+        Debug.Log($"Checkpoint position: {_lastCheckPointPos}");
+    }
+
+    public Vector3 GetLastCheckpointPos()
+    {
+        return _lastCheckPointPos;
     }
 
     //function to get integers from the names of checkpointControllers
@@ -75,11 +81,11 @@ public class GameManager : MonoBehaviour
                 int indexInt = int.Parse(index);
             //append index to array
                 indexes.Add(indexInt);
-                Debug.Log("Checkpoint number " + indexes[indexes.Count - 1] + " found");
+                //Debug.Log("Checkpoint number " + indexes[indexes.Count - 1] + " found");
                 validCheckpoints.Add(indexInt, checkpoint);
             }
             catch{
-                Debug.Log(_rawCheckpointControllers[i].gameObject + "is not a valid checkpoint, please rename it to contain a number");
+                //Debug.Log(_rawCheckpointControllers[i].gameObject + "is not a valid checkpoint, please rename it to contain a number");
             }
         }
         return validCheckpoints;
@@ -115,6 +121,11 @@ public class GameManager : MonoBehaviour
     public Vector3 GetSpawningPosition()
     {
         return _lastCheckPointPos;
+    }
+
+    public void RespawnPlayer(){
+        //set player position to last checkpoint
+        _player.transform.position = _lastCheckPointPos;
     }
     
 }

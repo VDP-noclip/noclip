@@ -4,13 +4,14 @@ using UnityEngine.SceneManagement;
 
 public class RealityPlayerCollisions : MonoBehaviour
 {
-
+    private GameManager _gameManager;
     private RespawningManager _respawningManager;
     private NoclipManager _noclipManager;
     private bool _touchingNoclipEnabler;
     
     private void Awake()
     {
+        _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         _noclipManager = GetComponent<NoclipManager>();
         _respawningManager = GetComponentInParent<RespawningManager>();
     }
@@ -41,7 +42,8 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("OutOfBounds"))
         {
-            _respawningManager.RespawnAllTransforms();
+            //_respawningManager.RespawnAllTransforms();
+            _gameManager.RespawnPlayer();
         }
         else if (other.CompareTag("ProgressSaver"))
         {

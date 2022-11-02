@@ -28,6 +28,8 @@ public class CheckpointController : MonoBehaviour
                 _gameManager.ActivateNextCheckpoint();
                 Physics.SyncTransforms();
                 CheckpointReached();
+                //disable the collider of this object
+                GetComponent<Collider>().enabled = false;
             }
         }
     }
