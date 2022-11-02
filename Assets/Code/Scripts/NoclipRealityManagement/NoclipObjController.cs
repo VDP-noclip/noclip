@@ -12,6 +12,7 @@ public class NoclipObjController : MonoBehaviour
     private void Awake()
     {
         _meshRender = GetComponent<Renderer>();
+        GetComponent<MeshRenderer>().enabled = false;
     }
     
     /// <summary>
