@@ -16,20 +16,22 @@ public class CheckpointController : MonoBehaviour
     {
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
-    
-    private void OnTriggerEnter(Collider otherObject)
+
+    /// <summary>
+    /// Call this function if the player collides with the checkpoint.
+    /// </summary>
+    public void ReactToPlayerCollision()
     {
-        if(_checkpointEnabled){
-            if (otherObject.CompareTag("RealityPlayer"))
-            {
-                _checkpointEnabled = false;
-                Debug.Log("you entered checkpoint: " + gameObject.name);
-                _gameManager.SetLastCheckpointPos(transform.position);
-                _gameManager.ActivateNextCheckpoint();
-                Physics.SyncTransforms();
-                CheckpointReached();
-            }
-        }
+        if (_checkpointEnabled)
+        {
+            _checkpointEnabled = false;
+            Debug.Log("You entered checkpoint: " + gameObject.name);
+            _gameManager.ActivateNextCheckpoint();
+            Physics.SyncTransforms();
+            CheckpointReached();
+            //disable the collider of this object
+            GetComponent<Collider>().enabled = false;
+        } 
     }
 
     private void CheckpointReached(){
