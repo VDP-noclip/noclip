@@ -38,9 +38,10 @@ public class NoclipMovement : MonoBehaviour
 
     private Transform _transform;
     private CameraManager _cameraManager;
+    private Transform _noclipCamera;
     
     // It's true if is the noclipPlayer, it's false if is the reality body
-    private bool _currentPlayer = true;
+    private bool _currentPlayer = false;
     
     // These positions depends o the level 
     private Vector3 _initRotation;
@@ -51,6 +52,7 @@ public class NoclipMovement : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+        _noclipCamera = _transform.GetChild(0).GetComponent<Transform>();
         _initRotation = _transform.eulerAngles;
         _initPosition = _transform.position;
 
@@ -104,8 +106,6 @@ public class NoclipMovement : MonoBehaviour
         if (other.CompareTag("RealityPlayer") && _currentPlayer)
         {
             _cameraManager.SwitchCamera();
-            _transform.position = _initPosition;
-            _transform.eulerAngles = _initRotation;
         }
     }
 
@@ -114,10 +114,11 @@ public class NoclipMovement : MonoBehaviour
         _currentPlayer = active;
     }
 
-    public void SetRaspownPosition(Vector3 position, Vector3 orientation)
+    public void SetPositionAndRotation(Vector3 position, Vector3 orientation, Vector3 cameraOrientation)
     {
-        _initPosition = position;
-        _initRotation = orientation;
+        _transform.position = position;
+        _transform.eulerAngles = orientation;
+        _noclipCamera.transform.eulerAngles = cameraOrientation;
     }
 
 }

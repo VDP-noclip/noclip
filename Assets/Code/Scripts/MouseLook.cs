@@ -7,7 +7,6 @@ public class MouseLook : MonoBehaviour
     private bool _activeScript = true;
     
     // link camera to body
-    [Tooltip("The script is currently active")]
     [SerializeField] private Transform _orientation;
     
     // set mouse sensibility in X and Y axis
@@ -59,10 +58,6 @@ public class MouseLook : MonoBehaviour
             If the object is different, the order is irrelevant*/
             _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
             _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
-            
-            
-                
-            
             
         }
     }

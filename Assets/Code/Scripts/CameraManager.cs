@@ -19,6 +19,7 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private KeyCode _activation = KeyCode.P;
 
+    //Thi boolean is true when the realPlayer is active, so the game is in the reality mode
     private bool _activeRealPlayer;
     private void Awake()
     {
@@ -61,10 +62,14 @@ public class CameraManager : MonoBehaviour
         
         //Activate/disactivate the noclipPlayer and his camera
         _noclipCamera.SetActive(_activeRealPlayer);
-        _noclipMouseLook.ActivateMouseLook(_activeRealPlayer);
         _noclipMovement.ActivatePlayer(_activeRealPlayer);
-        _noclipMovement.SetRaspownPosition(_realPlayer.transform.position, _realPlayer.transform.eulerAngles); //Set the noclip position in the realBody position
-            
+        _noclipMouseLook.ActivateMouseLook(_activeRealPlayer);
+
+        if (_activeRealPlayer) //When the switch from reality mode to noclip mode happened
+        {
+            _noclipMovement.SetPositionAndRotation(_realPlayer.transform.position, _realPlayer.transform.eulerAngles, _realPlayerCamera.transform.eulerAngles); //Set the noclip position in the realBody position
+        }
+
         _activeRealPlayer = !_activeRealPlayer;
         
     }
