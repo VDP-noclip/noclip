@@ -39,6 +39,8 @@ public class NoclipMovement : MonoBehaviour
     private Transform _transform;
     private CameraManager _cameraManager;
     
+    // It's true if is the noclipPlayer, it's false if is the reality body
+    private bool _currentPlayer = true;
     
     // These positions depends o the level 
     private Vector3 _initRotation;
@@ -66,7 +68,7 @@ public class NoclipMovement : MonoBehaviour
         if (!_active)
             return;
         
-        if (_enableMovement)
+        if (_enableMovement && _currentPlayer)
         {
             Vector3 deltaPosition = Vector3.zero;
             float currentSpeed = _movementSpeed;
@@ -99,7 +101,7 @@ public class NoclipMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("RealityPlayer"))
+        if (other.CompareTag("RealityPlayer") && _currentPlayer)
         {
             _cameraManager.SwitchCamera();
             _transform.position = _initPosition;
@@ -107,7 +109,12 @@ public class NoclipMovement : MonoBehaviour
         }
     }
 
-    public void SetRespownPosition(Vector3 position, Vector3 orientation)
+    public void ActivatePlayer(bool active)
+    {
+        _currentPlayer = active;
+    }
+
+    public void SetRaspownPosition(Vector3 position, Vector3 orientation)
     {
         _initPosition = position;
         _initRotation = orientation;
