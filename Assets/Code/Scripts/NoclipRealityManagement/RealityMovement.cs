@@ -51,8 +51,6 @@ public class RealityMovement : MonoBehaviour
 
     private Transform _transform;
     private Rigidbody _rigidbody;      // set the rigidbody
-    private NoclipManager _noclipManager;
-    private bool _touchingNoclipEnabler;
 
     // player states
     [SerializeField] private MovementState _state;     // current player state
@@ -81,7 +79,6 @@ public class RealityMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.AddForce(_slopeGravity, ForceMode.Force);
         _transform = GetComponent<Transform>();
-        _noclipManager = GetComponent<NoclipManager>();
 
         //TOREMOVE
         //_realityBodyCollider = GetComponentInChildren<CapsuleCollider>();
@@ -131,17 +128,6 @@ public class RealityMovement : MonoBehaviour
                 else*/
                     _rigidbody.drag = 0;
             }
-            if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
-            {
-                if (_noclipManager.NoclipEnabled)
-                {
-                    _noclipManager.DisableNoclip();
-                }
-                else
-                {
-                    _noclipManager.EnableNoclip();
-                }
-            }
         }
     }
 
@@ -164,21 +150,6 @@ public class RealityMovement : MonoBehaviour
         _currentPlayerBody = active;
     }
 
-    void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("NoclipEnabler"))
-        {
-            _touchingNoclipEnabler = true;
-        }
-    }
-    
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("NoclipEnabler"))
-        {
-            _touchingNoclipEnabler = false;
-        }
-    }
-    
     /*private void OnCollisionStay(Collision collision) {
         //if colliding with a ground object set drag to ground drag
         //collision.gameObject Layer get name
@@ -373,14 +344,5 @@ public class RealityMovement : MonoBehaviour
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
-    }
-    
-    /// <summary>
-    /// Check if we can call noclip method. If we are on the platform, we can call the method to enable/disable the
-    /// noclip mode!
-    /// </summary>
-    private bool CanCallNoclip()
-    {
-        return _touchingNoclipEnabler;
     }
 }

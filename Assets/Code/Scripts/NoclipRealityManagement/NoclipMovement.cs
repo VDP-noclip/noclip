@@ -37,14 +37,25 @@ public class NoclipMovement : MonoBehaviour
     private KeyCode _moveDown = KeyCode.Q;
 
     private Transform _transform;
+    private CameraManager _cameraManager;
     
+    
+    // These positions depends o the level 
     private Vector3 _initRotation;
+    private Vector3 _initPosition;
     
     
     private void Awake()
     {
         _transform = GetComponent<Transform>();
-        
+        _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+
+    }
+
+    private void Start()
+    {
+        _initRotation = _transform.eulerAngles;
+        _initPosition = _transform.position;
     }
 
     // Update is called once per frame
@@ -81,6 +92,16 @@ public class NoclipMovement : MonoBehaviour
             
             _transform.position += deltaPosition * (currentSpeed * Time.deltaTime);
             
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("RealityPlayer"))
+        {
+            _cameraManager.SwitchCamera();
+            _transform.position = _initPosition;
+            _transform.eulerAngles = _initRotation;
         }
     }
 
