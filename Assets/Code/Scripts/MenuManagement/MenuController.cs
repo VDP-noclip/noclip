@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.PostProcessing;
 using TMPro;
-using UnityEditor;
+using UnityEditor;;
 
 public class MenuController : MonoBehaviour
 {
@@ -23,16 +24,10 @@ public class MenuController : MonoBehaviour
     [Header("Toggle Settings")] [SerializeField]
     private Toggle invertYToggle = null;
 
-    [Header("Graphics Settings")] 
-    [SerializeField] private Slider brightnessSlider = null;
-    [SerializeField] private TMP_Text brightnessTextValue = null;
-    [SerializeField] private float defaultBrightness = 1;
-
-    [Space(10)] 
+    [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
     [SerializeField] private Toggle fullScreenToggle;
     
-
     private int _qualityLevel;
     private bool _isFullScreen;
     private float _brightnessLevel;
@@ -122,11 +117,6 @@ public class MenuController : MonoBehaviour
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
-    public void SetBrightness(float brightness)
-    {
-        _brightnessLevel = brightness;
-        brightnessTextValue.text = brightness.ToString("0.0");
-    }
     public void SetFullScreen(bool isFullscreen)
     {
         _isFullScreen = isFullscreen;
@@ -140,18 +130,15 @@ public class MenuController : MonoBehaviour
         AudioListener.volume = volume;
         volumeTextValue.text = volume.ToString("0.0");
     }
-    public void SetControllerSensitivity(float _sensitivity)
+    public void SetControllerSensitivity(float sensitivity)
     {
-        mainControllerSensitivity = Mathf.RoundToInt(_sensitivity);
-        controllerSensitivityTextValue.text = _sensitivity.ToString("0");
+        mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
+        controllerSensitivityTextValue.text = sensitivity.ToString("0");
     }
     
     //  Applies changes.
     public void GraphicsApply()
     {
-        PlayerPrefs.SetFloat("masterBrightness", _brightnessLevel);
-        //Insert brigthness change here
-        
         PlayerPrefs.SetInt("masterQuality", _qualityLevel);
         QualitySettings.SetQualityLevel(_qualityLevel);
         
@@ -204,6 +191,7 @@ public class MenuController : MonoBehaviour
 
         if (MenuType == "Graphics")
         {
+            Screen.brightness = defaultBrightness;
             brightnessSlider.value = defaultBrightness;
             brightnessTextValue.text = defaultBrightness.ToString("0.0");
 

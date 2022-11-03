@@ -78,15 +78,7 @@ public class LoadPrefs : MonoBehaviour
                     fullScreenToggle.isOn = false;
                 }
             }
-
-            if (PlayerPrefs.HasKey("masterBrightness"))
-            {
-                float localBrightness = PlayerPrefs.GetFloat("masterBrightness");
-
-                brightnessTextValue.text = localBrightness.ToString("0.0");
-                brightnessSlider.value = localBrightness;
-                //  To do: change brightness handler
-            }
+            
 
             if (PlayerPrefs.HasKey("masterSensitivity"))
             {
