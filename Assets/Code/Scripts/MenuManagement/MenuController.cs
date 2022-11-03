@@ -87,7 +87,7 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene(_newGameLevel);
     }
 
-    //  Loads a previously saved level. When a "save" feature will be added, this will finally work. For now, it's a placeholder.
+    //  Loads a previously saved level.
     public void ResumeGameDialogYes()
     {
         // From a design perspective, when a saved level is found the resume button should become more visible. This will be dealt with when polishing.
@@ -135,10 +135,10 @@ public class MenuController : MonoBehaviour
     {
         _qualityLevel = qualityIndex;
     }
-    public void SetVolume(float _volume)
+    public void SetVolume(float volume)
     {
-        AudioListener.volume = _volume;
-        volumeTextValue.text = _volume.ToString("0.0");
+        AudioListener.volume = volume;
+        volumeTextValue.text = volume.ToString("0.0");
     }
     public void SetControllerSensitivity(float _sensitivity)
     {
