@@ -60,15 +60,15 @@ public class CameraManager : MonoBehaviour
         _realPlayerMovement.ActivatePlayer(!_activeRealPlayer);
         _realMouseLook.ActivateMouseLook(!_activeRealPlayer);
         
-        //Activate/disactivate the noclipPlayer and his camera
-        _noclipCamera.SetActive(_activeRealPlayer);
-        _noclipMovement.ActivatePlayer(_activeRealPlayer);
-        _noclipMouseLook.ActivateMouseLook(_activeRealPlayer);
-
         if (_activeRealPlayer) //When the switch from reality mode to noclip mode happened
         {
             _noclipMovement.SetPositionAndRotation(_realPlayer.transform.position, _realPlayer.transform.rotation, _realPlayerCamera.transform.rotation); //Set the noclip position in the realBody position
         }
+        
+        //Activate/disactivate the noclipPlayer and his camera
+        _noclipCamera.SetActive(_activeRealPlayer);
+        _noclipMovement.ActivatePlayer(_activeRealPlayer);
+        _noclipMouseLook.ActivateMouseLook(_activeRealPlayer);
 
         _activeRealPlayer = !_activeRealPlayer;
         
