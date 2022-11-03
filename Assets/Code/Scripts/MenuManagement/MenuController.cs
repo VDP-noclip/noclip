@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 using TMPro;
-using UnityEditor;;
+using UnityEditor;
 
 public class MenuController : MonoBehaviour
 {
@@ -164,6 +164,7 @@ public class MenuController : MonoBehaviour
         }
 
         PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+
         StartCoroutine(ConfirmationBox());
     }
 
@@ -191,10 +192,6 @@ public class MenuController : MonoBehaviour
 
         if (MenuType == "Graphics")
         {
-            Screen.brightness = defaultBrightness;
-            brightnessSlider.value = defaultBrightness;
-            brightnessTextValue.text = defaultBrightness.ToString("0.0");
-
             qualityDropdown.value = 1;
             QualitySettings.SetQualityLevel((1));
 

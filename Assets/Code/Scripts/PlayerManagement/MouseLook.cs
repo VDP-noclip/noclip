@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MouseLook : MonoBehaviour
@@ -15,7 +16,8 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float _xSensitivity = 50f;
     [SerializeField] private float _ySensitivity = 50f;
     [SerializeField] private float _sensitivity = 1f;
-
+    
+        
     // It's true if the camera is active, false otherwise
     private bool _activeCurrently;
     private Transform _transform;
@@ -25,6 +27,11 @@ public class MouseLook : MonoBehaviour
     
     private void Awake()
     {
+        if (PlayerPrefs.HasKey("masterSensitivity"))
+        {
+            float _localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
+            _sensitivity = _sensitivity * _localSensitivity;
+        }
         _transform = GetComponent<Transform>();
     }
     

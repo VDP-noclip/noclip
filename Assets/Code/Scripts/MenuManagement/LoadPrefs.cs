@@ -22,10 +22,6 @@ public class LoadPrefs : MonoBehaviour
     [SerializeField] private TMP_Text volumeTextValue = null;
     [SerializeField] private Slider volumeSlider = null;
     
-    [Header("Brightness Settings")]
-    [SerializeField] private Slider brightnessSlider = null;
-    [SerializeField] private TMP_Text brightnessTextValue = null;
-    
     [Header("Quality Level Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
     
