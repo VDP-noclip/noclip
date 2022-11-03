@@ -37,7 +37,7 @@ public class NoclipMovement : MonoBehaviour
     private KeyCode _moveDown = KeyCode.Q;
 
     private Transform _transform;
-    private CameraManager _cameraManager;
+    private NoclipManager _noclipManager;
     
     
     // These positions depends o the level 
@@ -48,7 +48,7 @@ public class NoclipMovement : MonoBehaviour
     private void Awake()
     {
         _transform = GetComponent<Transform>();
-        _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+        _noclipManager = FindObjectOfType<NoclipManager>();
 
     }
 
@@ -99,9 +99,15 @@ public class NoclipMovement : MonoBehaviour
     {
         if (other.CompareTag("RealityPlayer"))
         {
-            _cameraManager.SwitchCamera();
-            _transform.position = _initPosition;
-            _transform.eulerAngles = _initRotation;
+            _noclipManager.SetPlayerCanDisableNoclip(true);
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("RealityPlayer"))
+        {
+            _noclipManager.SetPlayerCanDisableNoclip(false);
         }
     }
 
