@@ -60,10 +60,23 @@ public class MouseLook : MonoBehaviour
             _yRotation += mouseX;
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
-        
-            // rotate camera and orientation
-            _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
-            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+
+            if (PlayerPrefs.HasKey("masterInvertY"))
+            {
+                if (PlayerPrefs.GetInt("masterInvertY") == 1)
+                {
+                    // invert camera rotation and orientation
+                    _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
+                    _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+                }
+                else
+                {
+                    // rotate camera and orientation
+                    _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+                    _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+                }
+            }
+            
         }
     }
 
