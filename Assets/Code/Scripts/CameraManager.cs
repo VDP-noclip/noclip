@@ -67,7 +67,7 @@ public class CameraManager : MonoBehaviour
 
         if (_activeRealPlayer) //When the switch from reality mode to noclip mode happened
         {
-            _noclipMovement.SetPositionAndRotation(_realPlayer.transform.position, _realPlayer.transform.eulerAngles, _realPlayerCamera.transform.eulerAngles); //Set the noclip position in the realBody position
+            _noclipMovement.SetPositionAndRotation(_realPlayer.transform.position, _realPlayer.transform.rotation, _realPlayerCamera.transform.rotation); //Set the noclip position in the realBody position
         }
 
         _activeRealPlayer = !_activeRealPlayer;

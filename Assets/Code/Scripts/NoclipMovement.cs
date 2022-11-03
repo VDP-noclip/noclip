@@ -114,11 +114,11 @@ public class NoclipMovement : MonoBehaviour
         _currentPlayer = active;
     }
 
-    public void SetPositionAndRotation(Vector3 position, Vector3 orientation, Vector3 cameraOrientation)
+    public void SetPositionAndRotation(Vector3 position, Quaternion orientation, Quaternion cameraOrientation)
     {
         _transform.position = position;
-        _transform.eulerAngles = orientation;
-        _noclipCamera.transform.eulerAngles = cameraOrientation;
+        _transform.rotation = orientation;
+        _noclipCamera.transform.rotation = cameraOrientation;
     }
 
 }
