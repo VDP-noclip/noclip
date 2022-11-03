@@ -1534,8 +1534,8 @@ RectTransform:
   m_Father: {fileID: 619624905}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4106,7 +4106,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0.000077724, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5511,7 +5511,7 @@ MonoBehaviour:
   defaultVolume: 1
   confirmationPrompt: {fileID: 2054656209}
   noSavedGameDialog: {fileID: 651551500}
-  _newGameLevel: Scene_1
+  _newGameLevel: Scene_3_new_respawn_structure
   resolutionDropdown: {fileID: 1569892673}
 --- !u!4 &771194625
 Transform:
@@ -12606,7 +12606,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2003573578
 RectTransform:
   m_ObjectHideFlags: 0
