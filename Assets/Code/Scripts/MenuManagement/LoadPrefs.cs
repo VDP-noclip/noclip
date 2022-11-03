@@ -10,7 +10,9 @@ public class LoadPrefs : MonoBehaviour
     /// <summary>
     /// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
     /// If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
-    /// Note: in some cases there are functions missing.
+    /// 
+    /// You may see PlayerPrefs scattered around other scripts; that's because the checks in LoadPrefs are
+    /// mostly made to change the menu's state.
     /// </summary>
     
     [Header("General Settings")] 
@@ -75,7 +77,7 @@ public class LoadPrefs : MonoBehaviour
                 }
             }
             
-
+            // More infos about these two checks in MouseLook.cs.
             if (PlayerPrefs.HasKey("masterSensitivity"))
             {
                 float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
@@ -84,19 +86,17 @@ public class LoadPrefs : MonoBehaviour
                 controllerSensitivitySlider.value = localSensitivity;
                 menuController.mainControllerSensitivity = Mathf.RoundToInt(localSensitivity);
             }
-
+            
             if (PlayerPrefs.HasKey("masterInvertY"))
             {
                 if (PlayerPrefs.GetInt("masterInvertY") == 1)
                 {
                     invertYToggle.isOn = true;
-                    //  To do: Invert Y handler
                 }
 
                 else
                 {
                     invertYToggle.isOn = false;
-                    //  To do: Invert Y handler
                 }
             }
         }

@@ -12,6 +12,9 @@ public class MenuController : MonoBehaviour
     /// <summary>
     /// This is the Menu Controller: a centralized structure where every menu element resides.
     /// This implies sliders, buttons, popups and text. It also applies eventual modified settings (es.: SetResolution).
+    /// 
+    /// Important note: brightness has been temporarily ditched. PostProcessing effects will be
+    /// evaluated in the future. Keep an eye on the repo's issues.
     /// </summary>
     
     [Header("Gameplay Settings")] 
@@ -50,7 +53,8 @@ public class MenuController : MonoBehaviour
 
     private Resolution[] resolutions;
 
-    //  When the Menu starts the game will iterate through various available resolutions. When done, it'll set the settings' dropdown menu (graphics) to whathever resolution has been found.
+    // When the Menu starts the game will iterate through various available resolutions.
+    // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
     private void Start()
     {
         resolutions = Screen.resolutions;
@@ -76,13 +80,13 @@ public class MenuController : MonoBehaviour
         resolutionDropdown.RefreshShownValue();
     }
     
-    //  Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
+    // Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
     public void StartGameDialogYes()
     {
         SceneManager.LoadScene(_newGameLevel);
     }
 
-    //  Loads a previously saved level.
+    // Loads a previously saved level.
     public void ResumeGameDialogYes()
     {
         // From a design perspective, when a saved level is found the resume button should become more visible. This will be dealt with when polishing.
@@ -105,13 +109,14 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    //  Quits the game.
+    // Quits the game.
     public void QuitGameButton()
     {
         Application.Quit();
     }
 
-    //  Various setters; these change the visual side of the menu, for example the amount of brightness shown in numbers or if fullscreen is checked or not.
+    // Various setters; these change the visual side of the menu, for example
+    // the amount of brightness shown in numbers or if fullscreen is checked or not.
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
@@ -136,7 +141,7 @@ public class MenuController : MonoBehaviour
         controllerSensitivityTextValue.text = sensitivity.ToString("0");
     }
     
-    //  Applies changes.
+    // Applies changes. These actually save the information.
     public void GraphicsApply()
     {
         PlayerPrefs.SetInt("masterQuality", _qualityLevel);
@@ -168,7 +173,8 @@ public class MenuController : MonoBehaviour
         StartCoroutine(ConfirmationBox());
     }
 
-    //  When prompted, the player can reset various settings' values. This button changes based on the menutype it's given.
+    // When prompted, the player can reset various settings' values.
+    // This button changes based on the menutype it's given.
     public void ResetButton(string MenuType)
     {
         if (MenuType == "Audio")
@@ -206,7 +212,9 @@ public class MenuController : MonoBehaviour
         }
     }
     
-    //  Returns an image on the bottom-left. Lets the player know settings have changed.
+    // Returns an image on the bottom-left.
+    // Lets the player know settings have changed.
+    // A chance for a cool animation to take place, perhaps?
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);

@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    /// <summary>
+    /// Everything here is linked to how cursor input is processed and used.
+    /// Rotation, orientation, sensitivity handling and eventual added preferences such as inverted vertical axis.
+    /// </summary>
+
     [SerializeField]
     [Tooltip("The script is currently active")]
     private bool _activeScript = true;
@@ -27,10 +32,12 @@ public class MouseLook : MonoBehaviour
     
     private void Awake()
     {
+        // Checks whether there are actual sensitivity settings, and if there are
+        // it applies them by simply multiplying sensitivity with the _localSensitivity multiplier.
         if (PlayerPrefs.HasKey("masterSensitivity"))
         {
-            float _localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
-            _sensitivity = _sensitivity * _localSensitivity;
+            float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
+            _sensitivity *= localSensitivity;
         }
         _transform = GetComponent<Transform>();
     }
@@ -61,11 +68,12 @@ public class MouseLook : MonoBehaviour
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
 
+            // Checks whether there's local information about vertical axis preference.
             if (PlayerPrefs.HasKey("masterInvertY"))
             {
                 if (PlayerPrefs.GetInt("masterInvertY") == 1)
                 {
-                    // invert camera rotation and orientation
+                    // invert camera only on the vertical axis
                     _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
                     _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
                 }
