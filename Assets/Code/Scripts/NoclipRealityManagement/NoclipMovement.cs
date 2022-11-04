@@ -39,6 +39,7 @@ public class NoclipMovement : MonoBehaviour
     private Transform _transform;
     private CameraManager _cameraManager;
     private Transform _noclipCamera;
+    private NoclipManager _noclipManager;
     
     // It's true if is the noclipPlayer, it's false if is the reality body
     private bool _currentPlayer = false;
@@ -51,10 +52,8 @@ public class NoclipMovement : MonoBehaviour
     private void Awake()
     {
         _transform = GetComponent<Transform>();
-        _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+        _noclipManager = FindObjectOfType<NoclipManager>();
         _noclipCamera = _transform.GetChild(0).GetComponent<Transform>();
-        _initRotation = _transform.eulerAngles;
-        _initPosition = _transform.position;
 
     }
 
@@ -105,7 +104,15 @@ public class NoclipMovement : MonoBehaviour
     {
         if (other.CompareTag("RealityPlayer") && _currentPlayer)
         {
-            _cameraManager.SwitchCamera();
+            _noclipManager.SetPlayerCanDisableNoclip(true);
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("RealityPlayer"))
+        {
+            _noclipManager.SetPlayerCanDisableNoclip(false);
         }
     }
 

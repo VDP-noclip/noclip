@@ -44,15 +44,7 @@ public class CameraManager : MonoBehaviour
         
         _activeRealPlayer = true;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(_activation))
-        {
-            SwitchCamera();
-        }
-    }
+    
     public void SwitchCamera()
     {
         //Activate/disactivate the realPlayer and his camera
@@ -71,6 +63,5 @@ public class CameraManager : MonoBehaviour
         _noclipMouseLook.ActivateMouseLook(_activeRealPlayer);
 
         _activeRealPlayer = !_activeRealPlayer;
-        
     }
 }
