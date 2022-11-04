@@ -53,15 +53,9 @@ public class NoclipMovement : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();
-        _noclipCamera = _transform.GetChild(0).GetComponent<Transform>();
+        _noclipCamera = GetComponent<Transform>();
 
     }
-
-    /*private void Start()
-    {
-        _initRotation = _transform.eulerAngles;
-        _initPosition = _transform.position;
-    }*/
 
     // Update is called once per frame
     void Update()
@@ -121,10 +115,9 @@ public class NoclipMovement : MonoBehaviour
         _currentPlayer = active;
     }
 
-    public void SetPositionAndRotation(Vector3 position, Quaternion orientation, Quaternion cameraOrientation)
+    public void SetPositionAndRotation(Vector3 position, Quaternion cameraOrientation)
     {
         _transform.position = position;
-        _transform.rotation = orientation;
         _noclipCamera.transform.rotation = cameraOrientation;
     }
 
