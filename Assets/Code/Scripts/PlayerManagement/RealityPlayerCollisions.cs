@@ -15,25 +15,10 @@ public class RealityPlayerCollisions : MonoBehaviour
         _respawningManager = GetComponentInParent<RespawningManager>();
     }
 
-    private void Update()
-    {
-        if (CanCallNoclip() && Input.GetKeyDown(KeyCode.E))
-        {
-            if (_noclipManager.NoclipEnabled)
-            {
-                _noclipManager.DisableNoclip();
-            }
-            else
-            {
-                _noclipManager.EnableNoclip();
-            }
-        }
-    }
-
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("NoclipEnabler"))
         {
-            _touchingNoclipEnabler = true;
+            _noclipManager.SetPlayerCanEnableNoClip(true);
         }
         else if (other.CompareTag("Checkpoint"))
         {
@@ -59,16 +44,7 @@ public class RealityPlayerCollisions : MonoBehaviour
     {
         if (other.CompareTag("NoclipEnabler"))
         {
-            _touchingNoclipEnabler = false;
+            _noclipManager.SetPlayerCanEnableNoClip(false);
         }
-    }
-
-    /// <summary>
-    /// Check if we can call noclip method. If we are on the platform, we can call the method to enable/disable the
-    /// noclip mode!
-    /// </summary>
-    private bool CanCallNoclip()
-    {
-        return _touchingNoclipEnabler;
     }
 }

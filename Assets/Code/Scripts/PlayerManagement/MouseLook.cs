@@ -67,21 +67,24 @@ public class MouseLook : MonoBehaviour
             _yRotation += mouseX;
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
-
+            
             // Checks whether there's local information about vertical axis preference.
             if (PlayerPrefs.HasKey("masterInvertY"))
             {
+                // The following rotation order is needed because if the object is the same,
+                // the second assign value overwrites the values of the first one. If the object is different, the order is irrelevant.
+                
                 if (PlayerPrefs.GetInt("masterInvertY") == 1)
                 {
                     // invert camera only on the vertical axis
-                    _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
                     _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+                    _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
                 }
                 else
                 {
                     // rotate camera and orientation
-                    _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
                     _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+                    _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
                 }
             }
             
