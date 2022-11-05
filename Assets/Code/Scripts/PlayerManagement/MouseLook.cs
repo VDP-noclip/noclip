@@ -74,7 +74,7 @@ public class MouseLook : MonoBehaviour
                 // The following rotation order is needed because if the object is the same,
                 // the second assign value overwrites the values of the first one. If the object is different, the order is irrelevant.
                 
-                if (PlayerPrefs.GetInt("masterInvertY") == 1)
+                if (PlayerPrefs.GetInt("masterInvertY"))
                 {
                     // invert camera only on the vertical axis
                     _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
