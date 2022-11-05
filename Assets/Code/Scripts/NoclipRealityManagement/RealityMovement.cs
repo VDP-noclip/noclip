@@ -118,6 +118,11 @@ public class RealityMovement : MonoBehaviour
         MovePlayer();
         //Debug.Log(_moveSpeed);
     }*/
+
+    public void ResetSpeeedOnRespawn()
+    {
+        _rigidbody.velocity = Vector3.zero;
+    }
     
     public void ActivatePlayer(bool active)
     {
