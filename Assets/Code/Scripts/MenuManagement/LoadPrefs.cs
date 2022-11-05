@@ -5,16 +5,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
+/// If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
+/// 
+/// You may see PlayerPrefs scattered around other scripts; that's because the checks in LoadPrefs are
+/// mostly made to change the menu's state.
+/// </summary>
 public class LoadPrefs : MonoBehaviour
 {
-    /// <summary>
-    /// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
-    /// If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
-    /// 
-    /// You may see PlayerPrefs scattered around other scripts; that's because the checks in LoadPrefs are
-    /// mostly made to change the menu's state.
-    /// </summary>
-    
     [Header("General Settings")] 
     [SerializeField] private bool canUse = false;
 

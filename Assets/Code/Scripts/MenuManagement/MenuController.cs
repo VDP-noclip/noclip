@@ -7,16 +7,15 @@ using UnityEngine.Rendering.PostProcessing;
 using TMPro;
 using UnityEditor;
 
+/// <summary>
+/// This is the Menu Controller: a centralized structure where every menu element resides.
+/// This implies sliders, buttons, popups and text. It also applies eventual modified settings (es.: SetResolution).
+/// 
+/// Important note: brightness has been temporarily ditched. PostProcessing effects will be
+/// evaluated in the future. Keep an eye on the repo's issues.
+/// </summary>
 public class MenuController : MonoBehaviour
 {
-    /// <summary>
-    /// This is the Menu Controller: a centralized structure where every menu element resides.
-    /// This implies sliders, buttons, popups and text. It also applies eventual modified settings (es.: SetResolution).
-    /// 
-    /// Important note: brightness has been temporarily ditched. PostProcessing effects will be
-    /// evaluated in the future. Keep an eye on the repo's issues.
-    /// </summary>
-    
     [Header("Gameplay Settings")] 
     [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
     [SerializeField] private Slider controllerSensitivitySlider = null;

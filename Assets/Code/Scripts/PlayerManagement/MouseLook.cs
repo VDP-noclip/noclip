@@ -1,13 +1,12 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MouseLook : MonoBehaviour
-{
     /// <summary>
     /// Everything here is linked to how cursor input is processed and used.
     /// Rotation, orientation, sensitivity handling and eventual added preferences such as inverted vertical axis.
     /// </summary>
-
+public class MouseLook : MonoBehaviour
+{
     [SerializeField]
     [Tooltip("The script is currently active")]
     private bool _activeScript = true;
@@ -41,15 +40,13 @@ public class MouseLook : MonoBehaviour
         }
         _transform = GetComponent<Transform>();
     }
-    
-    // Start is called before the first frame update
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         if (!_activeScript)
@@ -63,26 +60,23 @@ public class MouseLook : MonoBehaviour
             float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
             float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
         
-            //calculate the rotation in both axis
+            // calculate the rotation in both axis
             _yRotation += mouseX;
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
             
-            // Checks whether there's local information about vertical axis preference.
+            // Checks whether there's local information about vertical axis preference and changes it.
             if (PlayerPrefs.HasKey("masterInvertY"))
             {
-                // The following rotation order is needed because if the object is the same,
-                // the second assign value overwrites the values of the first one. If the object is different, the order is irrelevant.
-                
-                if (PlayerPrefs.GetInt("masterInvertY"))
+                if (PlayerPrefs.GetInt("masterInvertY") == 1)
                 {
-                    // invert camera only on the vertical axis
+                    // Invert
                     _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
                     _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
                 }
                 else
                 {
-                    // rotate camera and orientation
+                    // Regular rotation and orientation
                     _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
                     _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
                 }
