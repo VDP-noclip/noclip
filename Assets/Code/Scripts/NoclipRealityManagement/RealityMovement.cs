@@ -82,6 +82,7 @@ public class RealityMovement : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+
         _rigidbody.freezeRotation = true;
         
         ResetJump(); // set _readyToJump to "true"
@@ -200,10 +201,11 @@ public class RealityMovement : MonoBehaviour
             // Add a force on the plane direction of the plane
             _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); 
             
-            if (_rigidbody.velocity.y > 0)  
+            //if _rigidbody.velocity.y != 0 and w a s or d pressed
+            if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane 
-                _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);   
+                _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);  
             }
         }
         // differentiate movement on the ground and in air
