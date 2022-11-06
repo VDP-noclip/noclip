@@ -218,10 +218,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _activeScript: 1
-  _orientation: {fileID: 5238956359414554662}
-  _xSensitivity: 100
-  _ySensitivity: 100
-  _sensitivity: 5
+  _orientation: {fileID: 6423799784713560806}
+  _xSensitivity: 50
+  _ySensitivity: 50
+  _sensitivity: 1
 --- !u!114 &6676181605516432391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +235,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraPosition: {fileID: 5238956359414554662}
+--- !u!1 &5413496004590197134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6423799784713560806}
+  m_Layer: 0
+  m_Name: RealityOrientation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6423799784713560806
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5413496004590197134}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5238956359414554662}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6155750143240272921
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,6 +399,7 @@ Transform:
   - {fileID: 6737490632057863009}
   - {fileID: 4759858814154562714}
   - {fileID: 9039045316966482035}
+  - {fileID: 6423799784713560806}
   m_Father: {fileID: 9169503778071531884}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -425,7 +457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _runSpeed: 6
-  _walkSpeed: 3
+  _walkSpeed: 2
   _groundDrag: 4
   _jumpForce: 8
   _jumpCooldown: 0.25
@@ -441,8 +473,8 @@ MonoBehaviour:
   _ground:
     serializedVersion: 2
     m_Bits: 8
-  _gravityMultiplier: 1
-  _orientation: {fileID: 5238956359414554662}
+  _gravityMultiplier: 3
+  _orientation: {fileID: 6423799784713560806}
   _state: 0
   _OnSlope: 0
   Grounded: 0
@@ -571,10 +603,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _activeScript: 1
-  _orientation: {fileID: 6933895827300247480}
-  _xSensitivity: 100
-  _ySensitivity: 100
-  _sensitivity: 5
+  _orientation: {fileID: 5584800721946916309}
+  _xSensitivity: 50
+  _ySensitivity: 50
+  _sensitivity: 1
 --- !u!114 &3046797087946575208
 MonoBehaviour:
   m_ObjectHideFlags: 0

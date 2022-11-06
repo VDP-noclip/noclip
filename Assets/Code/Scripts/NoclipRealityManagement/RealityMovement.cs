@@ -53,7 +53,7 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private float _gravityMultiplier = 1f;
     [SerializeField] private Transform _orientation;
 
-    private float _gravity = 9.81f;
+    private float _gravity = 9.81f;  // This is used for the movement force 
     private float _horizontalInput;
     private float _verticalInput;
 
@@ -74,8 +74,7 @@ public class RealityMovement : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _gravity = _gravity * _gravityMultiplier;
-        Physics.gravity *= _gravityMultiplier;
+        Physics.gravity *= _gravityMultiplier;   // Change the gravity
         _transform = GetComponent<Transform>();
     }
 
@@ -206,7 +205,7 @@ public class RealityMovement : MonoBehaviour
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane 
-                _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);  
+                _rigidbody.AddForce(Vector3.down * (_gravity * _gravityMultiplier * 4), ForceMode.Force);  
             }
         }
         // differentiate movement on the ground and in air
