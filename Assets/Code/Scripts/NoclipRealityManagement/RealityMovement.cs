@@ -50,9 +50,10 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
 
-    [SerializeField] private float _gravity = 10f;
+    [SerializeField] private float _gravityMultipier = 1f;
     [SerializeField] private Transform _orientation;
 
+    private float _gravity = 9.81f;
     private float _horizontalInput;
     private float _verticalInput;
 
@@ -73,6 +74,8 @@ public class RealityMovement : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _gravity = _gravity * _gravityMultipier;
+        Physics.gravity *= _gravityMultipier;
         _transform = GetComponent<Transform>();
     }
 
@@ -98,7 +101,7 @@ public class RealityMovement : MonoBehaviour
             _grounded = Physics.CheckSphere(_groundCheck.position,  0.48f, _ground);
         
             // stefanofossati comment: I Think that this second alternative is a little more precise for the slopes
-            _OnSlope = OnSlope();
+            _OnSlope = OnSlope(); // used to debug // TODO remove
             Grounded = _grounded; // used to debug // TODO remove
         
             UserInput();
@@ -195,12 +198,12 @@ public class RealityMovement : MonoBehaviour
         if (OnSlope() && !_exitingOnSlope)
         {
             // Add a force on the plane direction of the plane
-            _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); // TODO this value should be serializable
+            _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); 
             
-            if (_rigidbody.velocity.y > 0)  // In this if the going up and the going down slowly is considered
+            if (_rigidbody.velocity.y > 0)  
             {
                 // Add a force that obliged the player to stay on the inclined plane 
-                _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);   // TODO this value should be serializable
+                _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);   
             }
         }
         // differentiate movement on the ground and in air
