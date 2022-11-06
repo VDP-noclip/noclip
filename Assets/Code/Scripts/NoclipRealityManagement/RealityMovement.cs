@@ -50,7 +50,7 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
 
-    [SerializeField] private float _gravityMultipier = 1f;
+    [SerializeField] private float _gravityMultiplier = 1f;
     [SerializeField] private Transform _orientation;
 
     private float _gravity = 9.81f;
@@ -74,8 +74,8 @@ public class RealityMovement : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _gravity = _gravity * _gravityMultipier;
-        Physics.gravity *= _gravityMultipier;
+        _gravity = _gravity * _gravityMultiplier;
+        Physics.gravity *= _gravityMultiplier;
         _transform = GetComponent<Transform>();
     }
 
@@ -99,6 +99,7 @@ public class RealityMovement : MonoBehaviour
             //_grounded = Physics.Raycast(_transform.position,  Vector3.down, _playerHeight * 0.5f + 0.3f, _ground);
         
             //Alternative 2
+            // ATTENTION!!! the 0.48f value is based on the player capsule radius
             _grounded = Physics.CheckSphere(_groundCheck.position,  0.48f, _ground);
         
             // stefanofossati comment: I Think that this second alternative is a little more precise for the slopes
@@ -201,7 +202,7 @@ public class RealityMovement : MonoBehaviour
             // Add a force on the plane direction of the plane
             _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); 
             
-            //if _rigidbody.velocity.y != 0 and w a s or d pressed
+            // if _rigidbody.velocity.y != 0 and w a s or d pressed
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane 
