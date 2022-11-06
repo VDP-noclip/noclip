@@ -5,14 +5,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
+/// If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
+/// 
+/// You may see PlayerPrefs scattered around other scripts; that's because the checks in LoadPrefs are
+/// mostly made to change the menu's state.
+/// </summary>
 public class LoadPrefs : MonoBehaviour
 {
-    /// <summary>
-    /// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
-    /// If you've ever programmed for Android, PlayerPrefs is the equivalent of SharedPreferences.
-    /// Note: in some cases there are functions missing.
-    /// </summary>
-    
     [Header("General Settings")] 
     [SerializeField] private bool canUse = false;
 
@@ -21,10 +22,6 @@ public class LoadPrefs : MonoBehaviour
     [Header("Volume Settings")]
     [SerializeField] private TMP_Text volumeTextValue = null;
     [SerializeField] private Slider volumeSlider = null;
-    
-    [Header("Brightness Settings")]
-    [SerializeField] private Slider brightnessSlider = null;
-    [SerializeField] private TMP_Text brightnessTextValue = null;
     
     [Header("Quality Level Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -78,16 +75,8 @@ public class LoadPrefs : MonoBehaviour
                     fullScreenToggle.isOn = false;
                 }
             }
-
-            if (PlayerPrefs.HasKey("masterBrightness"))
-            {
-                float localBrightness = PlayerPrefs.GetFloat("masterBrightness");
-
-                brightnessTextValue.text = localBrightness.ToString("0.0");
-                brightnessSlider.value = localBrightness;
-                //  To do: change brightness handler
-            }
-
+            
+            // More infos about these two checks in MouseLook.cs.
             if (PlayerPrefs.HasKey("masterSensitivity"))
             {
                 float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
@@ -96,19 +85,17 @@ public class LoadPrefs : MonoBehaviour
                 controllerSensitivitySlider.value = localSensitivity;
                 menuController.mainControllerSensitivity = Mathf.RoundToInt(localSensitivity);
             }
-
+            
             if (PlayerPrefs.HasKey("masterInvertY"))
             {
                 if (PlayerPrefs.GetInt("masterInvertY") == 1)
                 {
                     invertYToggle.isOn = true;
-                    //  To do: Invert Y handler
                 }
 
                 else
                 {
                     invertYToggle.isOn = false;
-                    //  To do: Invert Y handler
                 }
             }
         }

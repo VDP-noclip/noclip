@@ -1,5 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
+    /// <summary>
+    /// Everything here is linked to how cursor input is processed and used.
+    /// Rotation, orientation, sensitivity handling and eventual added preferences such as inverted vertical axis.
+    /// </summary>
 public class MouseLook : MonoBehaviour
 {
     [SerializeField]
@@ -7,6 +12,7 @@ public class MouseLook : MonoBehaviour
     private bool _activeScript = true;
     
     // link camera to body
+    [Tooltip("The script is currently active")]
     [SerializeField] private Transform _orientation;
     
     // set mouse sensibility in X and Y axis
@@ -14,7 +20,8 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float _xSensitivity = 50f;
     [SerializeField] private float _ySensitivity = 50f;
     [SerializeField] private float _sensitivity = 1f;
-
+    
+        
     // It's true if the camera is active, false otherwise
     private bool _activeCurrently;
     private Transform _transform;
@@ -24,17 +31,22 @@ public class MouseLook : MonoBehaviour
     
     private void Awake()
     {
+        // Checks whether there are actual sensitivity settings, and if there are
+        // it applies them by simply multiplying sensitivity with the _localSensitivity multiplier.
+        if (PlayerPrefs.HasKey("masterSensitivity"))
+        {
+            float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
+            _sensitivity *= localSensitivity;
+        }
         _transform = GetComponent<Transform>();
     }
-    
-    // Start is called before the first frame update
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         if (!_activeScript)
@@ -48,16 +60,27 @@ public class MouseLook : MonoBehaviour
             float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
             float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
         
-            //calculate the rotation in both axis
+            // calculate the rotation in both axis
             _yRotation += mouseX;
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
-        
-            // rotate camera and orientation
-            /*This order is needed because if the object is the same, the second assign value overwrites the values of the first one.
-            If the object is different, the order is irrelevant*/
-            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
-            _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+            
+            // Checks whether there's local information about vertical axis preference and changes it.
+            if (PlayerPrefs.HasKey("masterInvertY"))
+            {
+                if (PlayerPrefs.GetInt("masterInvertY") == 1)
+                {
+                    // Invert
+                    _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+                    _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
+                }
+                else
+                {
+                    // Regular rotation and orientation
+                    _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+                    _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+                }
+            }
             
         }
     }
