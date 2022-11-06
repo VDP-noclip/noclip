@@ -38,7 +38,11 @@ public class NoclipMovement : MonoBehaviour
 
     private Transform _transform;
     private CameraManager _cameraManager;
+    private Transform _noclipCamera;
+    private NoclipManager _noclipManager;
     
+    // It's true if is the noclipPlayer, it's false if is the reality body
+    private bool _currentPlayer = false;
     
     // These positions depends o the level 
     private Vector3 _initRotation;
@@ -48,14 +52,9 @@ public class NoclipMovement : MonoBehaviour
     private void Awake()
     {
         _transform = GetComponent<Transform>();
-        _cameraManager = GameObject.FindObjectOfType<CameraManager>();
+        _noclipManager = FindObjectOfType<NoclipManager>();
+        _noclipCamera = GetComponent<Transform>();
 
-    }
-
-    private void Start()
-    {
-        _initRotation = _transform.eulerAngles;
-        _initPosition = _transform.position;
     }
 
     // Update is called once per frame
@@ -64,7 +63,7 @@ public class NoclipMovement : MonoBehaviour
         if (!_active)
             return;
         
-        if (_enableMovement)
+        if (_enableMovement && _currentPlayer)
         {
             Vector3 deltaPosition = Vector3.zero;
             float currentSpeed = _movementSpeed;
@@ -97,12 +96,29 @@ public class NoclipMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("RealityPlayer") && _currentPlayer)
+        {
+            _noclipManager.SetPlayerCanDisableNoclip(true);
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
         if (other.CompareTag("RealityPlayer"))
         {
-            _cameraManager.SwitchCamera();
-            _transform.position = _initPosition;
-            _transform.eulerAngles = _initRotation;
+            _noclipManager.SetPlayerCanDisableNoclip(false);
         }
+    }
+
+    public void ActivatePlayer(bool active)
+    {
+        _currentPlayer = active;
+    }
+
+    public void SetPositionAndRotation(Vector3 position, Quaternion cameraOrientation)
+    {
+        _transform.position = position;
+        _noclipCamera.transform.rotation = cameraOrientation;
     }
 
 }
