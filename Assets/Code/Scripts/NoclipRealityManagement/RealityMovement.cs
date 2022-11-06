@@ -12,8 +12,8 @@ public class RealityMovement : MonoBehaviour
     }
     
     [Header("Speed")]
-    [SerializeField] private float _walkSpeed = 6f;
-    [SerializeField] private float _sprintSpeed = 10f;
+    [SerializeField] private float _runSpeed = 6f;
+    [SerializeField] private float _walkSpeed = 3f;
     
     private float _moveSpeed;     // speed intensity
     
@@ -46,10 +46,11 @@ public class RealityMovement : MonoBehaviour
     
     // stefanofossati comment: I prefer to have a groundCheck object instead of the player height
     [SerializeField] private Transform _groundCheck;
-    [SerializeField] private float _playerHeight = 2f;  // Actualy this isn't used
+    [SerializeField] private float _playerHeight = 2f;  // Actually this isn't used
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
-    
+
+    [SerializeField] private float _gravity = 10f;
     [SerializeField] private Transform _orientation;
 
     private float _horizontalInput;
@@ -66,7 +67,7 @@ public class RealityMovement : MonoBehaviour
     // player states
     [SerializeField] private MovementState _state;     // current player state
 
-    
+    [SerializeField] private bool _OnSlope; //This seriazlized field is only use to debug from unity // TODO remove
     [SerializeField] private bool Grounded; //This seriazlized field is only use to debug from unity // TODO remove
     
     private void Awake()
@@ -97,7 +98,7 @@ public class RealityMovement : MonoBehaviour
             _grounded = Physics.CheckSphere(_groundCheck.position,  0.48f, _ground);
         
             // stefanofossati comment: I Think that this second alternative is a little more precise for the slopes
-        
+            _OnSlope = OnSlope();
             Grounded = _grounded; // used to debug // TODO remove
         
             UserInput();
@@ -113,13 +114,7 @@ public class RealityMovement : MonoBehaviour
         }
     }
 
-    /*private void FixedUpdate()
-    {
-        MovePlayer();
-        //Debug.Log(_moveSpeed);
-    }*/
-
-    public void ResetSpeeedOnRespawn()
+    public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
     }
@@ -173,14 +168,14 @@ public class RealityMovement : MonoBehaviour
         else if (_grounded && Input.GetKey(_sprintKey))
         {
             _state = MovementState.Sprinting;
-            _moveSpeed = _sprintSpeed;
+            _moveSpeed = _walkSpeed;
         }
         
         // mode - Walking
         else if (_grounded)
         {
             _state = MovementState.Walking;
-            _moveSpeed = _walkSpeed;
+            _moveSpeed = _runSpeed;
         }
 
         // mode - Air
@@ -200,19 +195,19 @@ public class RealityMovement : MonoBehaviour
         if (OnSlope() && !_exitingOnSlope)
         {
             // Add a force on the plane direction of the plane
-            _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * 10f), ForceMode.Force); // TODO this value should be serializable
-
-            if (_rigidbody.velocity.y > 0)
+            _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); // TODO this value should be serializable
+            
+            if (_rigidbody.velocity.y > -0.5f)  // In this if the going up and the going down slowly is considered
             {
                 // Add a force that obliged the player to stay on the inclined plane 
-                _rigidbody.AddForce(Vector3.down * 40f, ForceMode.Force);   // TODO this value should be serializable
+                _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);   // TODO this value should be serializable
             }
         }
         // differentiate movement on the ground and in air
         if (_grounded)
-            _rigidbody.AddForce(_moveSpeed * 10f * _moveDirection.normalized, ForceMode.Force);
+            _rigidbody.AddForce(_moveSpeed * _gravity * _moveDirection.normalized, ForceMode.Force);
         else
-            _rigidbody.AddForce(_moveSpeed * _airMultiplier * 10f * _moveDirection.normalized, ForceMode.Force);
+            _rigidbody.AddForce(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized, ForceMode.Force);
 
         _rigidbody.useGravity = !OnSlope();
     }
@@ -265,7 +260,7 @@ public class RealityMovement : MonoBehaviour
         if (Physics.Raycast(_groundCheck.position, Vector3.down, out _slopeHit, 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
-            return angle < _maxSlopeAngle && angle != 0;
+            return angle < _maxSlopeAngle && angle > -_maxSlopeAngle && angle != 0 && _state!=MovementState.Air;
         }
 
         return false;
