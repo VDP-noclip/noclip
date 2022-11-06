@@ -10,7 +10,7 @@ public class NoclipManager : MonoBehaviour
 {
     [SerializeField] private KeyCode noclipKey = KeyCode.P;
 
-    private List<NoclipObjController> _noclipObjControllers;
+    private List<BaseNoclipObjectController> _noclipObjControllers;
     private CameraManager _cameraManager;
 
     private bool _playerCanEnableNoclip;
@@ -20,7 +20,7 @@ public class NoclipManager : MonoBehaviour
     {
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
         _noclipObjControllers = noclipObjects.Select(
-            obj => obj.GetComponent<NoclipObjController>()).ToList();
+            obj => obj.GetComponent<BaseNoclipObjectController>()).ToList();
         
         _cameraManager = FindObjectOfType<CameraManager>();
     }
