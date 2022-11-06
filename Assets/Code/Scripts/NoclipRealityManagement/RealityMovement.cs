@@ -197,7 +197,7 @@ public class RealityMovement : MonoBehaviour
             // Add a force on the plane direction of the plane
             _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); // TODO this value should be serializable
             
-            if (_rigidbody.velocity.y > -0.5f)  // In this if the going up and the going down slowly is considered
+            if (_rigidbody.velocity.y > 0)  // In this if the going up and the going down slowly is considered
             {
                 // Add a force that obliged the player to stay on the inclined plane 
                 _rigidbody.AddForce(Vector3.down * (_gravity * 4), ForceMode.Force);   // TODO this value should be serializable
@@ -256,11 +256,10 @@ public class RealityMovement : MonoBehaviour
     //This function check if the plane is inclined
     private bool OnSlope()
     {
-        // Maybe this if statement can be more precise with CheckSphere
         if (Physics.Raycast(_groundCheck.position, Vector3.down, out _slopeHit, 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
-            return angle < _maxSlopeAngle && angle > -_maxSlopeAngle && angle != 0 && _state!=MovementState.Air;
+            return angle < _maxSlopeAngle && angle != 0 && _state!=MovementState.Air;
         }
 
         return false;
