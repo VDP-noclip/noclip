@@ -11,10 +11,12 @@ public class RealityMovement : MonoBehaviour
         Air
     }
 
-    [Header("Speed")] [SerializeField] private float _maxRunSpeed = 6f;
-    [SerializeField] private float _runSpeed = 10f;
+    [Header("Speed")] 
+    [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
+    [SerializeField] private float _maxRunSpeed = 6f;
+    [SerializeField] private float _runForceMultiplier = 10f;
     [SerializeField] private float _maxWalkSpeed = 3f;
-    [SerializeField] private float _walkSpeed = 3f;
+    [SerializeField] private float _walkForceMultiplier = 3f;
     
     private float _moveSpeed;     // speed intensity
     private float _maxMoveSpeed;
@@ -174,7 +176,7 @@ public class RealityMovement : MonoBehaviour
         else if (_grounded && Input.GetKey(_sprintKey))
         {
             _state = MovementState.Walking;
-            _moveSpeed = _walkSpeed;
+            _moveSpeed = _walkForceMultiplier;
             _maxMoveSpeed = _maxWalkSpeed;
         }
         
@@ -182,7 +184,7 @@ public class RealityMovement : MonoBehaviour
         else if (_grounded)
         {
             _state = MovementState.Sprinting;
-            _moveSpeed = _runSpeed;
+            _moveSpeed = _runForceMultiplier;
             _maxMoveSpeed = _maxRunSpeed;
         }
 
@@ -193,7 +195,7 @@ public class RealityMovement : MonoBehaviour
         }
     }
 
-    //
+    
     private void MovePlayer()
     {
         // calculate movement direction
