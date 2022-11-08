@@ -40,21 +40,6 @@ public class MouseLook : MonoBehaviour
             _sensitivity *= localSensitivity;
         }
         _transform = GetComponent<Transform>();
-
-        // Checks whether there's local information about vertical axis preference and changes it.
-        // at least let's check this thing just once
-        if (PlayerPrefs.HasKey("masterInvertY"))
-        {
-            if (PlayerPrefs.GetInt("masterInvertY") == 1)
-            {
-                _invertY = -1;
-            }
-        }
-        else
-        {
-            // You don't have a key. SORRY MAURICE!!!!!!!
-            throw new Exception("masterSensitivityY key is missing!");
-        }
     }
 
     void Start()
@@ -84,12 +69,31 @@ public class MouseLook : MonoBehaviour
             
             _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
             _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);
-
+            
+            // Checks whether there's local information about vertical axis preference and changes it.
+            // I don't know the cost of this statement but it definitely doesn't belong here.
+            UpdateInvertY();
         }
     }
 
     public void ActivateMouseLook(bool active)
     {
         _activeCurrently = active;
+    }
+    
+    public void UpdateInvertY()
+    {
+        if (PlayerPrefs.HasKey("masterInvertY"))
+        {
+            if (PlayerPrefs.GetInt("masterInvertY") == 1)
+            {
+                _invertY = -1;
+            }
+        }
+        else
+        {
+            // You don't have a key. SORRY MAURICE!!!!!!!
+            throw new Exception("masterSensitivityY key is missing!");
+        }
     }
 }
