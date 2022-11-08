@@ -29,7 +29,7 @@ public class MouseLook : MonoBehaviour
 
     private float _yRotation = 0f; // yaw movement variable
     private float _xRotation = 0f; // pitch movement variable
-    
+    private int _invertY = 1;
     private void Awake()
     {
         // Checks whether there are actual sensitivity settings, and if there are
@@ -40,12 +40,28 @@ public class MouseLook : MonoBehaviour
             _sensitivity *= localSensitivity;
         }
         _transform = GetComponent<Transform>();
+
+        // Checks whether there's local information about vertical axis preference and changes it.
+        // at least let's check this thing just once
+        if (PlayerPrefs.HasKey("masterInvertY"))
+        {
+            if (PlayerPrefs.GetInt("masterInvertY") == 1)
+            {
+                _invertY = -1;
+            }
+        }
+        else
+        {
+            // You don't have a key. SORRY MAURICE!!!!!!!
+            throw new Exception("masterSensitivityY key is missing!");
+        }
     }
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        
     }
     
     void Update()
@@ -66,27 +82,8 @@ public class MouseLook : MonoBehaviour
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
             
-            // Checks whether there's local information about vertical axis preference and changes it.
-            if (PlayerPrefs.HasKey("masterInvertY"))
-            {
-                if (PlayerPrefs.GetInt("masterInvertY") == 1)
-                {
-                    // Invert
-                    _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
-                    _transform.rotation = Quaternion.Euler(_xRotation*(-1), _yRotation, 0);
-                }
-                else
-                {
-                    // Regular rotation and orientation
-                    _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
-                    _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
-                }
-            }
-            else
-            {
-                // You don't have a key. SORRY MAURICE!!!!!!!
-                throw new Exception("masterSensitivityY key is missing!");
-            }
+            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
+            _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);
 
         }
     }
