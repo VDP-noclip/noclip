@@ -170,7 +170,7 @@ public class RealityMovement : MonoBehaviour
             _moveSpeed = _crouchSpeed;
         }
         
-        // mode - Sprinting
+        // mode - Walking
         else if (_grounded && Input.GetKey(_sprintKey))
         {
             _state = MovementState.Walking;
@@ -178,7 +178,7 @@ public class RealityMovement : MonoBehaviour
             _maxMoveSpeed = _maxWalkSpeed;
         }
         
-        // mode - Walking
+        // mode - Sprinting
         else if (_grounded)
         {
             _state = MovementState.Sprinting;
@@ -227,7 +227,7 @@ public class RealityMovement : MonoBehaviour
         {
             if (_rigidbody.velocity.magnitude > _maxMoveSpeed)
             {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _moveSpeed;
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxMoveSpeed;
             }
         }
         else
@@ -237,7 +237,7 @@ public class RealityMovement : MonoBehaviour
             // limit velocity if needed
             if (flatVel.magnitude > _maxMoveSpeed)
             {
-                Vector3 limitedVel = flatVel.normalized * _moveSpeed;
+                Vector3 limitedVel = flatVel.normalized * _maxMoveSpeed;
                 _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
             }
         }
