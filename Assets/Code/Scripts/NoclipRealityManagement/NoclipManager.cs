@@ -18,11 +18,16 @@ public class NoclipManager : MonoBehaviour
 
     void Awake()
     {
+        FindNoClipObjControllers();
+        _cameraManager = FindObjectOfType<CameraManager>();
+    }
+
+    public void FindNoClipObjControllers()
+    {
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
         _noclipObjControllers = noclipObjects.Select(
             obj => obj.GetComponent<BaseNoclipObjectController>()).ToList();
-        
-        _cameraManager = FindObjectOfType<CameraManager>();
+
     }
 
     /// <summary>
