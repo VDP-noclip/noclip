@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -81,7 +82,12 @@ public class MouseLook : MonoBehaviour
                     _transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
                 }
             }
-            
+            else
+            {
+                // You don't have a key. SORRY MAURICE!!!!!!!
+                throw new Exception("masterSensitivityY key is missing!");
+            }
+
         }
     }
 
