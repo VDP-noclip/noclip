@@ -8,7 +8,6 @@ public class CameraManager : MonoBehaviour
     
     [SerializeField] private GameObject _realPlayer;
     [SerializeField] private GameObject _realPlayerCamera;
-    private RealityMovement _realPlayerMovement;  // this isn't used
     private MouseLook _realMouseLook;
     
     [SerializeField] private GameObject _noclipCamera;
@@ -18,7 +17,6 @@ public class CameraManager : MonoBehaviour
     private NoclipManager _noclipManager;
     private void Awake()
     {
-        _realPlayerMovement = _realPlayer.GetComponent<RealityMovement>();
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
 
         _realMouseLook = _realPlayerCamera.GetComponent<MouseLook>();
