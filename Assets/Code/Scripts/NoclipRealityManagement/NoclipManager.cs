@@ -13,7 +13,7 @@ public class NoclipManager : MonoBehaviour
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private CameraManager _cameraManager;
 
-    private bool _noclipEnabled;
+    private bool _noclipEnabled;   
     private bool _playerCanEnableNoclip;
     private bool _playerCanDisableNoclip;
 
@@ -58,8 +58,8 @@ public class NoclipManager : MonoBehaviour
     private void EnableNoclip()
     {
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
-        _cameraManager.SwitchCamera();
         _noclipEnabled = true;
+        _cameraManager.SwitchCamera();
     }
 
     /// <summary>
@@ -68,8 +68,8 @@ public class NoclipManager : MonoBehaviour
     private void DisableNoclip()
     {
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
-        _cameraManager.SwitchCamera();
         _noclipEnabled = false;
+        _cameraManager.SwitchCamera();
     }
 
     /// <summary>
