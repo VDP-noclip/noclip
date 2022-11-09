@@ -10,15 +10,15 @@ public class NoclipIntangibleController : BaseNoclipObjectController
     private void Awake()
     {
         _meshRender = GetComponent<Renderer>();
-        disableNoclip();
+        DisableNoclip();
     }
 
-    protected override void activateNoclip()
+    public override void ActivateNoclip()
     {
         _meshRender.enabled = false;
     }
 
-    protected override void disableNoclip()
+    public override void DisableNoclip()
     {
         _meshRender.enabled = true;
     }
