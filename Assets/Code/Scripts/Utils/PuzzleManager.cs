@@ -17,16 +17,17 @@ public class PuzzleManager : MonoBehaviour
     void Update()
     {   
         // Todo: execute these 2 lines only when the player goes on the checkpoint
-        if (Application.isEditor && Input.GetKeyDown(KeyCode.X))
-        {
-            LoadNextPuzzle();
-            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
-        }
+        //if (Application.isEditor && Input.GetKeyDown(KeyCode.X))
+        //{
+           // LoadNextPuzzle();
+           // GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
+        //}
     }
 
-    private void LoadNextPuzzle()
+    public void LoadNextPuzzle()
     {
         GameObject.Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
         _currentPuzzleIndex += 1;
+        GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
     }
 }

@@ -1,24 +1,27 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 /// <summary>
-/// TODO
+/// THIS CODE REFLECTS https://www.figma.com/file/VXmyoNeOfotAkpYbjbkXCT/noclip_ideas?node-id=423%3A1041
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int _currentCheckpointIndex = 0;
-    [SerializeField] private string _gameState = "BEGIN_AREA";
-    
-    private GameObject _player;
-    private Vector3 _lastCheckPointPos;
-    private CheckpointController[] _rawCheckpointControllers;
+    [Tooltip("At least this script has a fancy icon :-)")]
+    [SerializeField] private string _gameState = "INITIALIZE_GAME";
 
-    private List<CheckpointController> _checkpointControllers;
-
-    //dictionary of int and CheckpointController
-    private Dictionary<int, CheckpointController> _checkpointIndexPointer = new();
     
+    [Tooltip("This logs a specific debug channel")]
+    [SerializeField] private string _debugChannel = "unloadScenes";
+
+    
+    void Awake()
+    {
+        
+    }
+
+    /* possibly AreaManager code
     void Awake()
     {
         _rawCheckpointControllers = FindObjectsOfType<CheckpointController>();
@@ -31,6 +34,28 @@ public class GameManager : MonoBehaviour
         GetCheckpointIndexes();
         _checkpointIndexPointer = GetCheckpointIndexes();
         ActivateNextCheckpoint();
+    }
+    */
+    
+    // Update is called once per frame
+    private void Update () {
+        //if c is pressed close this scene
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            //close this scene
+            int y = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.UnloadSceneAsync(y);
+        }
+    }
+
+
+/* OLD GAMEMANAGER THAT ACTUALLY WAS LEVELMANAGER THAT NOW IS SOMETHING ELSE
+    
+    // Channel Logger
+    private void Log(string message, string channel) {
+        if(channel == _debugChannel) {
+            Debug.Log(message);
+        }
     }
 
     //function to get integers from the names of checkpointControllers
@@ -73,7 +98,7 @@ public class GameManager : MonoBehaviour
         {
             _currentCheckpointIndex++;
             //activate next checkpoint
-            _checkpointIndexPointer[_currentCheckpointIndex].ActivateCheckpoint();
+            //_checkpointIndexPointer[_currentCheckpointIndex].ActivateCheckpoint();
             //increment checkpoint index
             Debug.Log("Activating checkpoint " + _currentCheckpointIndex);
             _gameState = "CHECKPOINT_" + _currentCheckpointIndex;
@@ -91,4 +116,19 @@ public class GameManager : MonoBehaviour
         GameObject player = GameObject.Find("RealityPlayer");
         return player;
     }
+
+
+    
+    
+    [SerializeField] private int _currentCheckpointIndex = 0;
+    private GameObject _player;
+    private Vector3 _lastCheckPointPos;
+    private CheckpointController[] _rawCheckpointControllers;
+
+    private List<CheckpointController> _checkpointControllers;
+
+    //dictionary of int and CheckpointController
+    private Dictionary<int, CheckpointController> _checkpointIndexPointer = new();
+    
+*/
 }

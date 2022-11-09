@@ -9,12 +9,12 @@ using UnityEngine;
 /// </summary>
 public class CheckpointController : MonoBehaviour
 {
-    private GameManager _gameManager;
+    //private GameManager _gameManager;
     [SerializeField] private GameObject _gameObject;
     private bool _checkpointEnabled = false;
     void Awake()
     {
-        _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        //_gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     }
 
     /// <summary>
@@ -22,25 +22,28 @@ public class CheckpointController : MonoBehaviour
     /// </summary>
     public void ReactToPlayerCollision()
     {
-        if (_checkpointEnabled)
-        {
-            _checkpointEnabled = false;
-            Debug.Log("You entered checkpoint: " + gameObject.name);
-            _gameManager.ActivateNextCheckpoint();
-            Physics.SyncTransforms();
-            CheckpointReached();
-            //disable the collider of this object
-            GetComponent<Collider>().enabled = false;
-        } 
+        //if (_checkpointEnabled)
+        //{
+            //_checkpointEnabled = false;
+        Debug.Log("You entered checkpoint: " + gameObject.name);
+        //_gameManager.ActivateNextCheckpoint();
+        Physics.SyncTransforms();
+        CheckpointReached();
+        //disable the collider of this object
+        GetComponent<Collider>().enabled = false;
+        //} 
     }
 
     private void CheckpointReached(){
         //change color of _gameObject
         _gameObject.GetComponent<Renderer>().material.color = Color.green;
+        //find gameobject PuzzleManager and call LoadNextPuzzle()
+        GameObject.Find("PuzzleManager").GetComponent<PuzzleManager>().LoadNextPuzzle();
     }
 
+    /*
     public void ActivateCheckpoint(){
         _checkpointEnabled = true;
         _gameObject.GetComponent<Renderer>().material.color = Color.red;
-    }
+    }*/
 }
