@@ -13,16 +13,22 @@ public class NoclipManager : MonoBehaviour
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private CameraManager _cameraManager;
 
+    private bool _noclipEnabled;
     private bool _playerCanEnableNoclip;
     private bool _playerCanDisableNoclip;
 
     void Awake()
     {
+        FindNoClipObjControllers();
+        _cameraManager = FindObjectOfType<CameraManager>();
+    }
+
+    public void FindNoClipObjControllers()
+    {
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
         _noclipObjControllers = noclipObjects.Select(
             obj => obj.GetComponent<BaseNoclipObjectController>()).ToList();
-        
-        _cameraManager = FindObjectOfType<CameraManager>();
+
     }
 
     /// <summary>
@@ -41,13 +47,19 @@ public class NoclipManager : MonoBehaviour
         _playerCanDisableNoclip = playerCanDisableNoclip;
     }
 
+    public bool IsNoclipEnabled()
+    {
+        return _noclipEnabled;
+    }
+
     /// <summary>
     /// Activate the noclip mode to all the objects and switch camera to the noclip one.
     /// </summary>
     private void EnableNoclip()
     {
-        _noclipObjControllers.ForEach(obj => obj.Noclip());
+        _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _cameraManager.SwitchCamera();
+        _noclipEnabled = true;
     }
 
     /// <summary>
@@ -55,8 +67,9 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private void DisableNoclip()
     {
-        _noclipObjControllers.ForEach(obj => obj.Noclip());
+        _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _cameraManager.SwitchCamera();
+        _noclipEnabled = false;
     }
 
     /// <summary>
