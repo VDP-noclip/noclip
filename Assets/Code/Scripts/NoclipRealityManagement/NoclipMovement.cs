@@ -81,10 +81,10 @@ public class NoclipMovement : MonoBehaviour
                 deltaPosition += _transform.right;
 
             if (Input.GetKey(_moveUp))
-                deltaPosition += transform.up;
+                deltaPosition += Vector3.up;
 
             if (Input.GetKey(_moveDown))
-                deltaPosition -= transform.up;
+                deltaPosition -= Vector3.up;
             
             _transform.position += deltaPosition * (currentSpeed * Time.deltaTime);
             

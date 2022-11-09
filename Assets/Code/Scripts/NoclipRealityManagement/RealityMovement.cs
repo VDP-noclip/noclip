@@ -10,12 +10,16 @@ public class RealityMovement : MonoBehaviour
         Crouching,
         Air
     }
-    
-    [Header("Speed")]
-    [SerializeField] private float _runSpeed = 6f;
-    [SerializeField] private float _walkSpeed = 3f;
+
+    [Header("Speed")] 
+    [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
+    [SerializeField] private float _maxRunSpeed = 6f;
+    [SerializeField] private float _runForceMultiplier = 10f;
+    [SerializeField] private float _maxWalkSpeed = 3f;
+    [SerializeField] private float _walkForceMultiplier = 3f;
     
     private float _moveSpeed;     // speed intensity
+    private float _maxMoveSpeed;
     
     [Header("Drag")]
     [SerializeField] private float _groundDrag = 4f;    // ground drag
@@ -165,18 +169,20 @@ public class RealityMovement : MonoBehaviour
             _moveSpeed = _crouchSpeed;
         }
         
-        // mode - Sprinting
+        // mode - Walking
         else if (_grounded && Input.GetKey(_sprintKey))
         {
-            _state = MovementState.Sprinting;
-            _moveSpeed = _walkSpeed;
+            _state = MovementState.Walking;
+            _moveSpeed = _walkForceMultiplier;
+            _maxMoveSpeed = _maxWalkSpeed;
         }
         
-        // mode - Walking
+        // mode - Sprinting
         else if (_grounded)
         {
-            _state = MovementState.Walking;
-            _moveSpeed = _runSpeed;
+            _state = MovementState.Sprinting;
+            _moveSpeed = _runForceMultiplier;
+            _maxMoveSpeed = _maxRunSpeed;
         }
 
         // mode - Air
@@ -186,7 +192,7 @@ public class RealityMovement : MonoBehaviour
         }
     }
 
-    //
+    
     private void MovePlayer()
     {
         // calculate movement direction
@@ -201,8 +207,8 @@ public class RealityMovement : MonoBehaviour
             // if _rigidbody.velocity.y != 0 and w a s or d pressed
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
-                // Add a force that obliged the player to stay on the inclined plane 
-                _rigidbody.AddForce(Vector3.down * (_gravity * _gravityMultiplier * 4), ForceMode.Force);  
+                // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
+                _rigidbody.AddForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * 4), ForceMode.Force);  
             }
         }
         // differentiate movement on the ground and in air
@@ -218,9 +224,9 @@ public class RealityMovement : MonoBehaviour
     {
         if (OnSlope() && !_exitingOnSlope)
         {
-            if (_rigidbody.velocity.magnitude > _moveSpeed)
+            if (_rigidbody.velocity.magnitude > _maxMoveSpeed)
             {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _moveSpeed;
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxMoveSpeed;
             }
         }
         else
@@ -228,9 +234,9 @@ public class RealityMovement : MonoBehaviour
             Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
             // limit velocity if needed
-            if (flatVel.magnitude > _moveSpeed)
+            if (flatVel.magnitude > _maxMoveSpeed)
             {
-                Vector3 limitedVel = flatVel.normalized * _moveSpeed;
+                Vector3 limitedVel = flatVel.normalized * _maxMoveSpeed;
                 _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
             }
         }
@@ -267,7 +273,7 @@ public class RealityMovement : MonoBehaviour
         return false;
     }
 
-    //This function retuns the vector3 that represents the plane on which the player is moving
+    //This function returns the vector3 that represents the plane on which the player is moving
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
