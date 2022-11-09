@@ -8,57 +8,52 @@ public class CameraManager : MonoBehaviour
     
     [SerializeField] private GameObject _realPlayer;
     [SerializeField] private GameObject _realPlayerCamera;
-    private RealityMovement _realPlayerMovement;
     private MouseLook _realMouseLook;
     
     [SerializeField] private GameObject _noclipCamera;
     private NoclipMovement _noclipMovement;
     private MouseLook _noclipMouseLook;
 
-    //Thi boolean is true when the realPlayer is active, so the game is in the reality mode
-    private bool _activeRealPlayer;
+    private NoclipManager _noclipManager;
     private void Awake()
     {
-        _realPlayerMovement = _realPlayer.GetComponent<RealityMovement>();
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
 
         _realMouseLook = _realPlayerCamera.GetComponent<MouseLook>();
         _noclipMouseLook = _noclipCamera.GetComponent<MouseLook>();
+        
+        _noclipManager = FindObjectOfType<NoclipManager>();
 
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        _realPlayerCamera.SetActive(true);
-        _realPlayerMovement.ActivatePlayer(true);
-        _realMouseLook.ActivateMouseLook(true);
+        bool isNoclipEnabled = _noclipManager.IsNoclipEnabled();
         
-        _noclipCamera.SetActive(false);
-        _noclipMovement.ActivatePlayer(false);
-        _noclipMouseLook.ActivateMouseLook(false);
+        _realPlayerCamera.SetActive(!isNoclipEnabled);
+        _realMouseLook.ActivateMouseLook(!isNoclipEnabled);
         
-        _activeRealPlayer = true;
+        _noclipCamera.SetActive(isNoclipEnabled);
+        _noclipMouseLook.ActivateMouseLook(isNoclipEnabled);
     }
     
     public void SwitchCamera()
     {
-        _activeRealPlayer = !_activeRealPlayer;
+        bool isNoclipEnabled = _noclipManager.IsNoclipEnabled();
         
         //Activate/disactivate the realPlayer and his camera
-        _realPlayerCamera.SetActive(_activeRealPlayer);
-        _realPlayerMovement.ActivatePlayer(_activeRealPlayer);
-        _realMouseLook.ActivateMouseLook(_activeRealPlayer);
+        _realPlayerCamera.SetActive(!isNoclipEnabled);
+        _realMouseLook.ActivateMouseLook(!isNoclipEnabled);
         
-        if (!_activeRealPlayer) //When the switch from reality mode to noclip mode happened
+        if (isNoclipEnabled) //When the switch from reality mode to noclip mode happened
         {
             _noclipMovement.SetPositionAndRotation(_realPlayer.transform.position, _realPlayerCamera.transform.rotation); //Set the noclip position in the realBody position
         }
         
         //Activate/disactivate the noclipPlayer and his camera
-        _noclipCamera.SetActive(!_activeRealPlayer);
-        _noclipMovement.ActivatePlayer(!_activeRealPlayer);
-        _noclipMouseLook.ActivateMouseLook(!_activeRealPlayer);
+        _noclipCamera.SetActive(isNoclipEnabled);
+        _noclipMouseLook.ActivateMouseLook(isNoclipEnabled);
 
         
     }

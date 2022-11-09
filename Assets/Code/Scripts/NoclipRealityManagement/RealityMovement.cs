@@ -61,6 +61,7 @@ public class RealityMovement : MonoBehaviour
 
     private Transform _transform;
     private Rigidbody _rigidbody;      // set the rigidbody
+    private NoclipManager _noclipManager;
 
     // It's true if is the realbody, it's false if is the noclip body
     private bool _currentPlayerBody  = true;
@@ -76,6 +77,7 @@ public class RealityMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         Physics.gravity *= _gravityMultiplier;   // Change the gravity
         _transform = GetComponent<Transform>();
+        _noclipManager = FindObjectOfType<NoclipManager>();
     }
 
     // Start is called before the first frame update
@@ -92,7 +94,7 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_currentPlayerBody)
+        if (!_noclipManager.IsNoclipEnabled())
         {
             //Alternative 1
             //_grounded = Physics.Raycast(_transform.position,  Vector3.down, _playerHeight * 0.5f + 0.3f, _ground);
@@ -121,11 +123,6 @@ public class RealityMovement : MonoBehaviour
     public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
-    }
-    
-    public void ActivatePlayer(bool active)
-    {
-        _currentPlayerBody = active;
     }
 
     // 
