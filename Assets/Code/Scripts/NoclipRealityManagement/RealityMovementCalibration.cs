@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
+
 public class RealityMovementCalibration : MonoBehaviour
 {
     private enum MovementState       // define player states
@@ -12,11 +14,6 @@ public class RealityMovementCalibration : MonoBehaviour
         Air
     }
 
-    //slider gameobject
-    [SerializeField] private GameObject _speedSlider;
-    [SerializeField] private GameObject _jumpForceSlider;
-    [SerializeField] private GameObject _gravitySlider;
-    [SerializeField] private GameObject _dragSlider;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [SerializeField] private float _maxRunSpeed = 6f;
@@ -219,7 +216,7 @@ public class RealityMovementCalibration : MonoBehaviour
         }
     }
 
-    
+    private float _groundSpeed = 0;
     private void MovePlayer()
     {
         // calculate movement direction
@@ -235,14 +232,24 @@ public class RealityMovementCalibration : MonoBehaviour
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
-                _rigidbody.AddForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * 4), ForceMode.Force);  
+                _rigidbody.AddForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4), ForceMode.Force); 
+                //TODO check if new slope angle is greater than the previous, if it is don't apply this force so that the player can climb it, then apply this force again as always 
             }
         }
         // differentiate movement on the ground and in air
-        if (_grounded)
+        if (_grounded){
+            _groundSpeed = _rigidbody.velocity.magnitude;
             _rigidbody.AddForce(_moveSpeed * _gravity * _moveDirection.normalized, ForceMode.Force);
-        else
+        }
+        else{
             _rigidbody.AddForce(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized, ForceMode.Force);
+            //prject the velocity on the horizontal plane
+            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_rigidbody.velocity, Vector3.up);
+            if (horizontalVelocity.magnitude > Mathf.Max(_maxMoveSpeed, _groundSpeed))
+            {
+                _rigidbody.velocity = horizontalVelocity.normalized * _groundSpeed + Vector3.up * _rigidbody.velocity.y;
+            }
+        }
 
         _rigidbody.useGravity = !OnSlope();
     }
@@ -306,10 +313,29 @@ public class RealityMovementCalibration : MonoBehaviour
         return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
     }
     
+    //slider gameobject
+    private GameObject _speedSlider;
+    private GameObject _jumpForceSlider;
+    private GameObject _gravitySlider;
+    private GameObject _dragSlider;
+    private GameObject _airSlider;
+    private GameObject _speedMonitor;
     private bool _gPressed = false;
     private bool _hPressed = false;
     private bool _calibrationMenu = true;
+
+    private void InitCalibrationMenu(){
+        _speedSlider = GameObject.Find("RunSpeed");
+        _jumpForceSlider = GameObject.Find("JumpForce");
+        _gravitySlider = GameObject.Find("Gravity");
+        _dragSlider = GameObject.Find("Drag");
+        _airSlider = GameObject.Find("AirMultiplier");
+        _speedMonitor = GameObject.Find("SpeedMonitor");
+    }
     private void CalibrationMenu(){
+        if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
+            InitCalibrationMenu();
+        }
         //_jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
         //_moveSpeed = _speedSlider.GetComponent<Slider>().value;
         _jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
@@ -318,6 +344,8 @@ public class RealityMovementCalibration : MonoBehaviour
         _runForceMultiplier = _speedSlider.GetComponent<Slider>().value;
         _groundDrag = _dragSlider.GetComponent<Slider>().value;
         _gravityMultiplier = _gravitySlider.GetComponent<Slider>().value;
+        _airMultiplier = _airSlider.GetComponent<Slider>().value;
+        _speedMonitor.GetComponent<TextMeshProUGUI>().text = ((int)_rigidbody.velocity.magnitude).ToString();
         Physics.gravity = _originalGravity * _gravityMultiplier;
         //g button toggle
         if (Input.GetKeyDown(KeyCode.G) && !_gPressed)
@@ -348,6 +376,7 @@ public class RealityMovementCalibration : MonoBehaviour
             _jumpForceSlider.SetActive(!_jumpForceSlider.activeSelf);
             _gravitySlider.SetActive(!_gravitySlider.activeSelf);
             _dragSlider.SetActive(!_dragSlider.activeSelf);
+            _airSlider.SetActive(!_airSlider.activeSelf);
         }
         if (!Input.GetKeyDown(KeyCode.G))
         {
