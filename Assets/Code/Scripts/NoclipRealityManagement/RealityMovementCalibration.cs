@@ -131,7 +131,7 @@ public class RealityMovementCalibration : MonoBehaviour
             SpeedControl();
 
             // handle drag
-            if (_grounded)
+            if (_grounded && !_commitJump)
                 _rigidbody.drag = _groundDrag;
             else
                 _rigidbody.drag = 0;
@@ -143,7 +143,18 @@ public class RealityMovementCalibration : MonoBehaviour
         _rigidbody.velocity = Vector3.zero;
     }
 
-    // 
+    
+    private bool _commitJump = false;
+
+    private void LateUpdate()
+    {
+        if (_commitJump)
+        {
+            _commitJump = false;
+            Jump();
+        }
+    }
+
     private void UserInput()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -154,7 +165,9 @@ public class RealityMovementCalibration : MonoBehaviour
         {
             _readyToJump = false;
             
-            Jump();
+            //set ground drag to zero
+            _rigidbody.drag = 0;
+            _commitJump = true;
             
             Invoke(nameof(ResetJump), _jumpCooldown); // continues to jump if space remains pressed
         }
