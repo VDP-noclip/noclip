@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     
     [Tooltip("This logs a specific debug channel")]
     [SerializeField] private string _debugChannel = "unloadScenes";
+    [SerializeField] private float _gravity = 0f;
 
     //enum game states
     private enum GameState
@@ -27,7 +28,6 @@ public class GameManager : MonoBehaviour
     }
     void Awake()
     {
-        
     }
 
     /* possibly AreaManager code
@@ -38,14 +38,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _player = InitPlayer();
-        Debug.Log(_player + " player found");
-        GetCheckpointIndexes();
-        _checkpointIndexPointer = GetCheckpointIndexes();
-        ActivateNextCheckpoint();
+        CloseAllScenes();
     }
     */
-    
+    void Start()
+    {
+    }
+
     // Update is called once per frame
     private void Update () {
         //if area is finished load next area
@@ -72,7 +71,7 @@ public class GameManager : MonoBehaviour
             if (scene.name != SceneManager.GetActiveScene().name)
             {
                 //unload scene
-                SceneManager.UnloadSceneAsync(scene);
+                SceneManager.UnloadScene(scene);
             }
         }
     }
@@ -98,6 +97,14 @@ public class GameManager : MonoBehaviour
         _gameState = gameState;
     }
 
+    public void SetGravity(float gravity)
+    {
+        _gravity = gravity;
+    }
+    public float GetGravity()
+    {
+        return _gravity;
+    }
 /* OLD GAMEMANAGER THAT ACTUALLY WAS LEVELMANAGER THAT NOW IS SOMETHING ELSE
     
     // Channel Logger
