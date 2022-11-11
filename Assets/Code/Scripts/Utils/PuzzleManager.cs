@@ -35,18 +35,37 @@ public class PuzzleManager : MonoBehaviour
             _currentPuzzleIndex += 1;
             //rotate newPuzzle.transform.Find("BeginAnchor") to zero
             //newPuzzle.transform.Find("BeginAnchor").transform.rotation = Quaternion.Euler(0, 0, 0);
-            //find absolute position of gameobject BeginAnchor in newPuzzle
-            Vector3 beginAnchorPosition = newPuzzle.transform.Find("BeginAnchor").position;
+            //find begin anchor
+            GameObject beginAnchor = newPuzzle.transform.Find("BeginAnchor").gameObject;
+            //find geometric center of begin anchor in world space
+            Vector3 beginAnchorPosition = beginAnchor.GetComponent<Renderer>().bounds.center;
+            
+            /*Check with visual debugging
+            //spawn a red vertical pole at beginAnchorPosition
+            GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pole.transform.position = beginAnchorPosition;
+            pole.transform.localScale = new Vector3(0.1f, 0.2f, 0.1f);
+            pole.GetComponent<Renderer>().material.color = Color.red;
+            */
+
             //difference between beginAnchorPosition and _puzzlePosition
             Vector3 difference = _puzzlePosition - beginAnchorPosition;
             //move newPuzzle by difference
             newPuzzle.transform.position = newPuzzle.transform.position + difference;
             //move newPuzzle by -2 on x and z
-            newPuzzle.transform.position = newPuzzle.transform.position + new Vector3(2, 0, 2); //Why it doesn't work without this is beyond me
-            //rotate EndAnchor of newPuzzle to zero
-            //newPuzzle.transform.Find("EndAnchor").transform.rotation = Quaternion.Euler(0, 0, 0);
-            //set _puzzlePosition to endAnchorPosition
-            _puzzlePosition = newPuzzle.transform.Find("EndAnchor").position;
+            //find end anchor
+            GameObject endAnchor = newPuzzle.transform.Find("EndAnchor").gameObject;
+            //find geometric center of end anchor in world space
+            _puzzlePosition = endAnchor.GetComponent<Renderer>().bounds.center;
+
+            /*Check with visual debugging
+            //spawn a green horizontal pole at beginAnchorPosition
+            pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pole.transform.position = _puzzlePosition;
+            pole.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            pole.GetComponent<Renderer>().material.color = Color.green;
+            */
+            
             GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
         }
         catch (IndexOutOfRangeException){
