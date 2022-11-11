@@ -9,4 +9,8 @@ public class DestroyThisObjectOnLoad : MonoBehaviour
         //destroy this object
         Destroy(gameObject);
     }
+    void Start()
+    {
+        
+    }
 }

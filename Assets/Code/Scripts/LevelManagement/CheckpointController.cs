@@ -37,6 +37,8 @@ public class CheckpointController : MonoBehaviour
     private void CheckpointReached(){
         //change color of _gameObject
         _gameObject.GetComponent<Renderer>().material.color = Color.green;
+        //rename the checkpoint
+        _gameObject.name = "CompletedCheckpoint";
         //find gameobject PuzzleManager and call LoadNextPuzzle()
         GameObject.Find("PuzzleManager").GetComponent<PuzzleManager>().LoadNextPuzzle();
     }

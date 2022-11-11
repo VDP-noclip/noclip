@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scenesToLoad:
-  - Menu_0
+  - Area_00
 --- !u!114 &1092676117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,4 +183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameState: INITIALIZE_GAME
+  _gameAreas:
+  - Area_00
+  - Area_01
+  - Area_00
   _debugChannel: unloadScenes

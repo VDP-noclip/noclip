@@ -10,12 +10,21 @@ public class GameManager : MonoBehaviour
 {
     [Tooltip("At least this script has a fancy icon :-)")]
     [SerializeField] private string _gameState = "INITIALIZE_GAME";
-
+    //list of game areas
+    [SerializeField] private List<string> _gameAreas = new List<string>();
+    //index of current game area
+    private int _currentGameAreaIndex = 0;
     
     [Tooltip("This logs a specific debug channel")]
     [SerializeField] private string _debugChannel = "unloadScenes";
 
-    
+    //enum game states
+    private enum GameState
+    {
+        INITIALIZE_GAME,
+        AREA_FINISHED,
+        GAME_FINISHED
+    }
     void Awake()
     {
         
@@ -39,15 +48,55 @@ public class GameManager : MonoBehaviour
     
     // Update is called once per frame
     private void Update () {
-        //if c is pressed close this scene
-        if (Input.GetKeyDown(KeyCode.C))
+        //if area is finished load next area
+        if(_gameState == "AREA_FINISHED")
         {
-            //close this scene
-            int y = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.UnloadSceneAsync(y);
+            //increase index of current game area
+            _currentGameAreaIndex += 1;
+            CloseAllScenes();
+            DestroyOtherGameObjects();
+            //load scene with name of next game area
+            SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+            SetGameState("NEW_AREA");
         }
     }
 
+    public void CloseAllScenes()
+    {
+        //get all scenes
+        Scene[] scenes = SceneManager.GetAllScenes();
+        //loop through all scenes
+        foreach (Scene scene in scenes)
+        {
+            //if scene is not this scene
+            if (scene.name != SceneManager.GetActiveScene().name)
+            {
+                //unload scene
+                SceneManager.UnloadSceneAsync(scene);
+            }
+        }
+    }
+
+    public void DestroyOtherGameObjects()
+    {
+        //get all game objects
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>();
+        //loop through all game objects
+        foreach (GameObject gameObject in gameObjects)
+        {
+            //if game object is not this game object
+            if (gameObject.name != this.gameObject.name)
+            {
+                //destroy game object
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    public void SetGameState(string gameState)
+    {
+        _gameState = gameState;
+    }
 
 /* OLD GAMEMANAGER THAT ACTUALLY WAS LEVELMANAGER THAT NOW IS SOMETHING ELSE
     
