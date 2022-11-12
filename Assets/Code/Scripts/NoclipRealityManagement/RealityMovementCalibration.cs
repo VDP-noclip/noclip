@@ -101,9 +101,6 @@ public class RealityMovementCalibration : MonoBehaviour
         ResetJump(); // set _readyToJump to "true"
 
         _startYScale = _transform.localScale.y;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
     }
 
     // Update is called once per frame
@@ -339,7 +336,7 @@ public class RealityMovementCalibration : MonoBehaviour
     private GameObject _speedMonitor;
     private bool _gPressed = false;
     private bool _hPressed = false;
-    private bool _calibrationMenu = true;
+    private bool _calibrationMenu = false;
 
     private void InitCalibrationMenu(){
         _speedSlider = GameObject.Find("RunSpeed");
