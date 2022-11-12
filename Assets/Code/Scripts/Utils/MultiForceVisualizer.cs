@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MultiForceVisualizer : MonoBehaviour
 {
+    //serialize player
+    [SerializeField] private GameObject player;
     //private Rigidbody
     private Rigidbody _rigidbody;
     private List<GameObject> _forceVisualizers = new List<GameObject>();
@@ -16,9 +18,11 @@ public class MultiForceVisualizer : MonoBehaviour
     void Start()
     {
         //get rigidbody of RealityPlayer
-        _rigidbody = GameObject.Find("RealityPlayer").GetComponent<Rigidbody>();
+        //_rigidbody = GameObject.Find("RealityPlayer").GetComponent<Rigidbody>();
+        _rigidbody = player.GetComponent<Rigidbody>();
         //get realityplayer realitymovementcalibration
-        RealityMovementCalibration realityMovementCalibration = GameObject.Find("RealityPlayer").GetComponent<RealityMovementCalibration>();
+        //RealityMovementCalibration realityMovementCalibration = GameObject.Find("RealityPlayer").GetComponent<RealityMovementCalibration>();
+        RealityMovementCalibration realityMovementCalibration = player.GetComponent<RealityMovementCalibration>();
         if(realityMovementCalibration.ShowForces()){
             Debug.Log("IMPORTANT: THE POLES SLOW DOWN THE PLAYER. REMOVE THEM IF YOU DON'T NEED THEM.");
             //for each color
@@ -79,8 +83,8 @@ public class MultiForceVisualizer : MonoBehaviour
         
         foreach (GameObject forceVisualizer in _forceVisualizers)
         {
-            //hide the forceVisualizer
-            forceVisualizer.SetActive(false);
+            //hide mesh of forceVisualizer
+            forceVisualizer.GetComponent<MeshRenderer>().enabled = false;
         }
         //for each force in the list of forces print ciao
         try{
@@ -112,8 +116,8 @@ public class MultiForceVisualizer : MonoBehaviour
             end = pole.transform.position + pole.transform.rotation * new Vector3(0, 0.7f * pole.transform.localScale.y, 0);
             //move pole up by 4
             //pole.transform.position += new Vector3(0, 4, 0);
-            //show the pole
-            pole.SetActive(true);
+            //show mesh of forceVisualizer
+            pole.GetComponent<MeshRenderer>().enabled = true;
         }
         }
         catch{

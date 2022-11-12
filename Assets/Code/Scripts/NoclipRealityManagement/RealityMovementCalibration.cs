@@ -342,15 +342,13 @@ public class RealityMovementCalibration : MonoBehaviour
         _speedMonitor = GameObject.Find("SpeedMonitor");
     }
 
-    MultiForceVisualizer _forceVisualizer;
+    [SerializeField] MultiForceVisualizer _forceVisualizer;
     
     //variable size list vector3 of forces
     private List<Vector3> _forces;
     private void CalibrationMenu(){
         if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
             InitCalibrationMenu();
-            //find gameobject ForceVisualizer
-            _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
         }
         _forceVisualizer.UpdateForces(_forces);
         _forces = new List<Vector3>();

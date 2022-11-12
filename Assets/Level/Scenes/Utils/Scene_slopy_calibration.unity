@@ -4125,6 +4125,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1917016927691387791, guid: 8dc680a59c7d0b54090accac8b0ddd8a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 904981494}
     - target: {fileID: 2578334893811728917, guid: 8dc680a59c7d0b54090accac8b0ddd8a,
         type: 3}
       propertyPath: m_Enabled
@@ -4200,6 +4205,11 @@ PrefabInstance:
       propertyPath: _showForces
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9135126390078114478, guid: 8dc680a59c7d0b54090accac8b0ddd8a,
+        type: 3}
+      propertyPath: _forceVisualizer
+      value: 
+      objectReference: {fileID: 1918371763}
     m_RemovedComponents:
     - {fileID: 2578334893811728917, guid: 8dc680a59c7d0b54090accac8b0ddd8a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8dc680a59c7d0b54090accac8b0ddd8a, type: 3}
@@ -4661,6 +4671,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &904981494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 905562973452443426, guid: 8dc680a59c7d0b54090accac8b0ddd8a,
+    type: 3}
+  m_PrefabInstance: {fileID: 801445598}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &952579816
 GameObject:
   m_ObjectHideFlags: 0
@@ -6838,7 +6854,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh27810
+  m_Name: pb_Mesh32940
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7399,7 +7415,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh27770
+  m_Name: pb_Mesh34814
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7654,6 +7670,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1807883053}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1918371763 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1917016927691387791, guid: 8dc680a59c7d0b54090accac8b0ddd8a,
+    type: 3}
+  m_PrefabInstance: {fileID: 801445598}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40098be7b22e711429cbd78db1eb7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2025524843
 GameObject:
   m_ObjectHideFlags: 0
