@@ -109,6 +109,14 @@ public class RealityMovementCalibration : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        //IMPORTANT LESSON materials loaded at runtime should be instantiated
+        //find ErrorCube and enable its mesh
+        //GameObject errorCube = GameObject.Find("ErrorCube");
+        //find realitybody
+        //GameObject realityBody = GameObject.Find("RealityBody");
+        //set material of errorCube to material of RealityBody
+        //errorCube.GetComponent<MeshRenderer>().material = realityBody.GetComponent<MeshRenderer>().material;
+
         CalibrationMenu();
 
         if (!_noclipManager.IsNoclipEnabled())

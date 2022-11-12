@@ -5,24 +5,25 @@ using UnityEngine;
 public class MultiForceVisualizer : MonoBehaviour
 {
     //serialize player
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject _player;
     //private Rigidbody
     private Rigidbody _rigidbody;
     private List<GameObject> _forceVisualizers = new List<GameObject>();
     private GameObject _endCone;
     //List<Vector3> forces
     private List<Vector3> _forces;
-    //array of 7 different colors
+    //list of 7 different color materials
+    private Material _exceptionMaterial;
     private Color[] _colors = new Color[7] { Color.red, Color.blue, Color.green, Color.yellow, Color.magenta, Color.cyan, Color.white };
     // Start is called before the first frame update
     void Start()
     {
         //get rigidbody of RealityPlayer
         //_rigidbody = GameObject.Find("RealityPlayer").GetComponent<Rigidbody>();
-        _rigidbody = player.GetComponent<Rigidbody>();
+        _rigidbody = _player.GetComponent<Rigidbody>();
         //get realityplayer realitymovementcalibration
         //RealityMovementCalibration realityMovementCalibration = GameObject.Find("RealityPlayer").GetComponent<RealityMovementCalibration>();
-        RealityMovementCalibration realityMovementCalibration = player.GetComponent<RealityMovementCalibration>();
+        RealityMovementCalibration realityMovementCalibration = _player.GetComponent<RealityMovementCalibration>();
         if(realityMovementCalibration.ShowForces()){
             Debug.Log("IMPORTANT: THE POLES SLOW DOWN THE PLAYER. REMOVE THEM IF YOU DON'T NEED THEM.");
             //for each color
@@ -33,12 +34,23 @@ public class MultiForceVisualizer : MonoBehaviour
                 pole.name = "ForceVisualizerVector";
                 _forceVisualizers.Add(pole);
                 //pole corresponding color from array of colors
-                pole.GetComponent<Renderer>().material.color = color;
+                //pole.GetComponent<Renderer>().material.color = color;
                 //disable shadow
                 pole.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 //disable all shadows
                 pole.GetComponent<Renderer>().receiveShadows = false;
+                //new material clone of realitybody material
+               // _materials.Add(new Material(GameObject.Find("RealityBody").GetComponent<MeshRenderer>().material));
+                //_materials[_materials.Count - 1].color = color;
+                //set material of pole
+                //pole.GetComponent<MeshRenderer>().material = _materials[_materials.Count - 1];
+                //set material of pole to material of realitybody
+                pole.GetComponent<Renderer>().material = new Material(GameObject.Find("RealityBody").GetComponent<MeshRenderer>().material);
+                pole.GetComponent<Renderer>().material.color = color;
+                //add material to list of materials
             }
+            _exceptionMaterial = new Material(GameObject.Find("RealityBody").GetComponent<MeshRenderer>().material);
+            _exceptionMaterial.color = Color.red;
         }
         else
             Destroy(this.gameObject);
@@ -79,15 +91,15 @@ public class MultiForceVisualizer : MonoBehaviour
     //multiple vectors
     void Update()
     {
+
         //destroy all gameobjects in _forceVisualizers
         
+        try{
         foreach (GameObject forceVisualizer in _forceVisualizers)
         {
-            //hide mesh of forceVisualizer
             forceVisualizer.GetComponent<MeshRenderer>().enabled = false;
         }
         //for each force in the list of forces print ciao
-        try{
         foreach (Vector3 force in _forces)
         {
             //set pole to corresponding element in _forceVisualizers
@@ -121,7 +133,22 @@ public class MultiForceVisualizer : MonoBehaviour
         }
         }
         catch{
+            //spawn a big red cube
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //rename cube
+            cube.name = "ErrorCube";
+            cube.transform.position = _rigidbody.transform.position + new Vector3(0, 10, 0);
+            cube.transform.localScale = new Vector3(10f, 10f, 10f);
+            cube.GetComponent<Renderer>().material = _exceptionMaterial;
+            //disable collider
+            Destroy(cube.GetComponent<Collider>());
         }
+    
+        //spawn a big red cube
+        //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //cube.transform.position = _rigidbody.transform.position;
+        //cube.transform.localScale = new Vector3(10f, 10f, 10f);
+        //cube.GetComponent<Renderer>().material.color = Color.red;
     }
 
     public void UpdateForces(List<Vector3> forces)
