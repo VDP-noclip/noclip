@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultiForceVisualizer : MonoBehaviour
+public class MultiForceVisualizer2 : MonoBehaviour
 {
     //private Rigidbody
     private Rigidbody _rigidbody;
@@ -19,21 +19,8 @@ public class MultiForceVisualizer : MonoBehaviour
         _rigidbody = GameObject.Find("RealityPlayer").GetComponent<Rigidbody>();
         //get realityplayer realitymovementcalibration
         RealityMovementCalibration realityMovementCalibration = GameObject.Find("RealityPlayer").GetComponent<RealityMovementCalibration>();
-        if(realityMovementCalibration.ShowForces()){
+        if(realityMovementCalibration.ShowForces())
             Debug.Log("IMPORTANT: THE POLES SLOW DOWN THE PLAYER. REMOVE THEM IF YOU DON'T NEED THEM.");
-            //for each color
-            foreach(Color color in _colors){
-                GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                Destroy(pole.GetComponent<Collider>());
-                //name pole "ForceVisualizerVector"
-                pole.name = "ForceVisualizerVector";
-                _forceVisualizers.Add(pole);
-                //pole corresponding color from array of colors
-                pole.GetComponent<Renderer>().material.color = color;
-                //disable shadow
-                pole.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            }
-        }
         else
             Destroy(this.gameObject);
     }
@@ -77,15 +64,18 @@ public class MultiForceVisualizer : MonoBehaviour
         
         foreach (GameObject forceVisualizer in _forceVisualizers)
         {
-            //hide the forceVisualizer
-            forceVisualizer.SetActive(false);
+            Destroy(forceVisualizer);
         }
         //for each force in the list of forces print ciao
-        try{
         foreach (Vector3 force in _forces)
         {
-            //set pole to corresponding element in _forceVisualizers
-            GameObject pole = _forceVisualizers[_forces.IndexOf(force)];
+            GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            Destroy(pole.GetComponent<Collider>());
+            //name pole "ForceVisualizerVector"
+            pole.name = "ForceVisualizerVector";
+            _forceVisualizers.Add(pole);
+            //pole corresponding color from array of colors
+            pole.GetComponent<Renderer>().material.color = _colors[_forces.IndexOf(force)];
             //remove collider of pole
             //set the position of the pole to the position of the RealityPlayer
             pole.transform.position = _rigidbody.transform.position;
@@ -110,11 +100,6 @@ public class MultiForceVisualizer : MonoBehaviour
             end = pole.transform.position + pole.transform.rotation * new Vector3(0, 0.7f * pole.transform.localScale.y, 0);
             //move pole up by 4
             //pole.transform.position += new Vector3(0, 4, 0);
-            //show the pole
-            pole.SetActive(true);
-        }
-        }
-        catch{
         }
     }
 
