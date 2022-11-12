@@ -14,7 +14,7 @@ public class RealityMovementCalibration : MonoBehaviour
         Crouching,
         Air
     }
-
+    [SerializeField] private bool _showForces = true;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [SerializeField] private float _maxRunSpeed = 6f;
@@ -228,27 +228,23 @@ public class RealityMovementCalibration : MonoBehaviour
         if (OnSlope() && !_exitingOnSlope)
         {
             // Add a force on the plane direction of the plane
-            _rigidbody.AddForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity), ForceMode.Force); 
-            _forces.Add(GetSlopeMoveDirection() * (_moveSpeed * _gravity));
-            
+            ApplyForce(GetSlopeMoveDirection() * (_moveSpeed * _gravity));
             // if _rigidbody.velocity.y != 0 and w a s or d pressed
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
-                _rigidbody.AddForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4), ForceMode.Force); 
-                _forces.Add(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4));
+                ApplyForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4));
+
                 //TODO check if new slope angle is greater than the previous, if it is don't apply this force so that the player can climb it, then apply this force again as always 
             }
         }
         // differentiate movement on the ground and in air
         if (_grounded){
             _groundSpeed = _rigidbody.velocity.magnitude;
-            _rigidbody.AddForce(_moveSpeed * _gravity * _moveDirection.normalized, ForceMode.Force);
-            _forces.Add(_moveSpeed * _gravity * _moveDirection.normalized);
+            ApplyForce(_moveSpeed * _gravity * _moveDirection.normalized);
         }
         else{
-            _rigidbody.AddForce(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized, ForceMode.Force);
-            _forces.Add(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized);
+            ApplyForce(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized);
             //prject the velocity on the horizontal plane
             Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_rigidbody.velocity, Vector3.up);
             if (horizontalVelocity.magnitude > Mathf.Max(_maxMoveSpeed, _groundSpeed))
@@ -296,8 +292,9 @@ public class RealityMovementCalibration : MonoBehaviour
         _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
         // create an upward impulse force
-        _rigidbody.AddForce(_transform.up * _jumpForce, ForceMode.Impulse);
-        _forces.Add(_transform.up * _jumpForce);
+        //_rigidbody.AddForce(_transform.up * _jumpForce, ForceMode.Impulse);
+        //_forces.Add(_transform.up * _jumpForce);
+        ApplyForce(_transform.up * _jumpForce * 50); //impulse is force/dt, 1/dt is 50 (fixed update is 0.02)
     }
 
     private void ResetJump()
@@ -345,7 +342,7 @@ public class RealityMovementCalibration : MonoBehaviour
         _speedMonitor = GameObject.Find("SpeedMonitor");
     }
 
-    ForceVisualizer _forceVisualizer;
+    MultiForceVisualizer _forceVisualizer;
     
     //variable size list vector3 of forces
     private List<Vector3> _forces;
@@ -353,7 +350,7 @@ public class RealityMovementCalibration : MonoBehaviour
         if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
             InitCalibrationMenu();
             //find gameobject ForceVisualizer
-            _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<ForceVisualizer>();
+            _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
         }
         _forceVisualizer.UpdateForces(_forces);
         _forces = new List<Vector3>();
@@ -403,5 +400,16 @@ public class RealityMovementCalibration : MonoBehaviour
         {
             _hPressed = false;
         }
+    }
+
+    void ApplyForce(Vector3 force)
+    {
+        _rigidbody.AddForce(force, ForceMode.Force);
+        _forces.Add(force);
+    }
+
+    public bool ShowForces()
+    {
+        return _showForces;
     }
 }
