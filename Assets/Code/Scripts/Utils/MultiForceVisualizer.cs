@@ -23,7 +23,7 @@ public class MultiForceVisualizer : MonoBehaviour
             Debug.Log("IMPORTANT: THE POLES SLOW DOWN THE PLAYER. REMOVE THEM IF YOU DON'T NEED THEM.");
             //for each color
             foreach(Color color in _colors){
-                GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 Destroy(pole.GetComponent<Collider>());
                 //name pole "ForceVisualizerVector"
                 pole.name = "ForceVisualizerVector";
@@ -32,6 +32,8 @@ public class MultiForceVisualizer : MonoBehaviour
                 pole.GetComponent<Renderer>().material.color = color;
                 //disable shadow
                 pole.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                //disable all shadows
+                pole.GetComponent<Renderer>().receiveShadows = false;
             }
         }
         else
