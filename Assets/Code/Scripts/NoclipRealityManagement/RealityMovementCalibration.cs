@@ -15,28 +15,40 @@ public class RealityMovementCalibration : MonoBehaviour
         Air
     }
     [SerializeField] private bool _showForces = true;
+    
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
+    [Range(0, 30)]
     [SerializeField] private float _maxRunSpeed = 6f;
-    [Range(0, 50)]
+    [Range(0, 30)]
     [SerializeField] private float _runForceMultiplier = 10f;
+    [Range(0, 25)]
     [SerializeField] private float _maxWalkSpeed = 3f;
+    [Range(0, 25)]
     [SerializeField] private float _walkForceMultiplier = 3f;
     
     private float _moveSpeed;     // speed intensity
     private float _maxMoveSpeed;
+    private float _groundSpeed = 0;
     
     [Header("Drag")]
+    [Range(0, 15)]
     [SerializeField] private float _groundDrag = 4f;    // ground drag
     
     [Header("Jump")]
+    [Range(0, 25)]
     [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [Range(0, 1)]
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
+    [Range(0, 0.3f)]
     [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
     private bool _readyToJump;      //
+    private bool _commitJump = false;
 
     [Header("Crouch")]
+    [Range(0, 10)]
     [SerializeField] private float _crouchSpeed = 2f;
+    [Range(0, 1)]
     [SerializeField] private float _crouchYScale = 0.5f;
     private float _startYScale;
     
@@ -59,6 +71,7 @@ public class RealityMovementCalibration : MonoBehaviour
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
 
+    [Range(0, 10)]
     [SerializeField] private float _gravityMultiplier = 1f;
     [SerializeField] private Transform _orientation;
 
@@ -153,9 +166,6 @@ public class RealityMovementCalibration : MonoBehaviour
         _rigidbody.velocity = Vector3.zero;
     }
 
-    
-    private bool _commitJump = false;
-
     private void LateUpdate()
     {
         if (_commitJump)
@@ -228,8 +238,6 @@ public class RealityMovementCalibration : MonoBehaviour
             _state = MovementState.Air;
         }
     }
-
-    private float _groundSpeed = 0;
     private void MovePlayer()
     {
         // calculate movement direction
