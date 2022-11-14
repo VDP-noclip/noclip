@@ -18,6 +18,7 @@ public class RealityMovementCalibration : MonoBehaviour
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [SerializeField] private float _maxRunSpeed = 6f;
+    [Range(0, 50)]
     [SerializeField] private float _runForceMultiplier = 10f;
     [SerializeField] private float _maxWalkSpeed = 3f;
     [SerializeField] private float _walkForceMultiplier = 3f;
@@ -103,8 +104,15 @@ public class RealityMovementCalibration : MonoBehaviour
         _startYScale = _transform.localScale.y;
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void Update(){
+        if (!_noclipManager.IsNoclipEnabled())
+        {
+            StateHandler();
+            SpeedControl();
+        }
+    }
+
+    private void FixedUpdate()
     {
         //IMPORTANT LESSON materials loaded at runtime should be instantiated
         //find ErrorCube and enable its mesh
@@ -114,7 +122,7 @@ public class RealityMovementCalibration : MonoBehaviour
         //set material of errorCube to material of RealityBody
         //errorCube.GetComponent<MeshRenderer>().material = realityBody.GetComponent<MeshRenderer>().material;
 
-        CalibrationMenu();
+        VisualizeForces();
 
         if (!_noclipManager.IsNoclipEnabled())
         {
@@ -130,9 +138,7 @@ public class RealityMovementCalibration : MonoBehaviour
             Grounded = _grounded; // used to debug // TODO remove
         
             UserInput();
-            StateHandler();
             MovePlayer();
-            SpeedControl();
 
             // handle drag
             if (_grounded && !_commitJump)
@@ -238,24 +244,18 @@ public class RealityMovementCalibration : MonoBehaviour
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
-                ApplyForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4));
+                ApplyForce(-_slopeHit.normal * (Physics.gravity.magnitude * _runForceMultiplier));
 
                 //TODO check if new slope angle is greater than the previous, if it is don't apply this force so that the player can climb it, then apply this force again as always 
             }
         }
         // differentiate movement on the ground and in air
-        if (_grounded){
+        else if (_grounded){
             _groundSpeed = _rigidbody.velocity.magnitude;
             ApplyForce(_moveSpeed * _gravity * _moveDirection.normalized);
         }
         else{
             ApplyForce(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized);
-            //prject the velocity on the horizontal plane
-            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_rigidbody.velocity, Vector3.up);
-            if (horizontalVelocity.magnitude > Mathf.Max(_maxMoveSpeed, _groundSpeed))
-            {
-                _rigidbody.velocity = horizontalVelocity.normalized * _groundSpeed + Vector3.up * _rigidbody.velocity.y;
-            }
         }
 
         _rigidbody.useGravity = !OnSlope();
@@ -275,8 +275,7 @@ public class RealityMovementCalibration : MonoBehaviour
                 _rigidbody.velocity = _rigidbody.velocity.normalized * _maxMoveSpeed;
             }
         }
-        else
-        {
+        else if (_grounded){
             Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
             // limit velocity if needed
@@ -284,6 +283,14 @@ public class RealityMovementCalibration : MonoBehaviour
             {
                 Vector3 limitedVel = flatVel.normalized * _maxMoveSpeed;
                 _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
+            }
+        }
+        else{
+            //project the velocity on the horizontal plane
+            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_rigidbody.velocity, Vector3.up);
+            if (horizontalVelocity.magnitude > Mathf.Max(_maxMoveSpeed, _groundSpeed))
+            {
+                _rigidbody.velocity = horizontalVelocity.normalized * _groundSpeed + Vector3.up * _rigidbody.velocity.y;
             }
         }
         
@@ -351,12 +358,28 @@ public class RealityMovementCalibration : MonoBehaviour
     
     //variable size list vector3 of forces
     private List<Vector3> _forces;
+
+    private void VisualizeForces()
+    {
+        _forceVisualizer.UpdateForces(_forces);
+        _forces = new List<Vector3>();
+    }
+
+    void ApplyForce(Vector3 force)
+    {
+        _rigidbody.AddForce(force, ForceMode.Force);
+        _forces.Add(force);
+    }
+
+    public bool ShowForces()
+    {
+        return _showForces;
+    }
+
     private void CalibrationMenu(){
         if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
             InitCalibrationMenu();
         }
-        _forceVisualizer.UpdateForces(_forces);
-        _forces = new List<Vector3>();
         //_jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
         //_moveSpeed = _speedSlider.GetComponent<Slider>().value;
         _jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
@@ -403,16 +426,5 @@ public class RealityMovementCalibration : MonoBehaviour
         {
             _hPressed = false;
         }
-    }
-
-    void ApplyForce(Vector3 force)
-    {
-        _rigidbody.AddForce(force, ForceMode.Force);
-        _forces.Add(force);
-    }
-
-    public bool ShowForces()
-    {
-        return _showForces;
     }
 }
