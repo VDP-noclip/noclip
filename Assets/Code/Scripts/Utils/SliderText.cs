@@ -18,6 +18,7 @@ public class SliderText : MonoBehaviour
     void Update()
     {
         //when slider value changes set its value to the text mesh pro
-        textMeshPro.GetComponent<TextMeshProUGUI>().text = GetComponent<Slider>().value.ToString();
+        //cut value to 2 decimal places
+        textMeshPro.GetComponent<TextMeshProUGUI>().text = GetComponent<Slider>().value.ToString("F2");
     }
 }

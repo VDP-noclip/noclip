@@ -238,13 +238,13 @@ public class RealityMovementCalibration : MonoBehaviour
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
-                ApplyForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4));
+                //ApplyForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4));
 
                 //TODO check if new slope angle is greater than the previous, if it is don't apply this force so that the player can climb it, then apply this force again as always 
             }
         }
         // differentiate movement on the ground and in air
-        if (_grounded){
+        else if (_grounded){
             _groundSpeed = _rigidbody.velocity.magnitude;
             ApplyForce(_moveSpeed * _gravity * _moveDirection.normalized);
         }
@@ -337,11 +337,13 @@ public class RealityMovementCalibration : MonoBehaviour
     private GameObject _slopeSlider;
     private GameObject _accSlider;
     private GameObject _speedMonitor;
+    private GameObject _saveButton;
     private bool _gPressed = false;
     private bool _hPressed = false;
     private bool _calibrationMenu = false;
 
     private void InitCalibrationMenu(){
+        _saveButton = GameObject.Find("SaveButton");
         _slopeSlider = GameObject.Find("MaxSlope");//
         _airSlider = GameObject.Find("AirAcceleration");
         _dragSlider = GameObject.Find("Drag");
@@ -352,6 +354,20 @@ public class RealityMovementCalibration : MonoBehaviour
         _gravitySlider = GameObject.Find("Gravity");
 
         _speedMonitor = GameObject.Find("SpeedMonitor");
+        try{
+            //load slider values from playerprefs
+            _slopeSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MaxSlope");
+            _airSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("AirAcceleration");
+            _dragSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Drag");
+            //_airSpeedSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("AirSpeed", 10);
+            _accSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("RunAcceleration");
+            _speedSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("RunSpeed");
+            _jumpForceSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("JumpForce");
+            _gravitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Gravity");
+        }
+        catch{
+            Debug.Log("PlayerPrefs not found");
+        }
     }
 
     [SerializeField] MultiForceVisualizer _forceVisualizer;
@@ -371,13 +387,16 @@ public class RealityMovementCalibration : MonoBehaviour
         _maxWalkSpeed = _maxRunSpeed / 2;
         _groundDrag = _dragSlider.GetComponent<Slider>().value;
         _gravityMultiplier = _gravitySlider.GetComponent<Slider>().value;
+        //cut airslider value to 2 decimal places
+        _airSlider.GetComponent<Slider>().value = (float)Math.Round(_airSlider.GetComponent<Slider>().value, 2);
         _airMultiplier = _airSlider.GetComponent<Slider>().value;
         //_maxAirSpeed = _airSpeedSlider.GetComponent<Slider>().value;
         _maxSlopeAngle = _slopeSlider.GetComponent<Slider>().value;
         _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
 
+        //set speed monitor value to current speed
+        _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
 
-        _speedMonitor.GetComponent<TextMeshProUGUI>().text = ((int)_rigidbody.velocity.magnitude).ToString();
         Physics.gravity = _originalGravity * _gravityMultiplier;
         //g button toggle
         if (Input.GetKeyDown(KeyCode.G) && !_gPressed)
@@ -421,6 +440,7 @@ public class RealityMovementCalibration : MonoBehaviour
         {
             _showForces = !_showForces;
         }
+
     }
 
     void ApplyForce(Vector3 force)
@@ -432,5 +452,23 @@ public class RealityMovementCalibration : MonoBehaviour
     public bool ShowForces()
     {
         return _showForces;
+    }
+
+    public void SaveSettings(){
+        //save settings
+        Debug.Log("Saving settings");
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.transform.position = this.transform.position + this.transform.forward * 2;
+        cube.GetComponent<Renderer>().material.color = Color.blue;
+        Destroy(cube, 2);
+        PlayerPrefs.SetFloat("JumpForce", _jumpForce);
+        PlayerPrefs.SetFloat("RunSpeed", _maxRunSpeed);
+        PlayerPrefs.SetFloat("WalkSpeed", _maxWalkSpeed);
+        PlayerPrefs.SetFloat("Drag", _groundDrag);
+        PlayerPrefs.SetFloat("Gravity", _gravityMultiplier);
+        PlayerPrefs.SetFloat("AirAcceleration", _airMultiplier);
+        PlayerPrefs.SetFloat("MaxSlope", _maxSlopeAngle);
+        PlayerPrefs.SetFloat("RunAcceleration", _runForceMultiplier);
+        PlayerPrefs.Save();
     }
 }
