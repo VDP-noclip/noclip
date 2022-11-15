@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _gravity;
 
     private int _currentGameAreaIndex;
-    private GameState _gameState = GameState.InitializeGame;
+    [SerializeField] private GameState _gameState = GameState.InitializeGame;
 
     //enum game states
     private enum GameState
