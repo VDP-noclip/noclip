@@ -14,7 +14,7 @@ public class RealityMovementCalibration : MonoBehaviour
         Crouching,
         Air
     }
-    [SerializeField] private bool _showForces = true;
+    private bool _showForces = false;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [SerializeField] private float _maxRunSpeed = 6f;
@@ -415,6 +415,11 @@ public class RealityMovementCalibration : MonoBehaviour
         if (!Input.GetKeyDown(KeyCode.G))
         {
             _hPressed = false;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            _showForces = !_showForces;
         }
     }
 

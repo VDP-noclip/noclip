@@ -21,7 +21,7 @@ public class MouseLook3rdPerson : MonoBehaviour
         _player = GameObject.Find("RealityPlayer");
     }
 
-    private bool _thirdPerson = true;
+    private bool _thirdPerson = false;
 
     // Update is called once per frame
     void Update()
