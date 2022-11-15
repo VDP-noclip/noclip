@@ -57,7 +57,7 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private float _gravityMultiplier = 1f;
     [SerializeField] private Transform _orientation;
 
-    [SerializeField] private float _gravity = 9.81f;  // This is used for the movement force //Questo peccato al cospetto di Dio va fixato
+    private float _gravity = 9.81f;  // This is used for the movement force 
     private float _horizontalInput;
     private float _verticalInput;
 
@@ -78,16 +78,8 @@ public class RealityMovement : MonoBehaviour
     
     private void Awake()
     {
-        GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        //if gravity magnitude is not 0
-        if (gameManager.GetGravity() == 0)
-        {
-            //set gravity to gravity magnitude
-            Physics.gravity *= _gravityMultiplier;
-            gameManager.SetGravity(Physics.gravity.magnitude);
-        }
-
         _rigidbody = GetComponent<Rigidbody>();
+        Physics.gravity *= _gravityMultiplier;   // Change the gravity
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();
     }
