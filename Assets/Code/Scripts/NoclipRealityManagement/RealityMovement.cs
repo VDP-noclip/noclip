@@ -10,24 +10,38 @@ public class RealityMovement : MonoBehaviour
         Crouching,
         Air
     }
-    
-    [Header("Speed")]
-    [SerializeField] private float _runSpeed = 6f;
-    [SerializeField] private float _walkSpeed = 3f;
+
+    [Header("Speed")] 
+    [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
+    [Range(0, 30)]
+    [SerializeField] private float _maxRunSpeed = 6f;
+    [Range(0, 30)]
+    [SerializeField] private float _runForceMultiplier = 10f;
+    [Range(0, 25)]
+    [SerializeField] private float _maxWalkSpeed = 3f;
+    [Range(0, 25)]
+    [SerializeField] private float _walkForceMultiplier = 3f;
     
     private float _moveSpeed;     // speed intensity
+    private float _maxMoveSpeed;
     
     [Header("Drag")]
+    [Range(0, 15)]
     [SerializeField] private float _groundDrag = 4f;    // ground drag
     
     [Header("Jump")]
+    [Range(0, 25)]
     [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [Range(0, 1)]
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
+    [Range(0, 1f)]
     [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
     private bool _readyToJump;      //
 
     [Header("Crouch")]
+    [Range(0, 10)]
     [SerializeField] private float _crouchSpeed = 2f;
+    [Range(0, 1)]
     [SerializeField] private float _crouchYScale = 0.5f;
     private float _startYScale;
     
@@ -50,10 +64,11 @@ public class RealityMovement : MonoBehaviour
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
 
+    [Range(0, 10)]
     [SerializeField] private float _gravityMultiplier = 1f;
     [SerializeField] private Transform _orientation;
 
-    [SerializeField] private float _gravity = 9.81f;  // This is used for the movement force //Questo peccato al cospetto di Dio va fixato
+    private float _gravity = 9.81f;  // This is used for the movement force 
     private float _horizontalInput;
     private float _verticalInput;
 
@@ -61,6 +76,7 @@ public class RealityMovement : MonoBehaviour
 
     private Transform _transform;
     private Rigidbody _rigidbody;      // set the rigidbody
+    private NoclipManager _noclipManager;
 
     // It's true if is the realbody, it's false if is the noclip body
     private bool _currentPlayerBody  = true;
@@ -81,9 +97,9 @@ public class RealityMovement : MonoBehaviour
             Physics.gravity *= _gravityMultiplier;
             gameManager.SetGravity(Physics.gravity.magnitude);
         }
-
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
+        _noclipManager = FindObjectOfType<NoclipManager>();
     }
 
     // Start is called before the first frame update
@@ -100,7 +116,7 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_currentPlayerBody)
+        if (!_noclipManager.IsNoclipEnabled())
         {
             //Alternative 1
             //_grounded = Physics.Raycast(_transform.position,  Vector3.down, _playerHeight * 0.5f + 0.3f, _ground);
@@ -126,17 +142,17 @@ public class RealityMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This function is called in order to reset the real body velocity when it respawns
+    /// </summary>
     public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
     }
-    
-    public void ActivatePlayer(bool active)
-    {
-        _currentPlayerBody = active;
-    }
 
-    // 
+    /// <summary>
+    /// This function manages the input of the user
+    /// </summary>
     private void UserInput()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -167,6 +183,9 @@ public class RealityMovement : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// This function manages the state of the real body. The body has different movement properties in different states
+    /// </summary>
     private void StateHandler()
     {
         // mode - Crouching
@@ -176,18 +195,20 @@ public class RealityMovement : MonoBehaviour
             _moveSpeed = _crouchSpeed;
         }
         
-        // mode - Sprinting
+        // mode - Walking
         else if (_grounded && Input.GetKey(_sprintKey))
         {
-            _state = MovementState.Sprinting;
-            _moveSpeed = _walkSpeed;
+            _state = MovementState.Walking;
+            _moveSpeed = _walkForceMultiplier;
+            _maxMoveSpeed = _maxWalkSpeed;
         }
         
-        // mode - Walking
+        // mode - Sprinting
         else if (_grounded)
         {
-            _state = MovementState.Walking;
-            _moveSpeed = _runSpeed;
+            _state = MovementState.Sprinting;
+            _moveSpeed = _runForceMultiplier;
+            _maxMoveSpeed = _maxRunSpeed;
         }
 
         // mode - Air
@@ -197,7 +218,9 @@ public class RealityMovement : MonoBehaviour
         }
     }
 
-    //
+    /// <summary>
+    /// This function manages the movement of the player in different situations
+    /// </summary>
     private void MovePlayer()
     {
         // calculate movement direction
@@ -212,8 +235,8 @@ public class RealityMovement : MonoBehaviour
             // if _rigidbody.velocity.y != 0 and w a s or d pressed
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
-                // Add a force that obliged the player to stay on the inclined plane 
-                _rigidbody.AddForce(Vector3.down * (_gravity * _gravityMultiplier * 4), ForceMode.Force);  
+                // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
+                _rigidbody.AddForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * 4), ForceMode.Force);  
             }
         }
         // differentiate movement on the ground and in air
@@ -225,13 +248,16 @@ public class RealityMovement : MonoBehaviour
         _rigidbody.useGravity = !OnSlope();
     }
 
+    /// <summary>
+    /// This function manages the velocity of the reality player
+    /// </summary>
     private void SpeedControl()
     {
         if (OnSlope() && !_exitingOnSlope)
         {
-            if (_rigidbody.velocity.magnitude > _moveSpeed)
+            if (_rigidbody.velocity.magnitude > _maxMoveSpeed)
             {
-                _rigidbody.velocity = _rigidbody.velocity.normalized * _moveSpeed;
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxMoveSpeed;
             }
         }
         else
@@ -239,9 +265,9 @@ public class RealityMovement : MonoBehaviour
             Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
             // limit velocity if needed
-            if (flatVel.magnitude > _moveSpeed)
+            if (flatVel.magnitude > _maxMoveSpeed)
             {
-                Vector3 limitedVel = flatVel.normalized * _moveSpeed;
+                Vector3 limitedVel = flatVel.normalized * _maxMoveSpeed;
                 _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
             }
         }
@@ -266,7 +292,12 @@ public class RealityMovement : MonoBehaviour
         _exitingOnSlope = false;
     }
 
-    //This function check if the plane is inclined
+    /// <summary>
+    /// This function check if the plane on which is the reality player is inclined
+    /// </summary>
+    /// <returns>
+    /// Returns a boolean that is true if the plane is inclined
+    /// </returns>
     private bool OnSlope()
     {
         if (Physics.Raycast(_groundCheck.position, Vector3.down, out _slopeHit, 0.5f + 0.3f))
@@ -278,7 +309,13 @@ public class RealityMovement : MonoBehaviour
         return false;
     }
 
-    //This function retuns the vector3 that represents the plane on which the player is moving
+    /// <summary>
+    /// This function calculates the direction of the slope plane
+    /// </summary>
+    /// <returns>
+    /// eturns the vector3 that represents the plane on which the player is moving
+    /// </returns>
+    
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
