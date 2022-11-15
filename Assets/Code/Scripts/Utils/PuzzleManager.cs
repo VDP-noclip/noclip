@@ -7,26 +7,63 @@ public class PuzzleManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] _puzzlePrefabs;
 
-    private int _currentPuzzleIndex = 0;
+    private int _currentPuzzleIndex;
 
+    private GameObject _gameManager;
+    private Vector3 _puzzlePosition;
+    
     private void Awake()
     {
         LoadNextPuzzle();
     }
 
-    void Update()
-    {   
-        // Todo: execute these 2 lines only when the player goes on the checkpoint
-        if (Application.isEditor && Input.GetKeyDown(KeyCode.X))
-        {
-            LoadNextPuzzle();
-            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
-        }
-    }
-
-    private void LoadNextPuzzle()
+    public void LoadNextPuzzle()
     {
-        GameObject.Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
-        _currentPuzzleIndex += 1;
+        //NOTE puzzles don't snap perfectly between anchors probably because of rotations
+        try{
+            GameObject newPuzzle = Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
+            _currentPuzzleIndex += 1;
+            //rotate newPuzzle.transform.Find("BeginAnchor") to zero
+            //newPuzzle.transform.Find("BeginAnchor").transform.rotation = Quaternion.Euler(0, 0, 0);
+            //find begin anchor
+            GameObject beginAnchor = newPuzzle.transform.Find("BeginAnchor").gameObject;
+            //find geometric center of begin anchor in world space
+            Vector3 beginAnchorPosition = beginAnchor.GetComponent<Renderer>().bounds.center;
+            
+            /*Check with visual debugging
+            //spawn a red vertical pole at beginAnchorPosition
+            GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pole.transform.position = beginAnchorPosition;
+            pole.transform.localScale = new Vector3(0.1f, 0.2f, 0.1f);
+            pole.GetComponent<Renderer>().material.color = Color.red;
+            */
+
+            //difference between beginAnchorPosition and _puzzlePosition
+            Vector3 difference = _puzzlePosition - beginAnchorPosition;
+            //move newPuzzle by difference
+            newPuzzle.transform.position = newPuzzle.transform.position + difference;
+            //move newPuzzle by -2 on x and z
+            //find end anchor
+            GameObject endAnchor = newPuzzle.transform.Find("EndAnchor").gameObject;
+            //find geometric center of end anchor in world space
+            _puzzlePosition = endAnchor.GetComponent<Renderer>().bounds.center;
+
+            /*Check with visual debugging
+            //spawn a green horizontal pole at beginAnchorPosition
+            pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pole.transform.position = _puzzlePosition;
+            pole.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            pole.GetComponent<Renderer>().material.color = Color.green;
+            */
+            
+            if (_currentPuzzleIndex > 1)
+                GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
+        }
+        catch (IndexOutOfRangeException){
+            Debug.Log("No more puzzles to load");
+            GameObject.Find("GameManager").GetComponent<GameManager>().SetGameState("AREA_FINISHED");
+            return;
+            //GameObject.Find("GameManager").GetComponent<GameManager>().CloseAllScenes();
+        }
     }
 }
