@@ -15,40 +15,27 @@ public class RealityMovementCalibration : MonoBehaviour
         Air
     }
     [SerializeField] private bool _showForces = true;
-    
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
-    [Range(0, 30)]
     [SerializeField] private float _maxRunSpeed = 6f;
-    [Range(0, 30)]
     [SerializeField] private float _runForceMultiplier = 10f;
-    [Range(0, 25)]
     [SerializeField] private float _maxWalkSpeed = 3f;
-    [Range(0, 25)]
     [SerializeField] private float _walkForceMultiplier = 3f;
     
     private float _moveSpeed;     // speed intensity
     private float _maxMoveSpeed;
-    private float _groundSpeed = 0;
     
     [Header("Drag")]
-    [Range(0, 15)]
     [SerializeField] private float _groundDrag = 4f;    // ground drag
     
     [Header("Jump")]
-    [Range(0, 25)]
     [SerializeField] private float _jumpForce = 8f;     // set jump upward force
-    [Range(0, 1)]
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
-    [Range(0, 0.3f)]
     [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
     private bool _readyToJump;      //
-    private bool _commitJump = false;
 
     [Header("Crouch")]
-    [Range(0, 10)]
     [SerializeField] private float _crouchSpeed = 2f;
-    [Range(0, 1)]
     [SerializeField] private float _crouchYScale = 0.5f;
     private float _startYScale;
     
@@ -71,7 +58,6 @@ public class RealityMovementCalibration : MonoBehaviour
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
 
-    [Range(0, 10)]
     [SerializeField] private float _gravityMultiplier = 1f;
     [SerializeField] private Transform _orientation;
 
@@ -117,15 +103,8 @@ public class RealityMovementCalibration : MonoBehaviour
         _startYScale = _transform.localScale.y;
     }
 
-    private void Update(){
-        if (!_noclipManager.IsNoclipEnabled())
-        {
-            StateHandler();
-            SpeedControl();
-        }
-    }
-
-    private void FixedUpdate()
+    // Update is called once per frame
+    private void Update()
     {
         //IMPORTANT LESSON materials loaded at runtime should be instantiated
         //find ErrorCube and enable its mesh
@@ -135,7 +114,7 @@ public class RealityMovementCalibration : MonoBehaviour
         //set material of errorCube to material of RealityBody
         //errorCube.GetComponent<MeshRenderer>().material = realityBody.GetComponent<MeshRenderer>().material;
 
-        VisualizeForces();
+        CalibrationMenu();
 
         if (!_noclipManager.IsNoclipEnabled())
         {
@@ -151,7 +130,9 @@ public class RealityMovementCalibration : MonoBehaviour
             Grounded = _grounded; // used to debug // TODO remove
         
             UserInput();
+            StateHandler();
             MovePlayer();
+            SpeedControl();
 
             // handle drag
             if (_grounded && !_commitJump)
@@ -165,6 +146,9 @@ public class RealityMovementCalibration : MonoBehaviour
     {
         _rigidbody.velocity = Vector3.zero;
     }
+
+    
+    private bool _commitJump = false;
 
     private void LateUpdate()
     {
@@ -238,6 +222,8 @@ public class RealityMovementCalibration : MonoBehaviour
             _state = MovementState.Air;
         }
     }
+
+    private float _groundSpeed = 0;
     private void MovePlayer()
     {
         // calculate movement direction
@@ -252,18 +238,25 @@ public class RealityMovementCalibration : MonoBehaviour
             if (_rigidbody.velocity.y != 0 &&(_horizontalInput != 0 || _verticalInput != 0))
             {
                 // Add a force that obliged the player to stay on the inclined plane. The force is perpendicular to the plane
-                ApplyForce(-_slopeHit.normal * (Physics.gravity.magnitude * _runForceMultiplier));
+                ApplyForce(-_slopeHit.normal * (_gravity * _gravityMultiplier * _runForceMultiplier * 4));
 
                 //TODO check if new slope angle is greater than the previous, if it is don't apply this force so that the player can climb it, then apply this force again as always 
             }
         }
         // differentiate movement on the ground and in air
-        else if (_grounded){
+        if (_grounded){
             _groundSpeed = _rigidbody.velocity.magnitude;
             ApplyForce(_moveSpeed * _gravity * _moveDirection.normalized);
         }
         else{
             ApplyForce(_moveSpeed * _airMultiplier * _gravity * _moveDirection.normalized);
+            //prject the velocity on the horizontal plane
+            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_rigidbody.velocity, Vector3.up);
+            float airMaxSpeed = Mathf.Max(_maxMoveSpeed, _groundSpeed); //in the air the max speed is the max between move speed and "sling speed" in case player was thrown away
+            if (horizontalVelocity.magnitude > airMaxSpeed)
+            {
+                _rigidbody.velocity = horizontalVelocity.normalized * airMaxSpeed + Vector3.up * _rigidbody.velocity.y;
+            }
         }
 
         _rigidbody.useGravity = !OnSlope();
@@ -283,7 +276,8 @@ public class RealityMovementCalibration : MonoBehaviour
                 _rigidbody.velocity = _rigidbody.velocity.normalized * _maxMoveSpeed;
             }
         }
-        else if (_grounded){
+        else
+        {
             Vector3 flatVel = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
             // limit velocity if needed
@@ -291,14 +285,6 @@ public class RealityMovementCalibration : MonoBehaviour
             {
                 Vector3 limitedVel = flatVel.normalized * _maxMoveSpeed;
                 _rigidbody.velocity = new Vector3(limitedVel.x, _rigidbody.velocity.y, limitedVel.z); // apply the new velocity to rb
-            }
-        }
-        else{
-            //project the velocity on the horizontal plane
-            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(_rigidbody.velocity, Vector3.up);
-            if (horizontalVelocity.magnitude > Mathf.Max(_maxMoveSpeed, _groundSpeed))
-            {
-                _rigidbody.velocity = horizontalVelocity.normalized * _groundSpeed + Vector3.up * _rigidbody.velocity.y;
             }
         }
         
@@ -348,17 +334,23 @@ public class RealityMovementCalibration : MonoBehaviour
     private GameObject _gravitySlider;
     private GameObject _dragSlider;
     private GameObject _airSlider;
+    private GameObject _slopeSlider;
+    private GameObject _accSlider;
     private GameObject _speedMonitor;
     private bool _gPressed = false;
     private bool _hPressed = false;
     private bool _calibrationMenu = false;
 
     private void InitCalibrationMenu(){
-        _speedSlider = GameObject.Find("RunSpeed");
+        _slopeSlider = GameObject.Find("MaxSlope");//
+        _airSlider = GameObject.Find("AirAcceleration");
+        _dragSlider = GameObject.Find("Drag");
+        //_airSpeedSlider = GameObject.Find("AirSpeed");//
+        _accSlider = GameObject.Find("RunAcceleration");//
+        _speedSlider = GameObject.Find("RunSpeed"); //walk is half
         _jumpForceSlider = GameObject.Find("JumpForce");
         _gravitySlider = GameObject.Find("Gravity");
-        _dragSlider = GameObject.Find("Drag");
-        _airSlider = GameObject.Find("AirMultiplier");
+
         _speedMonitor = GameObject.Find("SpeedMonitor");
     }
 
@@ -366,37 +358,25 @@ public class RealityMovementCalibration : MonoBehaviour
     
     //variable size list vector3 of forces
     private List<Vector3> _forces;
-
-    private void VisualizeForces()
-    {
-        _forceVisualizer.UpdateForces(_forces);
-        _forces = new List<Vector3>();
-    }
-
-    void ApplyForce(Vector3 force)
-    {
-        _rigidbody.AddForce(force, ForceMode.Force);
-        _forces.Add(force);
-    }
-
-    public bool ShowForces()
-    {
-        return _showForces;
-    }
-
     private void CalibrationMenu(){
         if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
             InitCalibrationMenu();
         }
+        _forceVisualizer.UpdateForces(_forces);
+        _forces = new List<Vector3>();
         //_jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
         //_moveSpeed = _speedSlider.GetComponent<Slider>().value;
         _jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
         _maxRunSpeed = _speedSlider.GetComponent<Slider>().value;
         _maxWalkSpeed = _maxRunSpeed / 2;
-        _runForceMultiplier = _speedSlider.GetComponent<Slider>().value;
         _groundDrag = _dragSlider.GetComponent<Slider>().value;
         _gravityMultiplier = _gravitySlider.GetComponent<Slider>().value;
         _airMultiplier = _airSlider.GetComponent<Slider>().value;
+        //_maxAirSpeed = _airSpeedSlider.GetComponent<Slider>().value;
+        _maxSlopeAngle = _slopeSlider.GetComponent<Slider>().value;
+        _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
+
+
         _speedMonitor.GetComponent<TextMeshProUGUI>().text = ((int)_rigidbody.velocity.magnitude).ToString();
         Physics.gravity = _originalGravity * _gravityMultiplier;
         //g button toggle
@@ -423,16 +403,29 @@ public class RealityMovementCalibration : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H) && !_hPressed)
         {
             _hPressed = true;
+            //find calibration menu
+            GameObject calibrationMenu = GameObject.Find("CalibratePlayerGUI");
+            //find canvas among children
+            GameObject canvas = calibrationMenu.transform.Find("Canvas").gameObject;
+            //find sliders among children
+            GameObject sliders = canvas.transform.Find("Sliders").gameObject;
             //toggle sliders
-            _speedSlider.SetActive(!_speedSlider.activeSelf);
-            _jumpForceSlider.SetActive(!_jumpForceSlider.activeSelf);
-            _gravitySlider.SetActive(!_gravitySlider.activeSelf);
-            _dragSlider.SetActive(!_dragSlider.activeSelf);
-            _airSlider.SetActive(!_airSlider.activeSelf);
+            sliders.SetActive(!sliders.activeSelf);
         }
         if (!Input.GetKeyDown(KeyCode.G))
         {
             _hPressed = false;
         }
+    }
+
+    void ApplyForce(Vector3 force)
+    {
+        _rigidbody.AddForce(force, ForceMode.Force);
+        _forces.Add(force);
+    }
+
+    public bool ShowForces()
+    {
+        return _showForces;
     }
 }
