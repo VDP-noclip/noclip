@@ -7,31 +7,21 @@ public class PuzzleManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] _puzzlePrefabs;
 
-    private int _currentPuzzleIndex = 0;
+    private int _currentPuzzleIndex;
 
     private GameObject _gameManager;
-    private Vector3 _puzzlePosition = new Vector3(0, 0, 0);
+    private Vector3 _puzzlePosition;
+    
     private void Awake()
     {
         LoadNextPuzzle();
-    }
-
-    void Update()
-    {   
-        // Todo: execute these 2 lines only when the player goes on the checkpoint
-        //if (Application.isEditor && Input.GetKeyDown(KeyCode.X))
-        //{
-           // LoadNextPuzzle();
-           // GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
-        //}
-        //if c is pressed, set gamestate to area_finished
     }
 
     public void LoadNextPuzzle()
     {
         //NOTE puzzles don't snap perfectly between anchors probably because of rotations
         try{
-            GameObject newPuzzle = GameObject.Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
+            GameObject newPuzzle = Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
             _currentPuzzleIndex += 1;
             //rotate newPuzzle.transform.Find("BeginAnchor") to zero
             //newPuzzle.transform.Find("BeginAnchor").transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -66,7 +56,8 @@ public class PuzzleManager : MonoBehaviour
             pole.GetComponent<Renderer>().material.color = Color.green;
             */
             
-            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
+            if (_currentPuzzleIndex > 1)
+                GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
         }
         catch (IndexOutOfRangeException){
             Debug.Log("No more puzzles to load");
