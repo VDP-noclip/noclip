@@ -30,11 +30,10 @@ public class RealityMovementCalibration : MonoBehaviour
     
     [Header("Jump")]
     [SerializeField] private float _jumpForce = 8f;     // set jump upward force
-    [SerializeField] private float _jumpCooldown = 0.15f;      // set jump cooldown
+    [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
     private bool _readyToJump;      //
-    private bool _commitJump = false;
-    
+
     [Header("Crouch")]
     [SerializeField] private float _crouchSpeed = 2f;
     [SerializeField] private float _crouchYScale = 0.5f;
@@ -136,7 +135,7 @@ public class RealityMovementCalibration : MonoBehaviour
             SpeedControl();
 
             // handle drag
-            if (_grounded )
+            if (_grounded && !_commitJump)
                 _rigidbody.drag = _groundDrag;
             else
                 _rigidbody.drag = 0;
@@ -149,17 +148,16 @@ public class RealityMovementCalibration : MonoBehaviour
     }
 
     
-    
+    private bool _commitJump = false;
 
-    /*private void LateUpdate()
+    private void LateUpdate()
     {
         if (_commitJump)
         {
             _commitJump = false;
-            _rigidbody.drag = 0;
             Jump();
         }
-    }*/
+    }
 
     private void UserInput()
     {
@@ -167,18 +165,15 @@ public class RealityMovementCalibration : MonoBehaviour
         _verticalInput = Input.GetAxisRaw("Vertical");
         
         // when to jump
-        if (Input.GetKeyDown(_jumpKey) && _grounded)
+        if (Input.GetKey(_jumpKey) && _readyToJump && _grounded)
         {
             _readyToJump = false;
             
             //set ground drag to zero
+            _rigidbody.drag = 0;
             _commitJump = true;
             
-            Jump();
-            
-            _exitingOnSlope = false;
-            
-            //Invoke(nameof(ResetJump), _jumpCooldown); // continues to jump if space remains pressed
+            Invoke(nameof(ResetJump), _jumpCooldown); // continues to jump if space remains pressed
         }
         
         // start crouch
@@ -303,9 +298,9 @@ public class RealityMovementCalibration : MonoBehaviour
         _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
         
         // create an upward impulse force
-        _rigidbody.AddForce(_transform.up * _jumpForce, ForceMode.Impulse);
+        //_rigidbody.AddForce(_transform.up * _jumpForce, ForceMode.Impulse);
         //_forces.Add(_transform.up * _jumpForce);
-        //ApplyForce(_transform.up * _jumpForce * 50); //impulse is force/dt, 1/dt is 50 (fixed update is 0.02)
+        ApplyForce(_transform.up * _jumpForce * 50); //impulse is force/dt, 1/dt is 50 (fixed update is 0.02)
     }
 
     private void ResetJump()
