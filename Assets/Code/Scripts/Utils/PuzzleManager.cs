@@ -61,7 +61,7 @@ public class PuzzleManager : MonoBehaviour
         }
         catch (IndexOutOfRangeException){
             Debug.Log("No more puzzles to load");
-            GameObject.Find("GameManager").GetComponent<GameManager>().SetGameState("AREA_FINISHED");
+            GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
             return;
             //GameObject.Find("GameManager").GetComponent<GameManager>().CloseAllScenes();
         }
