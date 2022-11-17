@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -44,9 +43,11 @@ public class ObjectsHolderManager : MonoBehaviour
 
     private void ApplyTagToChildren()
     {
-        var definedTags = UnityEditorInternal.InternalEditorUtility.tags;
-        if (!definedTags.Contains(_tagToApply))
-            throw new ArgumentException($"The tag '{_tagToApply}' is not in the tags list!");
+        #if UNITY_EDITOR
+            var definedTags = UnityEditorInternal.InternalEditorUtility.tags;
+            if (!definedTags.Contains(_tagToApply))
+                throw new ArgumentException($"The tag '{_tagToApply}' is not in the tags list!");
+        #endif
         
         //set tag of all children to _tagToApply
         foreach (Transform child in _childrenTransforms) {
@@ -56,9 +57,11 @@ public class ObjectsHolderManager : MonoBehaviour
     
     private void ApplyLayerToChildren()
     {
-        var definedLayers = UnityEditorInternal.InternalEditorUtility.layers;
-        if (!definedLayers.Contains(_layerToApply))
-            throw new ArgumentException($"The tag '{_layerToApply}' is not in the layers list!");
+        #if UNITY_EDITOR
+            var definedLayers = UnityEditorInternal.InternalEditorUtility.layers;
+            if (!definedLayers.Contains(_layerToApply))
+                throw new ArgumentException($"The tag '{_layerToApply}' is not in the layers list!");
+        #endif
         
         //set layer of all children to _layerToApply
         foreach (Transform child in _childrenTransforms) {
