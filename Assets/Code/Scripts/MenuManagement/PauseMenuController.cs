@@ -1,15 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenuController : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private bool isPaused;
     [SerializeField] private AudioSource menuPress;
-
+    
+    [Header("Sensitivity Settings")]
+    [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
+    [SerializeField] private Slider controllerSensitivitySlider = null;
+    
+    public int mainControllerSensitivity = 4;
+    
+    [Header("Volume Settings")] 
+    [SerializeField] private TMP_Text volumeTextValue = null;
+    [SerializeField] private Slider volumeSlider = null;
+    [SerializeField] private float defaultVolume = 1.0f;
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -52,5 +65,27 @@ public class PauseMenuController : MonoBehaviour
         
         pauseMenuUI.SetActive(false);
         isPaused = false;
+    }
+    
+    public void SetControllerSensitivity(float sensitivity)
+    {
+        mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
+        controllerSensitivityTextValue.text = sensitivity.ToString("0");
+    }
+    public void SetVolume(float volume)
+    {
+        AudioListener.volume = volume;
+        volumeTextValue.text = volume.ToString("0.0");
+        volumeSlider.value = volume;
+    }
+    
+    public void GameplayApply()
+    {
+        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+    }
+    
+    public void VolumeApply()
+    {
+        PlayerPrefs.SetFloat("masterVolume", AudioListener.volume);
     }
 }
