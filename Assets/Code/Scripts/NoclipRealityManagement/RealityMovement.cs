@@ -150,6 +150,16 @@ public class RealityMovement : MonoBehaviour
         _rigidbody.velocity = Vector3.zero;
     }
 
+    public bool IsGrounded()
+    {
+        return _grounded;
+    }
+
+    public float GetVelocity()
+    {
+        return _rigidbody.velocity.magnitude;
+    }
+
     /// <summary>
     /// This function manages the input of the user
     /// </summary>
