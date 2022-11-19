@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1092676115}
   - component: {fileID: 1092676117}
-  - component: {fileID: 1092676116}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -156,20 +155,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1092676116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1092676114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e54ebd674fc84fb9934c494ec8ab58ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scenesToLoad:
-  - Area_00
 --- !u!114 &1092676117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,10 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0563da06eccd61945948b3d2649353fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameState: INITIALIZE_GAME
   _gameAreas:
   - Area_00
   - Area_01
-  - Area_00
-  _debugChannel: unloadScenes
   _gravity: 0
+  _gameState: 2
