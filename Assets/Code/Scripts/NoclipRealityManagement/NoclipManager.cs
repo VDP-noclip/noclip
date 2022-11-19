@@ -9,6 +9,8 @@ using UnityEngine;
 public class NoclipManager : MonoBehaviour
 {
     [SerializeField] private KeyCode noclipKey = KeyCode.P;
+    [SerializeField] private Material realitySkyboxMaterial;
+    [SerializeField] private Material noClipSkyboxMaterial;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private CameraManager _cameraManager;
@@ -21,6 +23,7 @@ public class NoclipManager : MonoBehaviour
     {
         FindNoClipObjControllers();
         _cameraManager = FindObjectOfType<CameraManager>();
+        RenderSettings.skybox = realitySkyboxMaterial;
     }
 
     public void FindNoClipObjControllers()
@@ -60,6 +63,7 @@ public class NoclipManager : MonoBehaviour
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _cameraManager.SwitchCamera();
+        RenderSettings.skybox = noClipSkyboxMaterial;
     }
 
     /// <summary>
@@ -70,6 +74,7 @@ public class NoclipManager : MonoBehaviour
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _cameraManager.SwitchCamera();
+        RenderSettings.skybox = realitySkyboxMaterial;
     }
 
     /// <summary>
