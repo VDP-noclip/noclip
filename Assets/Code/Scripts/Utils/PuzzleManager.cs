@@ -7,32 +7,42 @@ public class PuzzleManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] _puzzlePrefabs;
 
-    private int _currentPuzzleIndex = 0;
+    private int _currentPuzzleIndex;
+    private int _finalPuzzleIndex;
 
     private GameObject _gameManager;
-    private Vector3 _puzzlePosition = new Vector3(0, 0, 0);
+    private Vector3 _puzzlePosition;
+    
     private void Awake()
     {
-        LoadNextPuzzle();
+        LoadCurrentPuzzle();
+        _finalPuzzleIndex = _puzzlePrefabs.Length - 1;
     }
-
-    void Update()
-    {   
-        // Todo: execute these 2 lines only when the player goes on the checkpoint
-        //if (Application.isEditor && Input.GetKeyDown(KeyCode.X))
-        //{
-           // LoadNextPuzzle();
-           // GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
-        //}
-        //if c is pressed, set gamestate to area_finished
-    }
-
+    
+    /// <summary>
+    /// Call this function when the puzzle is finished and you need to move to the next one. If the current puzzle is
+    /// the last one, set the game state to AreaFinished
+    /// </summary>
     public void LoadNextPuzzle()
     {
-        //NOTE puzzles don't snap perfectly between anchors probably because of rotations
-        try{
-            GameObject newPuzzle = GameObject.Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
+        if (_currentPuzzleIndex != _finalPuzzleIndex)
+        {
             _currentPuzzleIndex += 1;
+            LoadCurrentPuzzle();
+            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
+        }
+        else
+        {
+            Debug.Log("No more puzzles to load. Area finished!");
+            GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
+        }
+    }
+
+    private void LoadCurrentPuzzle()
+    {
+            //NOTE: puzzles don't snap perfectly between anchors probably because of rotations
+            GameObject newPuzzle = Instantiate(_puzzlePrefabs[_currentPuzzleIndex]);
+            
             //rotate newPuzzle.transform.Find("BeginAnchor") to zero
             //newPuzzle.transform.Find("BeginAnchor").transform.rotation = Quaternion.Euler(0, 0, 0);
             //find begin anchor
@@ -65,14 +75,5 @@ public class PuzzleManager : MonoBehaviour
             pole.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
             pole.GetComponent<Renderer>().material.color = Color.green;
             */
-            
-            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
-        }
-        catch (IndexOutOfRangeException){
-            Debug.Log("No more puzzles to load");
-            GameObject.Find("GameManager").GetComponent<GameManager>().SetGameState("AREA_FINISHED");
-            return;
-            //GameObject.Find("GameManager").GetComponent<GameManager>().CloseAllScenes();
-        }
     }
 }

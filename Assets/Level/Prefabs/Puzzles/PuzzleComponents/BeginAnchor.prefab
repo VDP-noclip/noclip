@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 5339219882375805596}
   - component: {fileID: 7594625844579559779}
   - component: {fileID: 4146263448080230387}
+  - component: {fileID: 8142945589192773126}
   m_Layer: 3
   m_Name: BeginAnchor
-  m_TagString: Untagged
+  m_TagString: NoclipEnabler
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -357,3 +358,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abaf90f285fe2b541b83a2922d580d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &8142945589192773126
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3010988821000165799}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.1734314, y: 2.4816449, z: 3.8551903}
+  m_Center: {x: -2.0867157, y: -1.2408224, z: -1.927597}
