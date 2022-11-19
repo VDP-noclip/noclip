@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
-    private enum MovementState       // define player states
+    public enum MovementState       // define player states
     {
         Walking,
         Sprinting,
@@ -158,6 +158,11 @@ public class RealityMovement : MonoBehaviour
     public float GetVelocity()
     {
         return _rigidbody.velocity.magnitude;
+    }
+
+    public MovementState GetState()
+    {
+        return _state;
     }
 
     /// <summary>

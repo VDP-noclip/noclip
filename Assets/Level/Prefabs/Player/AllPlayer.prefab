@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 460104324572155052}
   - component: {fileID: 4013955752892843109}
   - component: {fileID: 4435813178358354976}
-  - component: {fileID: 4692015822514746202}
+  - component: {fileID: 505321409776112632}
   m_Layer: 0
   m_Name: RealityPlayer
   m_TagString: Untagged
@@ -453,8 +453,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336889237d9f9ae4d89c69977da9e829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runSpeed: 7
-  _walkSpeed: 6
+  _maxRunSpeed: 6
+  _runForceMultiplier: 10
+  _maxWalkSpeed: 3
+  _walkForceMultiplier: 3
   _groundDrag: 4
   _jumpForce: 13
   _jumpCooldown: 0.25
@@ -472,7 +474,6 @@ MonoBehaviour:
     m_Bits: 8
   _gravityMultiplier: 3
   _orientation: {fileID: 6423799784713560806}
-  _gravity: 9.81
   _state: 0
   _OnSlope: 0
   Grounded: 0
@@ -486,7 +487,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1bdba58c55da5d54994af9ad4d38e048, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -572,7 +573,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4692015822514746202
+--- !u!114 &505321409776112632
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -581,11 +582,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8332031875421162927}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dca680c8f7aa53846b019302179f32d0, type: 3}
+  m_Script: {fileID: 11500000, guid: 89154feeedb44e2449b5c63b20e2e110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioVelocity: 2
-  _audioStart: 3
+  _walkBobSpeed: 20
+  _walkBobAmount: 0.01
+  _stepSpeed: 0.35
+  _speedAudioActivation: 1.5
+  _audio: {fileID: 4435813178358354976}
+  _footstepClips:
+  - {fileID: 8300000, guid: 1bdba58c55da5d54994af9ad4d38e048, type: 3}
+  - {fileID: 8300000, guid: 22b494529a3379945a76c2a06908bc28, type: 3}
+  _camera: {fileID: 5100550035080717454}
 --- !u!1 &8905615672618808175
 GameObject:
   m_ObjectHideFlags: 0
