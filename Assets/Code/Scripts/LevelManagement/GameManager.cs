@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _gravity;
 
     private int _currentGameAreaIndex;
+    private int _finalGameAreaIndex;
     [SerializeField] private GameState _gameState = GameState.InitializeGame;
 
     //enum game states
@@ -19,20 +20,34 @@ public class GameManager : MonoBehaviour
     {
         InitializeGame,
         AreaFinished,
-        NewArea
+        NewArea,
+        GameCompleted
     }
-
-    // Update is called once per frame
+    
+    private void Awake()
+    {
+        SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+        _finalGameAreaIndex = _gameAreas.Count - 1;
+    }
+    
     private void Update()
     {
-        //if area is finished load next area
+        //if area is finished load next area, complete the game if it is the last one
         if (_gameState == GameState.AreaFinished)
         {
-            _currentGameAreaIndex += 1;
-            CloseAllScenes();
-            DestroyOtherGameObjects();
-            SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
-            _gameState = GameState.NewArea;
+            if (_currentGameAreaIndex == _finalGameAreaIndex)
+            {
+                _gameState = GameState.GameCompleted;
+                Debug.Log("Congratulations, you have completed the game!");
+            }
+            else
+            {
+                _gameState = GameState.NewArea;
+                CloseAllScenes();
+                DestroyOtherGameObjects();
+                _currentGameAreaIndex += 1;
+                SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+            }
         }
     }
 
