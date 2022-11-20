@@ -9,6 +9,14 @@ using UnityEngine.UI;
 public class PauseMenuController : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject settingsMenuUI;
+    [SerializeField] private GameObject audioMenuUI;
+    [SerializeField] private GameObject gameplayMenuUI;
+    
+    [SerializeField] private Button resume;
+    [SerializeField] private Button settings;
+    [SerializeField] private Button exit;
+
     [SerializeField] private bool isPaused;
     [SerializeField] private AudioSource menuPress;
     
@@ -62,8 +70,19 @@ public class PauseMenuController : MonoBehaviour
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+
+        
         
         pauseMenuUI.SetActive(false);
+        audioMenuUI.SetActive(false);
+        settingsMenuUI.SetActive(false);
+        gameplayMenuUI.SetActive(false);
+        
+        resume.enabled = true;
+        settings.enabled = true;
+        exit.enabled = true;
+        
         isPaused = false;
     }
     
