@@ -89,14 +89,14 @@ public class RealityMovement : MonoBehaviour
     
     private void Awake()
     {
-        GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        /*GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         //if gravity magnitude is not 0
         if (gameManager.GetGravity() == 0)
         {
             //set gravity to gravity magnitude
-            Physics.gravity *= _gravityMultiplier;
             gameManager.SetGravity(Physics.gravity.magnitude);
-        }
+        } */
+        Physics.gravity *= _gravityMultiplier;
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();

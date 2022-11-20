@@ -442,12 +442,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336889237d9f9ae4d89c69977da9e829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runSpeed: 10
-  _walkSpeed: 6
-  _groundDrag: 4
-  _jumpForce: 13
+  _maxRunSpeed: 20
+  _runForceMultiplier: 16
+  _maxWalkSpeed: 7
+  _walkForceMultiplier: 2
+  _groundDrag: 12
+  _jumpForce: 12
   _jumpCooldown: 0.25
-  _airMultiplier: 0.4
+  _airMultiplier: 0.1
   _crouchSpeed: 2
   _crouchYScale: 0.5
   _maxSlopeAngle: 45
@@ -459,7 +461,7 @@ MonoBehaviour:
   _ground:
     serializedVersion: 2
     m_Bits: 8
-  _gravityMultiplier: 3
+  _gravityMultiplier: 2
   _orientation: {fileID: 6423799784713560806}
   _state: 0
   _OnSlope: 0
