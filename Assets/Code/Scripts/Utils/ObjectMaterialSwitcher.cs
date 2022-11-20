@@ -12,9 +12,9 @@ namespace Code.Scripts.Utils
         private readonly Material[] _noclipMaterials;
         private readonly Renderer _renderer;
 
-        public ObjectMaterialSwitcher(GameObject obj, Material[] defaultNoclipMaterials)
+        public ObjectMaterialSwitcher(GameObject obj, Material[] noclipMaterials)
         {
-            _noclipMaterials = defaultNoclipMaterials;
+            _noclipMaterials = noclipMaterials;
             _renderer = obj.GetComponent<Renderer>();
             _originalMaterials = _renderer.materials;
         }

@@ -15,7 +15,7 @@ public class NoclipManager : MonoBehaviour
     [SerializeField] private NoclipOptions _noclipOptions;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
-    private ObjectMaterialSwitcher[] _realityObjMaterialSwitchers;
+    private ObjectMaterialSwitcher[] _objectMaterialSwitchers;
     private CameraManager _cameraManager;
 
     private bool _noclipEnabled;   
@@ -35,7 +35,7 @@ public class NoclipManager : MonoBehaviour
     public void GetReadyForPuzzle()
     {
         StartCoroutine(GetNoClipObjControllers());
-        StartCoroutine(GetRealityObjects());
+        StartCoroutine(GetObjectMaterialSwitchers());
     }
 
     /// <summary>
@@ -112,44 +112,41 @@ public class NoclipManager : MonoBehaviour
         yield return null;
     }
     
-    private IEnumerator GetRealityObjects()
+    private IEnumerator GetObjectMaterialSwitchers()
     {
         GameObject[] realityObjects = GameObject.FindGameObjectsWithTag("RealityObject");
         GameObject[] backgroundObjects = GameObject.FindGameObjectsWithTag("Background");
         List<GameObject> gameObjectsToChange = new();
         gameObjectsToChange.AddRange(realityObjects);
         gameObjectsToChange.AddRange(backgroundObjects);
-        Debug.Log("Found bg objects:" + backgroundObjects.Length);
 
         ObjectMaterialSwitcher[] objectMaterialSwitchers = new ObjectMaterialSwitcher[gameObjectsToChange.Count];
+        
         for (int i = 0; i < gameObjectsToChange.Count; i++)
         {
             Material[] noclipMaterials;
             GameObject obj = gameObjectsToChange[i];
             NoclipMaterialHolder noclipMaterialHolder = obj.GetComponent<NoclipMaterialHolder>();
+            
             if (noclipMaterialHolder)
-            {
                 noclipMaterials = noclipMaterialHolder.GetNoclipMaterials();
-            }
             else if (obj.CompareTag("Background"))
-            {
                 noclipMaterials = _noclipOptions.noClipMaterialsForBackgroundObjects;
-            }
             else
-            {
                 noclipMaterials = _noclipOptions.noClipMaterialsForRealityObjects;
-            }
+
             ObjectMaterialSwitcher objectMaterialSwitcher = new ObjectMaterialSwitcher(obj, noclipMaterials);
             objectMaterialSwitchers[i] = objectMaterialSwitcher;
         }
-        _realityObjMaterialSwitchers = objectMaterialSwitchers;
+        _objectMaterialSwitchers = objectMaterialSwitchers;
+        
         yield return null;
     }
 
     private void RenderNoclipMode()
     {
         RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
-        foreach (var objectMaterialSwitcher in _realityObjMaterialSwitchers)
+        foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
             objectMaterialSwitcher.SetNoclipMaterials();
         }
@@ -158,7 +155,7 @@ public class NoclipManager : MonoBehaviour
     private void RenderRealityMode()
     {
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
-        foreach (var objectMaterialSwitcher in _realityObjMaterialSwitchers)
+        foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
             objectMaterialSwitcher.SetOriginalMaterials();
         }
