@@ -395,7 +395,7 @@ public class RealityMovementCalibration : MonoBehaviour
         _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
 
         //set speed monitor value to current speed
-        _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
+        //_speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
 
         Physics.gravity = _originalGravity * _gravityMultiplier;
         //g button toggle
