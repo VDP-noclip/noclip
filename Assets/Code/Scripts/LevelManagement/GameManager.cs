@@ -1,94 +1,100 @@
 using UnityEngine;
-using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 /// <summary>
-/// TODO
+/// Contains a list of areas to be loaded sequentially. Each area will contain several puzzles and scenes.
+/// This code reflects https://www.figma.com/file/VXmyoNeOfotAkpYbjbkXCT/noclip_ideas?node-id=423%3A1041
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int _currentCheckpointIndex = 0;
-    [SerializeField] private string _gameState = "BEGIN_AREA";
-    
-    private GameObject _player;
-    private Vector3 _lastCheckPointPos;
-    private CheckpointController[] _rawCheckpointControllers;
+    [SerializeField] private List<string> _gameAreas;
+    [SerializeField] private float _gravity;
 
-    private List<CheckpointController> _checkpointControllers;
+    private int _currentGameAreaIndex;
+    private int _finalGameAreaIndex;
+    [SerializeField] private GameState _gameState = GameState.InitializeGame;
 
-    //dictionary of int and CheckpointController
-    private Dictionary<int, CheckpointController> _checkpointIndexPointer = new();
-    
-    void Awake()
+    //enum game states
+    private enum GameState
     {
-        _rawCheckpointControllers = FindObjectsOfType<CheckpointController>();
+        InitializeGame,
+        AreaFinished,
+        NewArea,
+        GameCompleted
     }
-
-    void Start()
+    
+    private void Awake()
     {
-        _player = InitPlayer();
-        Debug.Log(_player + " player found");
-        GetCheckpointIndexes();
-        _checkpointIndexPointer = GetCheckpointIndexes();
-        ActivateNextCheckpoint();
+        SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+        _finalGameAreaIndex = _gameAreas.Count - 1;
     }
-
-    //function to get integers from the names of checkpointControllers
-    private Dictionary<int, CheckpointController> GetCheckpointIndexes()
+    
+    private void Update()
     {
-        //list of integers
-        List<int> indexes = new List<int>();
-        Dictionary<int, CheckpointController> validCheckpoints = new Dictionary<int, CheckpointController>();
-        for (int i = 0; i < _rawCheckpointControllers.Length; i++)
+        //if area is finished load next area, complete the game if it is the last one
+        if (_gameState == GameState.AreaFinished)
         {
-            //string
-            string checkpointName = _rawCheckpointControllers[i].gameObject.name;
-            CheckpointController checkpoint = _rawCheckpointControllers[i];
-            //remove all characters except numbers
-            //declare new string
-            string index = "";
-            index = Regex.Replace(checkpointName, "[^0-9]", "");
-            //convert string index to int
-            //try except
-            try
+            if (_currentGameAreaIndex == _finalGameAreaIndex)
             {
-                int indexInt = int.Parse(index);
-                //append index to array
-                indexes.Add(indexInt);
-                //Debug.Log("Checkpoint number " + indexes[indexes.Count - 1] + " found");
-                validCheckpoints.Add(indexInt, checkpoint);
+                _gameState = GameState.GameCompleted;
+                Debug.Log("Congratulations, you have completed the game!");
             }
-            catch
+            else
             {
-                //Debug.Log(_rawCheckpointControllers[i].gameObject + "is not a valid checkpoint, please rename it to contain a number");
+                _gameState = GameState.NewArea;
+                CloseAllScenes();
+                DestroyOtherGameObjects();
+                _currentGameAreaIndex += 1;
+                SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
             }
         }
-
-        return validCheckpoints;
     }
 
-    public void ActivateNextCheckpoint()
+    public void CloseAllScenes()
     {
-        try
+        //get all scenes
+        Scene[] scenes = SceneManager.GetAllScenes();
+        //loop through all scenes
+        foreach (Scene scene in scenes)
         {
-            _currentCheckpointIndex++;
-            //activate next checkpoint
-            _checkpointIndexPointer[_currentCheckpointIndex].ActivateCheckpoint();
-            //increment checkpoint index
-            Debug.Log("Activating checkpoint " + _currentCheckpointIndex);
-            _gameState = "CHECKPOINT_" + _currentCheckpointIndex;
-        }
-        catch
-        {
-            Debug.Log("No more checkpoints, area is finished");
-            _gameState = "END_AREA";
+            //if scene is not this scene
+            if (scene.name != SceneManager.GetActiveScene().name)
+            {
+                //unload scene
+                SceneManager.UnloadScene(scene);
+            }
         }
     }
 
-    private GameObject InitPlayer()
+    public void DestroyOtherGameObjects()
     {
-        //find gameobject with name AllPlayer
-        GameObject player = GameObject.Find("RealityPlayer");
-        return player;
+        //get all game objects
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>();
+        //loop through all game objects
+        foreach (GameObject gameObject in gameObjects)
+        {
+            //if game object is not this game object
+            if (gameObject.name != this.gameObject.name)
+            {
+                //destroy game object
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    public void SetAreaFinished()
+    {
+        _gameState = GameState.AreaFinished;
+    }
+
+    public void SetGravity(float gravity)
+    {
+        _gravity = gravity;
+    }
+
+    public float GetGravity()
+    {
+        return _gravity;
     }
 }

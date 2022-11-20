@@ -6,6 +6,7 @@ public class RespawningManager : MonoBehaviour
 {
     private Transform _transform;
     private List<Transform> _childrenTransforms;
+    private RealityMovement _realityMovement;
 
     private Vector3 _lastCheckPointPosition;
     private Quaternion _lastCheckPointRotation;
@@ -16,6 +17,7 @@ public class RespawningManager : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _childrenTransforms = GetAllChildrenTransforms(_transform);
+        _realityMovement = _transform.GetComponentInChildren<RealityMovement>();
         
         Debug.Log($"Found {_childrenTransforms.Count} children!");
         
@@ -45,6 +47,7 @@ public class RespawningManager : MonoBehaviour
             _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
             _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
         }
+        _realityMovement.ResetSpeedOnRespawn();
     }
 
     /// <summary>
