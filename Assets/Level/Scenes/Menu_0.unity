@@ -1416,7 +1416,8 @@ AudioSource:
   m_GameObject: {fileID: 119334343}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 1083961818433948243, guid: 966f75dff49d65b4a9d6827eea13a365,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 29c50a1d52c128b4da2f5aa113a4a884, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -5687,6 +5688,7 @@ MonoBehaviour:
   volumeTextValue: {fileID: 512621429}
   volumeSlider: {fileID: 1882909496}
   defaultVolume: 1
+  audioMixer: {fileID: 24100000, guid: 966f75dff49d65b4a9d6827eea13a365, type: 2}
   confirmationPrompt: {fileID: 2054656209}
   noSavedGameDialog: {fileID: 651551500}
   _newGameLevel: 0_Main
@@ -13098,8 +13100,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 1691515903}
   m_HandleRect: {fileID: 889267119}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: 0.1
+  m_MaxValue: 2.7
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
