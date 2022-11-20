@@ -86,8 +86,6 @@ public class RealityMovementCalibration : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _originalGravity = Physics.gravity;
-        Physics.gravity *= _gravityMultiplier;   // Change the gravity
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();
     }
@@ -101,6 +99,13 @@ public class RealityMovementCalibration : MonoBehaviour
         ResetJump(); // set _readyToJump to "true"
 
         _startYScale = _transform.localScale.y;
+
+        //if gravity magnitude is not 0 (Gamemanager zeroes it on game boot)
+        if (Physics.gravity.magnitude != 0)
+        {
+            //set gravity to gravity magnitude
+            Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
+        }
     }
 
     // Update is called once per frame
@@ -370,13 +375,14 @@ public class RealityMovementCalibration : MonoBehaviour
         }
     }
 
-    [SerializeField] MultiForceVisualizer _forceVisualizer;
+    private MultiForceVisualizer _forceVisualizer;
     
     //variable size list vector3 of forces
     private List<Vector3> _forces;
     private void CalibrationMenu(){
         if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
             InitCalibrationMenu();
+            _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
         }
         _forceVisualizer.UpdateForces(_forces);
         _forces = new List<Vector3>();
@@ -397,7 +403,7 @@ public class RealityMovementCalibration : MonoBehaviour
         //set speed monitor value to current speed
         _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
 
-        Physics.gravity = _originalGravity * _gravityMultiplier;
+        Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
         //g button toggle
         if (Input.GetKeyDown(KeyCode.G) && !_gPressed)
         {
