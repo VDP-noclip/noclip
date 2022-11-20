@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40b8109c0acc274b92ee4bd92d5fe3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noclipKey: 112
+  _noclipOptions: {fileID: 11400000, guid: d849b88aa8a3daa4ea8efb753ddaaf61, type: 2}
 --- !u!114 &460104324572155052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,8 +442,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336889237d9f9ae4d89c69977da9e829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runSpeed: 10
-  _walkSpeed: 6
+  _maxRunSpeed: 6
+  _runForceMultiplier: 10
+  _maxWalkSpeed: 3
+  _walkForceMultiplier: 3
   _groundDrag: 4
   _jumpForce: 13
   _jumpCooldown: 0.25
