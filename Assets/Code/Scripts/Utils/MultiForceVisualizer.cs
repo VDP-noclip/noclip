@@ -26,7 +26,6 @@ public class MultiForceVisualizer : MonoBehaviour
         //get realityplayer realitymovementcalibration
         //RealityMovementCalibration realityMovementCalibration = GameObject.Find("RealityPlayer").GetComponent<RealityMovementCalibration>();
         realityMovementCalibration = _player.GetComponent<RealityMovementCalibration>();
-        Debug.Log("IMPORTANT: THE POLES SLOW DOWN THE PLAYER. REMOVE THEM IF YOU DON'T NEED THEM.");
         //for each color
         foreach(Color color in _colors){
             GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cube);

@@ -96,4 +96,9 @@ public class MouseLook : MonoBehaviour
             throw new Exception("masterSensitivityY key is missing!");
         }
     }
+
+    public void setSensitivity(float sensitivity)
+    {
+        _sensitivity = sensitivity;
+    }
 }

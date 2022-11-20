@@ -14,6 +14,7 @@ public class RealityMovementCalibration : MonoBehaviour
         Crouching,
         Air
     }
+    //[SerializeField] private bool _calibration = true;
     private bool _showForces = false;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
@@ -119,6 +120,7 @@ public class RealityMovementCalibration : MonoBehaviour
         //set material of errorCube to material of RealityBody
         //errorCube.GetComponent<MeshRenderer>().material = realityBody.GetComponent<MeshRenderer>().material;
 
+        //if (_calibration) 
         CalibrationMenu();
 
         if (!_noclipManager.IsNoclipEnabled())
@@ -343,6 +345,8 @@ public class RealityMovementCalibration : MonoBehaviour
     private GameObject _accSlider;
     private GameObject _speedMonitor;
     private GameObject _saveButton;
+    private GameObject _sensitivitySlider;
+    private MouseLook _mouseLook;
     private bool _gPressed = false;
     private bool _hPressed = false;
     private bool _calibrationMenu = false;
@@ -357,6 +361,8 @@ public class RealityMovementCalibration : MonoBehaviour
         _speedSlider = GameObject.Find("RunSpeed"); //walk is half
         _jumpForceSlider = GameObject.Find("JumpForce");
         _gravitySlider = GameObject.Find("Gravity");
+        _sensitivitySlider = GameObject.Find("Sensitivity");
+        _mouseLook = GameObject.Find("RealityCamera").GetComponent<MouseLook>();
 
         _speedMonitor = GameObject.Find("SpeedMonitor");
         try{
@@ -369,6 +375,7 @@ public class RealityMovementCalibration : MonoBehaviour
             _speedSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("RunSpeed");
             _jumpForceSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("JumpForce");
             _gravitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Gravity");
+            _sensitivitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Sensitivity");
         }
         catch{
             Debug.Log("PlayerPrefs not found");
@@ -399,6 +406,7 @@ public class RealityMovementCalibration : MonoBehaviour
         //_maxAirSpeed = _airSpeedSlider.GetComponent<Slider>().value;
         _maxSlopeAngle = _slopeSlider.GetComponent<Slider>().value;
         _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
+        _mouseLook.setSensitivity(_sensitivitySlider.GetComponent<Slider>().value);
 
         //set speed monitor value to current speed
         _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
@@ -475,6 +483,7 @@ public class RealityMovementCalibration : MonoBehaviour
         PlayerPrefs.SetFloat("AirAcceleration", _airMultiplier);
         PlayerPrefs.SetFloat("MaxSlope", _maxSlopeAngle);
         PlayerPrefs.SetFloat("RunAcceleration", _runForceMultiplier);
+        PlayerPrefs.SetFloat("Sensitivity", _sensitivitySlider.GetComponent<Slider>().value);
         PlayerPrefs.Save();
     }
 }
