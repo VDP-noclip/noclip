@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Code.ScriptableObjects;
 using UnityEngine;
 
 /// <summary>
@@ -8,9 +9,7 @@ using UnityEngine;
 /// </summary>
 public class NoclipManager : MonoBehaviour
 {
-    [SerializeField] private KeyCode noclipKey = KeyCode.P;
-    [SerializeField] private Material realitySkyboxMaterial;
-    [SerializeField] private Material noClipSkyboxMaterial;
+    [SerializeField] private NoclipOptions _noclipOptions;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private CameraManager _cameraManager;
@@ -23,7 +22,7 @@ public class NoclipManager : MonoBehaviour
     {
         FindNoClipObjControllers();
         _cameraManager = FindObjectOfType<CameraManager>();
-        RenderSettings.skybox = realitySkyboxMaterial;
+        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
     }
 
     public void FindNoClipObjControllers()
@@ -63,7 +62,7 @@ public class NoclipManager : MonoBehaviour
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _cameraManager.SwitchCamera();
-        RenderSettings.skybox = noClipSkyboxMaterial;
+        RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
     }
 
     /// <summary>
@@ -74,7 +73,7 @@ public class NoclipManager : MonoBehaviour
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _cameraManager.SwitchCamera();
-        RenderSettings.skybox = realitySkyboxMaterial;
+        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
     }
 
     /// <summary>
@@ -82,13 +81,13 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (Input.GetKeyDown(noclipKey) && _playerCanEnableNoclip)
+        if (Input.GetKeyDown(_noclipOptions.noclipKey) && _playerCanEnableNoclip)
         {
             EnableNoclip();
             _playerCanEnableNoclip = false;
         }
 
-        if (Input.GetKeyDown(noclipKey) && _playerCanDisableNoclip)
+        if (Input.GetKeyDown(_noclipOptions.noclipKey) && _playerCanDisableNoclip)
         {
             DisableNoclip();
             _playerCanDisableNoclip = false;
