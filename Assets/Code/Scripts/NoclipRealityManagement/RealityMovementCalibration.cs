@@ -142,7 +142,7 @@ public class RealityMovementCalibration : MonoBehaviour
             SpeedControl();
 
             // handle drag
-            if (_grounded && !_commitJump)
+            if (_grounded && && _horizontalInput == 0 && _verticalInput == 0 && !_commitJump)
                 _rigidbody.drag = _groundDrag;
             else
                 _rigidbody.drag = 0;
