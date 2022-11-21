@@ -19,13 +19,13 @@ public class RealityMovementFeedbacks : MonoBehaviour
     [Space]
     
     [SerializeField] private Camera _camera;
-    private RealityMovement _realityMovement;
+    private RealityMovementCalibration _realityMovementCalibration;
 
-    private RealityMovement.MovementState _lastState;
+    private RealityMovementCalibration.MovementState _lastState;
     
     private void Awake()
     {
-        _realityMovement = GetComponent<RealityMovement>();
+        _realityMovementCalibration = GetComponent<RealityMovementCalibration>();
     }
     
     // Start is called before the first frame update
@@ -43,9 +43,9 @@ public class RealityMovementFeedbacks : MonoBehaviour
 
     private void HandleHeadbob()
     {
-        if (_realityMovement.IsGrounded())
+        if (_realityMovementCalibration.IsGrounded())
         {
-            if (_realityMovement.GetVelocity() > 1f)
+            if (_realityMovementCalibration.GetVelocity() > 1f)
             {
                 _headBobTimer += Time.deltaTime * _walkBobSpeed;  // it could be differentiate 
                 _camera.transform.localPosition = _camera.transform.localPosition + (new Vector3(0, Mathf.Sin(_headBobTimer), 0) * _walkBobAmount);
@@ -56,10 +56,10 @@ public class RealityMovementFeedbacks : MonoBehaviour
     private void HandleFootstep()
     {
          
-        if (_realityMovement.GetState() != RealityMovement.MovementState.Air)
+        if (_realityMovementCalibration.GetState() != RealityMovementCalibration.MovementState.Air)
         {
             _footstepTimer -= Time.deltaTime;
-            if (_realityMovement.GetVelocity() > _speedAudioActivation && _footstepTimer < 0)
+            if (_realityMovementCalibration.GetVelocity() > _speedAudioActivation && _footstepTimer < 0)
             {
                 _audio.PlayOneShot(_footstepClips[Random.Range(0, _footstepClips.Length - 1)]);
                 _audio.volume = Random.Range(0.8f, 1);
@@ -70,7 +70,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
         else
         {
             _audio.Stop();
-            if (_lastState == RealityMovement.MovementState.Air)
+            if (_lastState == RealityMovementCalibration.MovementState.Air)
             {
                 _audio.PlayOneShot(_footstepClips[Random.Range(0, _footstepClips.Length - 1)]); 
                 _audio.volume = Random.Range(0.8f, 1);
@@ -78,7 +78,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
             }
         }
         
-        _lastState = _realityMovement.GetState();
+        _lastState = _realityMovementCalibration.GetState();
         
         
     }
