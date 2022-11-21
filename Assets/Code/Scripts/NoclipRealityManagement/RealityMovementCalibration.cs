@@ -167,6 +167,10 @@ public class RealityMovementCalibration : MonoBehaviour
         return _rigidbody.velocity.magnitude;
     }
 
+    public float GetMaxVelocity()
+    {
+        return _maxMoveSpeed;
+    }
     public MovementState GetState()
     {
         return _state;

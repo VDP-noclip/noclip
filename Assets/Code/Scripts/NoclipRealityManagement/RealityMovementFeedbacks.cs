@@ -5,8 +5,7 @@ using UnityEngine;
 public class RealityMovementFeedbacks : MonoBehaviour
 {
     [Header("Headbob parameters")]
-    [SerializeField] private float _walkBobSpeed = 12f;
-    [SerializeField] private float _walkBobAmount = 0.05f;
+    [SerializeField] private float _headbobMultiplier = 0.05f;
     private float _headBobTimer;
 
     [Header("Footstep parameters")]
@@ -14,8 +13,13 @@ public class RealityMovementFeedbacks : MonoBehaviour
     [SerializeField] private float _speedAudioActivation = 2f;
     [SerializeField] private AudioSource _audio;
     [SerializeField] private AudioClip[] _footstepClips;
+    [SerializeField] private AudioClip _landSound;
     private float _footstepTimer;
-    
+
+    private float _moveSpeed;
+
+    private Vector3 _cameraPosition;
+
     [Space]
     
     [SerializeField] private Camera _camera;
@@ -26,6 +30,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
     private void Awake()
     {
         _realityMovementCalibration = GetComponent<RealityMovementCalibration>();
+        _cameraPosition = _camera.transform.localPosition;
     }
     
     // Start is called before the first frame update
@@ -37,45 +42,55 @@ public class RealityMovementFeedbacks : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _moveSpeed = _realityMovementCalibration.GetVelocity();
         HandleHeadbob();
         HandleFootstep();
     }
 
+    /// <summary>
+    /// This function handles the headbob of the reality player
+    /// </summary>
     private void HandleHeadbob()
     {
         if (_realityMovementCalibration.IsGrounded())
         {
-            if (_realityMovementCalibration.GetVelocity() > 1f)
+            if (_moveSpeed > 1f)
             {
-                _headBobTimer += Time.deltaTime * _walkBobSpeed;  // it could be differentiate 
-                _camera.transform.localPosition = _camera.transform.localPosition + (new Vector3(0, Mathf.Sin(_headBobTimer), 0) * _walkBobAmount);
+                // The time is incremented each time that the camera moves
+                _headBobTimer += Time.deltaTime * _realityMovementCalibration.GetMaxVelocity();  // This speed changes related to the reality player state
+                // The position of the camera change on the y axis in order to do an up and down. The maximum difference is managed by the multiplier
+                _camera.transform.localPosition = _cameraPosition + (new Vector3(0, Mathf.Sin(_headBobTimer), 0) * _headbobMultiplier);
             }
         }
     }
 
+    /// <summary>
+    /// This function handles the footstep sound
+    /// </summary>
     private void HandleFootstep()
     {
-         
+        // If the reality player is in contact with an object of the ground layer
         if (_realityMovementCalibration.GetState() != RealityMovementCalibration.MovementState.Air)
         {
-            _footstepTimer -= Time.deltaTime;
-            if (_realityMovementCalibration.GetVelocity() > _speedAudioActivation && _footstepTimer < 0)
+            _footstepTimer -= Time.deltaTime * _realityMovementCalibration.GetMaxVelocity();
+            if (_moveSpeed > _speedAudioActivation && _footstepTimer < 0)
             {
                 _audio.PlayOneShot(_footstepClips[Random.Range(0, _footstepClips.Length - 1)]);
                 _audio.volume = Random.Range(0.8f, 1);
                 _footstepTimer = _stepSpeed;
             }
             
+            // if the player go from a state of air to a state of ground. so this is the sound when the player land on the ground
+            if (_lastState == RealityMovementCalibration.MovementState.Air) 
+            {
+                _audio.PlayOneShot(_landSound); 
+                _audio.volume = 1.5f;
+            }
+            
         }
-        else
+        else // if the reality player is in air
         {
             _audio.Stop();
-            if (_lastState == RealityMovementCalibration.MovementState.Air)
-            {
-                _audio.PlayOneShot(_footstepClips[Random.Range(0, _footstepClips.Length - 1)]); 
-                _audio.volume = Random.Range(0.8f, 1);
-                _footstepTimer = _stepSpeed;
-            }
         }
         
         _lastState = _realityMovementCalibration.GetState();
