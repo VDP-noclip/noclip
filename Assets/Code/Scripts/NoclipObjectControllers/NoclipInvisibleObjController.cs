@@ -3,8 +3,7 @@ using UnityEngine;
 /// <summary>
 /// An object that is invisible but tangible. It appears when noclip mode is enabled.
 /// </summary>
-// Todo: rename this class and related tag to "TangibleNoclipObject" or sth similar, upon agreement with the group
-public class NoclipObjController : BaseNoclipObjectController
+public class NoclipInvisibleObjController : BaseNoclipObjectController
 {
     private Renderer _meshRender;
 
