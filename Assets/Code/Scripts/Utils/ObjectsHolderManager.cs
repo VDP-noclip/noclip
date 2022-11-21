@@ -25,6 +25,12 @@ public class ObjectsHolderManager : MonoBehaviour
         if (_layerToApply != null)
             ApplyLayerToChildren();
 
+        //disable mesh renderer of all children
+        foreach (Transform child in _childrenTransforms)
+        {
+            //add FadeIn script to all children
+            child.gameObject.AddComponent<FadeIn2>();
+        }
     }
     
     private List<Transform> GetAllChildrenTransforms(Transform _t)
