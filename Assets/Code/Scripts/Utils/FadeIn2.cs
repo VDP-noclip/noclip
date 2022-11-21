@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class FadeIn2 : MonoBehaviour
 {
-    private float _fadeSpeed = 0.01f; //透明化の速さ
+    private float _fadeSpeed = 0.02f; //透明化の速さ
     // Awake is called when the script instance is being loaded.
     void Awake()
     {
-        GetComponent<Renderer>().material.color = new Color(GetComponent<MeshRenderer>().material.color.r, GetComponent<MeshRenderer>().material.color.g, GetComponent<MeshRenderer>().material.color.b, 0f);
+        GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
+        GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow_transparent", typeof(Material)) as Material);
         //zwrite 0
         GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
         //no shadows ):
@@ -31,12 +32,13 @@ public class FadeIn2 : MonoBehaviour
         if (GetComponent<Renderer>().material.color.a < 1)
         {
             //make mesh more opaque
-            GetComponent<Renderer>().material.color = new Color(GetComponent<MeshRenderer>().material.color.r, GetComponent<MeshRenderer>().material.color.g, GetComponent<MeshRenderer>().material.color.b, GetComponent<MeshRenderer>().material.color.a + _fadeSpeed);
+            GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
         }
         //else switch to ProBuilder_yellow
         else
         {
             GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
+            GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow", typeof(Material)) as Material);
         }
     }
 }
