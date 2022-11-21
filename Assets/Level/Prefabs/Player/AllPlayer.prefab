@@ -423,6 +423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b582ca40adeff49882c2f64ad173bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _calibrationMenu: 0
   _maxRunSpeed: 6
   _runForceMultiplier: 10
   _maxWalkSpeed: 3
@@ -567,14 +568,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89154feeedb44e2449b5c63b20e2e110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _headbobMultiplier: 0.1
+  _headbobVaritation: 0.05
+  _headbobPeriodMultiplier: 3
   _stepSpeed: 4
   _speedAudioActivation: 2
   _audio: {fileID: 58928047651188944}
   _footstepClips:
-  - {fileID: 8300000, guid: 1bdba58c55da5d54994af9ad4d38e048, type: 3}
-  - {fileID: 8300000, guid: 22b494529a3379945a76c2a06908bc28, type: 3}
-  _landSound: {fileID: 8300000, guid: 1bdba58c55da5d54994af9ad4d38e048, type: 3}
+  - {fileID: 8300000, guid: bc0ecafccca464640b93db32dd2deb1d, type: 3}
+  - {fileID: 8300000, guid: 3a634590364adaa45af5e2cd9b5f8568, type: 3}
+  - {fileID: 8300000, guid: 6b7fbbba4aa576a4da5a2d2d99de0201, type: 3}
+  - {fileID: 8300000, guid: c765506d6a5525f439771b2649912360, type: 3}
+  - {fileID: 8300000, guid: 04f02b1272699d54bbd1515681912c81, type: 3}
+  _landSound: {fileID: 8300000, guid: 04f02b1272699d54bbd1515681912c81, type: 3}
   _camera: {fileID: 5100550035080717454}
 --- !u!1 &9039045316966482032
 GameObject:

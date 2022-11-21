@@ -5,7 +5,10 @@ using UnityEngine;
 public class RealityMovementFeedbacks : MonoBehaviour
 {
     [Header("Headbob parameters")]
-    [SerializeField] private float _headbobMultiplier = 0.05f;
+    [SerializeField] private float _headbobVariationSprinting = 0.1f;
+    [SerializeField] private float _headbobVariationWalking = 0.05f;
+    [SerializeField] private float _headbobPeriodMultiplier = 2f;
+    private float _headbobVariation;
     private float _headBobTimer;
 
     [Header("Footstep parameters")]
@@ -45,6 +48,8 @@ public class RealityMovementFeedbacks : MonoBehaviour
         _moveSpeed = _realityMovementCalibration.GetVelocity();
         HandleHeadbob();
         HandleFootstep();
+        
+        
     }
 
     /// <summary>
@@ -52,14 +57,24 @@ public class RealityMovementFeedbacks : MonoBehaviour
     /// </summary>
     private void HandleHeadbob()
     {
+
+        if (_realityMovementCalibration.GetState() == RealityMovementCalibration.MovementState.Walking)
+        {
+            _headbobVariation = _headbobVariationWalking;
+        }
+        else
+        {
+            _headbobVariation = _headbobVariationSprinting;
+        }
+        
         if (_realityMovementCalibration.IsGrounded())
         {
             if (_moveSpeed > 1f)
             {
                 // The time is incremented each time that the camera moves
-                _headBobTimer += Time.deltaTime * _realityMovementCalibration.GetMaxVelocity();  // This speed changes related to the reality player state
+                _headBobTimer += Time.deltaTime * _realityMovementCalibration.GetMaxVelocity() * _headbobPeriodMultiplier;  // This speed changes related to the reality player state
                 // The position of the camera change on the y axis in order to do an up and down. The maximum difference is managed by the multiplier
-                _camera.transform.localPosition = _cameraPosition + (new Vector3(0, Mathf.Sin(_headBobTimer), 0) * _headbobMultiplier);
+                _camera.transform.localPosition = _cameraPosition + (new Vector3(0, Mathf.Sin(_headBobTimer), 0) * _headbobVariation);
             }
         }
     }
@@ -73,7 +88,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
         if (_realityMovementCalibration.GetState() != RealityMovementCalibration.MovementState.Air)
         {
             _footstepTimer -= Time.deltaTime * _realityMovementCalibration.GetMaxVelocity();
-            if (_moveSpeed > _speedAudioActivation && _footstepTimer < 0)
+            if (_moveSpeed > _speedAudioActivation && _footstepTimer < 0 && _camera.transform.localPosition.y < _cameraPosition.y - _headbobVariation*0.9)
             {
                 _audio.PlayOneShot(_footstepClips[Random.Range(0, _footstepClips.Length - 1)]);
                 _audio.volume = Random.Range(0.8f, 1);
@@ -91,6 +106,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
         else // if the reality player is in air
         {
             _audio.Stop();
+            _footstepTimer = _stepSpeed;
         }
         
         _lastState = _realityMovementCalibration.GetState();
