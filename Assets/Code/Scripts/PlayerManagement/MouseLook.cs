@@ -59,8 +59,8 @@ public class MouseLook : MonoBehaviour
         if (_activeCurrently)
         {
             // get mouse input and proportionally modify the sensitivity
-            float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
+            float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity;
         
             // calculate the rotation in both axis
             _yRotation += mouseX;
