@@ -100,16 +100,15 @@ public class NoclipManager : MonoBehaviour
             if (_playerCanEnableNoclip)
             {
                 StartCoroutine(EnableNoclip());
+            } 
+            else
+            {
+                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND"); 
             }
             
             if (_playerCanDisableNoclip)
             {
                 StartCoroutine(DisableNoclip());
-            }
-            
-            if (!_playerCanEnableNoclip)
-            {
-                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND"); 
             }
         }
     }
