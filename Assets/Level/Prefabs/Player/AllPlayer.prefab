@@ -568,11 +568,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89154feeedb44e2449b5c63b20e2e110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _headbobVaritation: 0.05
-  _headbobPeriodMultiplier: 3
-  _stepSpeed: 4
+  _headbobVariationSprinting: 0.06
+  _headbobVariationWalking: 0.06
+  _headbobFrequency: 3
+  reproductionTime: 1
   _speedAudioActivation: 2
-  _audio: {fileID: 58928047651188944}
+  _audioSource: {fileID: 0}
   _footstepClips:
   - {fileID: 8300000, guid: bc0ecafccca464640b93db32dd2deb1d, type: 3}
   - {fileID: 8300000, guid: 3a634590364adaa45af5e2cd9b5f8568, type: 3}
