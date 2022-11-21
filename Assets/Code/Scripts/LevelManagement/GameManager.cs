@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
+        Physics.gravity = new Vector3(0, 0, 0);
         SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
         _finalGameAreaIndex = _gameAreas.Count - 1;
     }
