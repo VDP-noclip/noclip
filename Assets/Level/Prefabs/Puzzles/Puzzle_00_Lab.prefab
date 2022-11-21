@@ -956,6 +956,7 @@ GameObject:
   - component: {fileID: 7685536466251095689}
   - component: {fileID: 2208009636262608656}
   - component: {fileID: 6918031996416119469}
+  - component: {fileID: 8591231750817934670}
   m_Layer: 3
   m_Name: PolyShape_1
   m_TagString: Untagged
@@ -1394,6 +1395,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &8591231750817934670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554259015991256338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 326371e0291fe7f4ebd54349af807531, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _noclipMaterials:
+  - {fileID: 2100000, guid: 911ad7496573d2a4cb306b0dabed0b4c, type: 2}
 --- !u!1001 &2968914005748814829
 PrefabInstance:
   m_ObjectHideFlags: 0
