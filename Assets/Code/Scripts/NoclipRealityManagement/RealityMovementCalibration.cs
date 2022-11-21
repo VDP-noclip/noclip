@@ -309,7 +309,8 @@ public class RealityMovementCalibration : MonoBehaviour
         _exitingOnSlope = true;
         // reset y velocity
         _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
-        
+
+        _rigidbody.drag = 0;
         // create an upward impulse force
         //_rigidbody.AddForce(_transform.up * _jumpForce, ForceMode.Impulse);
         //_forces.Add(_transform.up * _jumpForce);
