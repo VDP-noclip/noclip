@@ -38,7 +38,7 @@ public class LoadPrefs : MonoBehaviour
     [Header("Invert Y Settings")]
     [SerializeField] private Toggle invertYToggle = null;
 
-    private void Awake()
+    private void Start()
     {
         if (canUse)
         {
@@ -51,7 +51,8 @@ public class LoadPrefs : MonoBehaviour
                 
                 volumeTextValue.text = localVolume.ToString("0.0");
                 volumeSlider.value = localVolume;
-                audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localVolume) * 20);
+                menuController.SetVolume(localVolume);
+                //audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localVolume) * 20);
             }
             else
             {
