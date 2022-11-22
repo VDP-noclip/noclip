@@ -186,8 +186,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _activeScript: 1
   _orientation: {fileID: 6423799784713560806}
-  _xSensitivity: 50
-  _ySensitivity: 50
+  _xSensitivity: 1
+  _ySensitivity: 1
   _sensitivity: 1
 --- !u!1 &5413496004590197134
 GameObject:
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b582ca40adeff49882c2f64ad173bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _calibration: 1
+  _calibrationMenu: 0
   _maxRunSpeed: 6
   _runForceMultiplier: 10
   _maxWalkSpeed: 3
@@ -616,6 +616,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4674821149033968117, guid: 8030186c43e35384595d120598ea99b5,
+        type: 3}
+      propertyPath: _xSensitivity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4674821149033968117, guid: 8030186c43e35384595d120598ea99b5,
+        type: 3}
+      propertyPath: _ySensitivity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9054193092741203383, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
