@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
-    private enum MovementState       // define player states
+    public enum MovementState       // define player states
     {
         Walking,
         Sprinting,
@@ -89,13 +89,11 @@ public class RealityMovement : MonoBehaviour
     
     private void Awake()
     {
-        GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        //if gravity magnitude is not 0
-        if (gameManager.GetGravity() == 0)
+        //if gravity magnitude is not 0 (Gamemanager zeroes it on game boot)
+        if (Physics.gravity.magnitude != 0)
         {
             //set gravity to gravity magnitude
             Physics.gravity *= _gravityMultiplier;
-            gameManager.SetGravity(Physics.gravity.magnitude);
         }
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
@@ -148,6 +146,21 @@ public class RealityMovement : MonoBehaviour
     public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
+    }
+
+    public bool IsGrounded()
+    {
+        return _grounded;
+    }
+
+    public float GetVelocity()
+    {
+        return _rigidbody.velocity.magnitude;
+    }
+
+    public MovementState GetState()
+    {
+        return _state;
     }
 
     /// <summary>

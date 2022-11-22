@@ -13,7 +13,7 @@ public class MouseLook : MonoBehaviour
     private bool _activeScript = true;
     
     // link camera to body
-    [Tooltip("The script is currently active")]
+    [Tooltip("Indicates the gameobject that has the orientation information: could be also the gameobject that own this script")]
     [SerializeField] private Transform _orientation;
     
     // set mouse sensibility in X and Y axis
@@ -59,16 +59,19 @@ public class MouseLook : MonoBehaviour
         if (_activeCurrently)
         {
             // get mouse input and proportionally modify the sensitivity
-            float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity * Time.deltaTime;
+            float mouseX = Input.GetAxisRaw("Mouse X") * _xSensitivity * _sensitivity; //NB: here X refers to the axis of the screen
+            float mouseY = Input.GetAxisRaw("Mouse Y") * _ySensitivity * _sensitivity; //NB: here Y refers to the axis of the screen
         
             // calculate the rotation in both axis
-            _yRotation += mouseX;
-            _xRotation -= mouseY;
+            _yRotation += mouseX; // the x screen axis corresponds to a rotation on the y axis of the camera 
+            _xRotation -= mouseY; // the y screen axis corresponds to a rotation on the x axis of the camera 
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
             
-            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
-            _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);
+            // TODO check the right name for the orientation: in this way are a little confusing terms
+            
+            // IMPORTANT: Don't change the order of the two following lines: if _orientation and _transform are the same gameobject it doesn't work due to value override.
+            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);  // updates the orientation of the gameobject that has the orientation information of the camera on the y axis
+            _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);  // updates the camera orientation
             
             // Checks whether there's local information about vertical axis preference and changes it.
             // I don't know the cost of this statement but it definitely doesn't belong here.
@@ -95,5 +98,10 @@ public class MouseLook : MonoBehaviour
             // You don't have a key. SORRY MAURICE!!!!!!!
             throw new Exception("masterSensitivityY key is missing!");
         }
+    }
+
+    public void setSensitivity(float sensitivity)
+    {
+        _sensitivity = sensitivity;
     }
 }
