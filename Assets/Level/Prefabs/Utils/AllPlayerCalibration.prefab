@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40b8109c0acc274b92ee4bd92d5fe3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noclipKey: 112
+  _noclipOptions: {fileID: 11400000, guid: d849b88aa8a3daa4ea8efb753ddaaf61, type: 2}
 --- !u!114 &8742322589523402273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b582ca40adeff49882c2f64ad173bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showForces: 1
   _maxRunSpeed: 6
   _runForceMultiplier: 10
   _maxWalkSpeed: 3
@@ -149,6 +148,7 @@ MonoBehaviour:
   _state: 0
   _OnSlope: 0
   Grounded: 0
+  _forceVisualizer: {fileID: 0}
 --- !u!1 &3052869099814235796
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,11 +418,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb20b503cb267b48ba108b16bff3353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _activeScript: 1
-  _orientation: {fileID: 0}
-  _xSensitivity: 50
-  _ySensitivity: 50
-  _sensitivity: 1
 --- !u!1 &7252963810651285100
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,6 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40098be7b22e711429cbd78db1eb7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
 --- !u!1001 &2047176295524559325
 PrefabInstance:
   m_ObjectHideFlags: 0
