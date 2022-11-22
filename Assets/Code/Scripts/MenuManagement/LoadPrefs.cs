@@ -42,7 +42,7 @@ public class LoadPrefs : MonoBehaviour
     {
         if (canUse)
         {
-            // TODO: Doesn't work...
+            // Changes soundtrack volume based on stored value
             if (PlayerPrefs.HasKey("soundtrackVolume"))
             {
                 

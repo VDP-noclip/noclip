@@ -134,7 +134,7 @@ public class MenuController : MonoBehaviour
         _qualityLevel = qualityIndex;
     }
     
-    // TODO: For Stefano: this works! Look at VolumeApply.
+    // Sets volume in Mixer
     public void SetVolume(float volume)
     {
         currentVolume = volume;
@@ -159,7 +159,7 @@ public class MenuController : MonoBehaviour
         StartCoroutine(ConfirmationBox());
     }
     
-    // TODO: Doesn't work. At least, it doesn't load this in LoadPrefs
+    // Applies changes
     public void VolumeApply()
     {
         PlayerPrefs.SetFloat("soundtrackVolume", currentVolume);
