@@ -163,6 +163,7 @@ public class MenuController : MonoBehaviour
     public void VolumeApply()
     {
         PlayerPrefs.SetFloat("soundtrackVolume", currentVolume);
+        Debug.Log(currentVolume);
         StartCoroutine(ConfirmationBox());
     }
     public void GameplayApply()

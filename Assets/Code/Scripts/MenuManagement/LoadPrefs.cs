@@ -45,8 +45,10 @@ public class LoadPrefs : MonoBehaviour
             // TODO: Doesn't work...
             if (PlayerPrefs.HasKey("soundtrackVolume"))
             {
+                
                 float localVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-
+                Debug.Log("volume locale: " + localVolume);
+                
                 volumeTextValue.text = localVolume.ToString("0.0");
                 volumeSlider.value = localVolume;
                 audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localVolume) * 20);
