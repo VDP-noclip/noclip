@@ -7,7 +7,7 @@ using TMPro;
 using System.Collections.Generic;
 public class RealityMovementCalibration : MonoBehaviour
 {
-    private enum MovementState       // define player states
+    public enum MovementState       // define player states
     {
         Walking,
         Sprinting,
@@ -163,6 +163,25 @@ public class RealityMovementCalibration : MonoBehaviour
     
     private bool _commitJump = false;
 
+    public bool IsGrounded()
+    {
+        return _grounded;
+    }
+
+    public float GetVelocity()
+    {
+        return _rigidbody.velocity.magnitude;
+    }
+
+    public float GetMaxVelocity()
+    {
+        return _maxMoveSpeed;
+    }
+    public MovementState GetState()
+    {
+        return _state;
+    }
+    
     private void LateUpdate()
     {
         if (_commitJump)
