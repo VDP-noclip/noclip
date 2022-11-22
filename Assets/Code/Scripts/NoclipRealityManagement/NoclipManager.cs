@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Code.ScriptableObjects;
 using Code.Scripts.Utils;
+using POLIMIGameCollective;
 
 
 /// <summary>
@@ -88,19 +89,22 @@ public class NoclipManager : MonoBehaviour
         yield return null;
     }
 
+
     /// <summary>
     /// Allows the player to enable/disable noclip mode.
     /// </summary>
     private void Update()
     {
-        if (Input.GetKeyDown(_noclipOptions.noclipKey) && _playerCanEnableNoclip)
+        if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
-            StartCoroutine(EnableNoclip());
-        }
-
-        if (Input.GetKeyDown(_noclipOptions.noclipKey) && _playerCanDisableNoclip)
-        {
-            StartCoroutine(DisableNoclip());
+            if (_playerCanEnableNoclip)
+                StartCoroutine(EnableNoclip());
+            else if (_playerCanDisableNoclip)
+                StartCoroutine(DisableNoclip());
+            else if (!_noclipEnabled)
+                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND. PRESSING P HAS NO EFFECT"); 
+            else if (_noclipEnabled)
+                EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP"); 
         }
     }
     
