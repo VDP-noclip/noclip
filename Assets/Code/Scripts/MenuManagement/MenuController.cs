@@ -41,6 +41,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] private float defaultVolume = 1.0f;
     [SerializeField] private AudioMixer audioMixer;
 
+    private float currentVolume;
+
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
     
@@ -131,10 +133,12 @@ public class MenuController : MonoBehaviour
     {
         _qualityLevel = qualityIndex;
     }
-    // WORKS IN DECIBEL 
+    
+    // TODO: For Stefano: this works! Look at VolumeApply.
     public void SetVolume(float volume)
     {
-        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(volume) * 20);
+        currentVolume = volume;
+        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(currentVolume) * 20);
         volumeTextValue.text = volume.ToString("0.0");
     }
     public void SetControllerSensitivity(float sensitivity)
@@ -155,10 +159,10 @@ public class MenuController : MonoBehaviour
         StartCoroutine(ConfirmationBox());
     }
     
-    // TODO: doesn't get value from mixer :(
+    // TODO: Doesn't work. At least, it doesn't load this in LoadPrefs
     public void VolumeApply()
     {
-        PlayerPrefs.SetFloat("soundtrackVolume", AudioListener.volume);
+        PlayerPrefs.SetFloat("soundtrackVolume", currentVolume);
         StartCoroutine(ConfirmationBox());
     }
     public void GameplayApply()

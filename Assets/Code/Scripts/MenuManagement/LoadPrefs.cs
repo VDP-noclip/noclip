@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
 
 /// <summary>
 /// LoadPref checks whether user settings are locally saved. This script is basically a big list of checks.
@@ -22,7 +23,8 @@ public class LoadPrefs : MonoBehaviour
     [Header("Volume Settings")]
     [SerializeField] private TMP_Text volumeTextValue = null;
     [SerializeField] private Slider volumeSlider = null;
-    
+    [SerializeField] private AudioMixer audioMixer;
+
     [Header("Quality Level Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
     
@@ -40,13 +42,14 @@ public class LoadPrefs : MonoBehaviour
     {
         if (canUse)
         {
-            if (PlayerPrefs.HasKey("masterVolume"))
+            // TODO: Doesn't work...
+            if (PlayerPrefs.HasKey("soundtrackVolume"))
             {
-                float localVolume = PlayerPrefs.GetFloat("masterVolume");
+                float localVolume = PlayerPrefs.GetFloat("soundtrackVolume");
 
                 volumeTextValue.text = localVolume.ToString("0.0");
                 volumeSlider.value = localVolume;
-                AudioListener.volume = localVolume;
+                audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localVolume) * 20);
             }
             else
             {
