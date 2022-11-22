@@ -18,16 +18,13 @@ public class TutorialController : MonoBehaviour
     {
         EventManager.StartListening ("PressP", PressP);
         EventManager.StartListening ("DisplayHint", DisplayHint);
-
     }
 
 
     private void PressP()
     {
         EventManager.StopListening("PressP", PressP);
-        
-        Debug.Log("PressP displayed");
-        
+        StartCoroutine(DisplayHintCoroutine("PRESS P"));
         EventManager.StartListening("PressP", PressP);
     }
 
