@@ -21,9 +21,7 @@ public class RealityPlayerCollisions : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("NoclipEnabler"))
         {
-            EventManager.TriggerEvent("PressP");
             EventManager.TriggerEvent("DisplayHint", "PRESS P TO NOCLIP");
-            
             _noclipManager.SetPlayerCanEnableNoClip(true);
         }
         else if (other.CompareTag("Checkpoint"))
