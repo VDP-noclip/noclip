@@ -98,18 +98,13 @@ public class NoclipManager : MonoBehaviour
         if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
             if (_playerCanEnableNoclip)
-            {
                 StartCoroutine(EnableNoclip());
-            } 
-            else
-            {
-                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND"); 
-            }
-            
-            if (_playerCanDisableNoclip)
-            {
+            else if (_playerCanDisableNoclip)
                 StartCoroutine(DisableNoclip());
-            }
+            else if (!_noclipEnabled)
+                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND. PRESSING P HAS NO EFFECT"); 
+            else if (_noclipEnabled)
+                EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP"); 
         }
     }
     
