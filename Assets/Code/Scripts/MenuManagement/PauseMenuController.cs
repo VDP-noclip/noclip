@@ -82,6 +82,16 @@ public class PauseMenuController : MonoBehaviour
         
         isPaused = false;
     }
+
+    public void ReturnToMenu()
+    {
+        Time.timeScale = 1;
+        AudioListener.pause = false;
+        
+        isPaused = false;
+        
+        SceneManager.LoadScene("Menu_0");
+    }
     
     public void SetControllerSensitivity(float sensitivity)
     {
