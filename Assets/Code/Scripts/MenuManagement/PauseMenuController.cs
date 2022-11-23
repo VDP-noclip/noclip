@@ -113,29 +113,24 @@ public class PauseMenuController : MonoBehaviour
     {
         mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
     }
-    public void SetVolume(float volume, string type)
+    public void SetVolumeSoundtrack(float volume)
     {
-        if (type == "Soundtrack")
-        {
-            _currentSoundVolume = volume;
-            _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
-            _volumeSoundtrackSlider.value = volume;
-        }
-        else if (type == "Effects")
-        {
-            _currentEffectsVolume = volume;
-            _audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
-            _volumeEffectsSlider.value = volume;
-        }
-        else if (type == "Global")
-        {
-            _currentGlobalVolume = volume;
-            _audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
-            _volumeGlobalSlider.value = volume;
-        }
-
+        _currentSoundVolume = volume;
+        _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
+        _volumeSoundtrackSlider.value = volume;
     }
-    
+    public void SetVolumeEffects(float volume)
+    {
+        _currentEffectsVolume = volume;
+        _audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
+        _volumeEffectsSlider.value = volume;
+    }
+    public void SetVolumeGlobal(float volume)
+    {
+        _currentGlobalVolume = volume;
+        _audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
+        _volumeGlobalSlider.value = volume;
+    }
     public void GameplayApply()
     {
         if (invertYToggle.isOn)
