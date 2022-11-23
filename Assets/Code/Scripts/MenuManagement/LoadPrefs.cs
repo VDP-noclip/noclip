@@ -47,8 +47,7 @@ public class LoadPrefs : MonoBehaviour
             {
                 
                 float localVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-                Debug.Log("volume locale: " + localVolume);
-                
+
                 volumeTextValue.text = localVolume.ToString("0.0");
                 volumeSlider.value = localVolume;
                 menuController.SetVolume(localVolume);

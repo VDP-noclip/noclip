@@ -24,8 +24,8 @@ public class MenuController : MonoBehaviour
     
     public int mainControllerSensitivity = 4;
 
-    [Header("Toggle Settings")] [SerializeField]
-    private Toggle invertYToggle = null;
+    [Header("Toggle Settings")] 
+    [SerializeField] private Toggle invertYToggle = null;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -163,7 +163,7 @@ public class MenuController : MonoBehaviour
     public void VolumeApply()
     {
         PlayerPrefs.SetFloat("soundtrackVolume", currentVolume);
-        Debug.Log(currentVolume);
+        
         StartCoroutine(ConfirmationBox());
     }
     public void GameplayApply()
@@ -189,6 +189,9 @@ public class MenuController : MonoBehaviour
         if (MenuType == "Audio")
         {
             audioMixer.SetFloat("soundtrackVolume", Mathf.Log(defaultVolume) * 20);
+            audioMixer.SetFloat("globalVolume", Mathf.Log(defaultVolume) * 20);
+            audioMixer.SetFloat("effectsVolume", Mathf.Log(defaultVolume) * 20);
+            
             volumeSlider.value = defaultVolume;
             volumeTextValue.text = defaultVolume.ToString("0.0");
             
