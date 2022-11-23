@@ -423,23 +423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b582ca40adeff49882c2f64ad173bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-  _maxRunSpeed: 20
-  _runForceMultiplier: 16
-  _maxWalkSpeed: 7
-  _walkForceMultiplier: 2
-  _groundDrag: 12
-=======
-  _calibrationMenu: 0
-  _maxRunSpeed: 20
-  _runForceMultiplier: 7
-  _maxWalkSpeed: 3
-  _walkForceMultiplier: 3
-  _groundDrag: 20
->>>>>>> Stashed changes
-  _jumpForce: 12
-=======
   _calibrationMenu: 0
   _maxRunSpeed: 6
   _runForceMultiplier: 10
@@ -447,9 +430,8 @@ MonoBehaviour:
   _walkForceMultiplier: 3
   _groundDrag: 4
   _jumpForce: 8
->>>>>>> develop
   _jumpCooldown: 0.25
-  _airMultiplier: 0.1
+  _airMultiplier: 0.4
   _crouchSpeed: 2
   _crouchYScale: 0.5
   _maxSlopeAngle: 0
@@ -461,11 +443,7 @@ MonoBehaviour:
   _ground:
     serializedVersion: 2
     m_Bits: 8
-<<<<<<< HEAD
-  _gravityMultiplier: 2
-=======
   _gravityMultiplier: 1
->>>>>>> develop
   _orientation: {fileID: 6423799784713560806}
   _state: 0
   _OnSlope: 0

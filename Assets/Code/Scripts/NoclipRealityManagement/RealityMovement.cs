@@ -14,11 +14,11 @@ public class RealityMovement : MonoBehaviour
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [Range(0, 30)]
-    [SerializeField] private float _maxRunSpeed = 6f;
+    [SerializeField] private float _maxRunSpeed = 21f;
     [Range(0, 30)]
-    [SerializeField] private float _runForceMultiplier = 10f;
+    [SerializeField] private float _runForceMultiplier = 7f;
     [Range(0, 25)]
-    [SerializeField] private float _maxWalkSpeed = 3f;
+    [SerializeField] private float _maxWalkSpeed = 10f;
     [Range(0, 25)]
     [SerializeField] private float _walkForceMultiplier = 3f;
     
@@ -27,15 +27,15 @@ public class RealityMovement : MonoBehaviour
     
     [Header("Drag")]
     [Range(0, 15)]
-    [SerializeField] private float _groundDrag = 4f;    // ground drag
+    [SerializeField] private float _groundDrag = 20f;    // ground drag
     
     [Header("Jump")]
     [Range(0, 25)]
-    [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [SerializeField] private float _jumpForce = 12f;     // set jump upward force
     [Range(0, 1)]
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [Range(0, 1f)]
-    [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
+    [SerializeField] private float _airMultiplier = 0.3f;     // set air movement limitation
     private bool _readyToJump;      //
 
     [Header("Crouch")]
@@ -46,7 +46,7 @@ public class RealityMovement : MonoBehaviour
     private float _startYScale;
     
     [Header("Slope handling")]
-    [SerializeField] private float _maxSlopeAngle;
+    [SerializeField] private float _maxSlopeAngle = 45;
     private RaycastHit _slopeHit;
     private bool _exitingOnSlope = false;
     
@@ -65,7 +65,7 @@ public class RealityMovement : MonoBehaviour
     private bool _grounded;
 
     [Range(0, 10)]
-    [SerializeField] private float _gravityMultiplier = 1f;
+    [SerializeField] private float _gravityMultiplier = 3f;
     [SerializeField] private Transform _orientation;
 
     private float _gravity = 9.81f;  // This is used for the movement force 
