@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731715, g: 0.13414735, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -208,42 +208,162 @@ PrefabInstance:
     - target: {fileID: 5195668875776479481, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _scenesToLoad.Array.data[2]
-      value: Area_01_Background
+      value: Area_01_Environment_test
       objectReference: {fileID: 0}
     - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _puzzlePrefabs.Array.size
-      value: 5
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _puzzlePrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 3541203960272751889, guid: 548628c22c82b6341adcf4acfa115afc,
+      objectReference: {fileID: 4223317181280031168, guid: 5471cbc0bc03803429a0c5f67a7a090f,
         type: 3}
     - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _puzzlePrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 1346435820038458250, guid: 81a6169fcfe99eb4aa9926ca7849da1f,
+      objectReference: {fileID: 1311582977839657214, guid: d2f0099084725f04a89eebe56102779c,
         type: 3}
     - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _puzzlePrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 8202025676799520668, guid: e0d699d863fbec148b49ce5f5731e17e,
+      objectReference: {fileID: 5743668768610558647, guid: 86d0cfabf08e9bc49accd9e0ed7dd4cc,
         type: 3}
     - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _puzzlePrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 8313678433417032915, guid: b30c74fcc8abe2c4fadf7e5af7fff56b,
+      objectReference: {fileID: 5279397701217815195, guid: 70833612a593da94ab64c4c8a132456a,
         type: 3}
     - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _puzzlePrefabs.Array.data[4]
       value: 
-      objectReference: {fileID: 433055271025843327, guid: d57daaa02c47f3f48a9873238aaf36a5,
+      objectReference: {fileID: 9211063948828575469, guid: bef6a36bfec963c4883699bbad75e540,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 1532890494041299503, guid: c18ade8ee920e174289e35e90ab0b4bf,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[6]
+      value: 
+      objectReference: {fileID: 6888548613040559882, guid: 8abc3aefe9e48df48be2de203087385d,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[7]
+      value: 
+      objectReference: {fileID: 6015279310080637496, guid: 099c8fbd00c4ac64b82b72af33e622ea,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[8]
+      value: 
+      objectReference: {fileID: 8517093814403417531, guid: b37642ae7141fe84caf0c70ea899a75a,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[9]
+      value: 
+      objectReference: {fileID: 86539044814822409, guid: 4791119517160844a9161927ecabcaef,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[10]
+      value: 
+      objectReference: {fileID: 2667979911004113026, guid: b0de904d3c5316c419ef0c5dda1b6b4e,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[11]
+      value: 
+      objectReference: {fileID: 4158493693492736373, guid: e00b4d684995ce946aacb7b89591e148,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[12]
+      value: 
+      objectReference: {fileID: 3596530844094801080, guid: 59a7c1d99fd2317499f7dd7490a86736,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[13]
+      value: 
+      objectReference: {fileID: 4813907312269080296, guid: aed7c1c9c20cce04c84d763aa96333cd,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[14]
+      value: 
+      objectReference: {fileID: 3989880041859385971, guid: 5d88437fa6fb0534d8427aa9f33ea054,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[15]
+      value: 
+      objectReference: {fileID: 8037427433649652282, guid: c0881c9a39483c144835dd51fd8cb051,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[16]
+      value: 
+      objectReference: {fileID: 4190349613921940062, guid: ace0b665f47266e4aac80f8486dbd492,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[17]
+      value: 
+      objectReference: {fileID: 6646892164799789910, guid: e1bca55b91000c04aa506dff83247aae,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[18]
+      value: 
+      objectReference: {fileID: 2696776010026536267, guid: fde27f575fbd5574fa3e52664fcda8b1,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[19]
+      value: 
+      objectReference: {fileID: 4677549791691714138, guid: 062b0abae46a4c04bb3ea888fdd05edb,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[20]
+      value: 
+      objectReference: {fileID: 6666990489514530968, guid: b4078fc190fc728468e538704e542d4c,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[21]
+      value: 
+      objectReference: {fileID: 8619108656343639102, guid: 2e1b233e595fec14086c2b2ec353195f,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[22]
+      value: 
+      objectReference: {fileID: 3382568466360033636, guid: fd63d7df7c95614429a0733511a20aad,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[23]
+      value: 
+      objectReference: {fileID: 1232709137605659526, guid: 3f9dd8f4d0b6b914a8c1a6673f08a5c9,
+        type: 3}
+    - target: {fileID: 5195668876607682582, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: _puzzlePrefabs.Array.data[24]
+      value: 
+      objectReference: {fileID: 8303861729196563964, guid: caeb23a245233df499ebc7dff0f607b7,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 653048c31db304d4c9dedd7e832c3385, type: 3}
