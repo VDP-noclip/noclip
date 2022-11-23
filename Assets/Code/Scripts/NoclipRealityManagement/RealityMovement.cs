@@ -65,7 +65,7 @@ public class RealityMovement : MonoBehaviour
     private bool _grounded;
 
     [Range(0, 10)]
-    [SerializeField] private float _gravityMultiplier = 3f;
+    [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private Transform _orientation;
 
     private float _gravity = 9.81f;  // This is used for the movement force 
