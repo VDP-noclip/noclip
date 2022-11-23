@@ -10,13 +10,13 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Looking for puzzles");
-        //for N find 00_Puzzle_N until there are no more
+        //for N find Puzzle_N until there are no more
         while (true)
         {
             try
             {
                 //find puzzle in children
-                GameObject puzzle = transform.Find("00_Puzzle_" + _currentPuzzleIndex).gameObject;
+                GameObject puzzle = transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject;
                 if (puzzle == null)
                     break;
                 puzzle.SetActive(false);
@@ -36,7 +36,7 @@ public class LevelManager : MonoBehaviour
         Debug.Log("Found " + _currentPuzzleIndex + " puzzles");
         _puzzleAmount = _currentPuzzleIndex;
         _currentPuzzleIndex = 0;
-        transform.Find("00_Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
+        transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -51,11 +51,12 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log("LoadNextPuzzle");
             _currentPuzzleIndex++;
-            transform.Find("00_Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
+            transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
         }
         else
         {
             Debug.Log("Area finished!");
+            GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
         }
     }
 }
