@@ -71,9 +71,6 @@ public class PauseMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-
-        
-        
         pauseMenuUI.SetActive(false);
         audioMenuUI.SetActive(false);
         settingsMenuUI.SetActive(false);
