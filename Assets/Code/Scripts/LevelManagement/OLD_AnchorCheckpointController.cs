@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class AnchorCheckpointController : MonoBehaviour
+public class OLD_AnchorCheckpointController : MonoBehaviour
 {
     [SerializeField] GameObject _endAnchor;
     private Renderer _anchorRenderer;
@@ -20,6 +20,6 @@ public class AnchorCheckpointController : MonoBehaviour
             return;
         _anchorRenderer.material.color = Color.green;
         _alreadyAskedForNextPuzzle = true;
-        GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
+        GameObject.Find("PuzzleManager").GetComponent<PuzzleManager>().LoadNextPuzzle();
     }
 }
