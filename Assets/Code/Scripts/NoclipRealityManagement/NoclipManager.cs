@@ -1,7 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Code.ScriptableObjects;
 using UnityEngine;
+using Code.ScriptableObjects;
+using Code.Scripts.Utils;
+using POLIMIGameCollective;
+
 
 /// <summary>
 /// This class manages the switch between noclip and normal mode. It calls Noclip() of all the noclip objects and
@@ -12,6 +16,7 @@ public class NoclipManager : MonoBehaviour
     [SerializeField] private NoclipOptions _noclipOptions;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
+    private ObjectMaterialSwitcher[] _objectMaterialSwitchers;
     private CameraManager _cameraManager;
 
     private bool _noclipEnabled;   
@@ -20,17 +25,18 @@ public class NoclipManager : MonoBehaviour
 
     void Awake()
     {
-        FindNoClipObjControllers();
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
     }
 
-    public void FindNoClipObjControllers()
+    /// <summary>
+    /// To be called at the beginning of each puzzle and in the awake method. It gets the reference to all the objects
+    /// needed by the noclip manager.
+    /// </summary>
+    public void GetReadyForPuzzle()
     {
-        GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
-        _noclipObjControllers = noclipObjects.Select(
-            obj => obj.GetComponent<BaseNoclipObjectController>()).ToList();
-
+        StartCoroutine(GetNoClipObjControllers());
+        StartCoroutine(GetObjectMaterialSwitchers());
     }
 
     /// <summary>
@@ -57,43 +63,105 @@ public class NoclipManager : MonoBehaviour
     /// <summary>
     /// Activate the noclip mode to all the objects and switch camera to the noclip one.
     /// </summary>
-    private void EnableNoclip()
+    private IEnumerator EnableNoclip()
     {
+        _playerCanEnableNoclip = false;
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _cameraManager.SwitchCamera();
-        RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
+        RenderNoclipMode();
+        yield return null;
     }
 
     /// <summary>
     /// Deactivate the noclip mode to all the objects and switch camera to the normal one.
     /// </summary>
-    private void DisableNoclip()
+    private IEnumerator DisableNoclip()
     {
+        _playerCanDisableNoclip = false;
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _cameraManager.SwitchCamera();
-        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
+        // The camera/bodies are still in the correct area, this should be set to false when the player exits
+        // the platform
+        _playerCanEnableNoclip = true;
+        RenderRealityMode();
+        yield return null;
     }
+
 
     /// <summary>
     /// Allows the player to enable/disable noclip mode.
     /// </summary>
     private void Update()
     {
-        if (Input.GetKeyDown(_noclipOptions.noclipKey) && _playerCanEnableNoclip)
+        if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
-            EnableNoclip();
-            _playerCanEnableNoclip = false;
+            if (_playerCanEnableNoclip)
+                StartCoroutine(EnableNoclip());
+            else if (_playerCanDisableNoclip)
+                StartCoroutine(DisableNoclip());
+            else if (!_noclipEnabled)
+                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND. PRESSING P HAS NO EFFECT"); 
+            else if (_noclipEnabled)
+                EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP"); 
         }
+    }
+    
+    private IEnumerator GetNoClipObjControllers()
+    {
+        GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
+        _noclipObjControllers = noclipObjects.Select(
+            obj => obj.GetComponent<BaseNoclipObjectController>()).ToList();
+        yield return null;
+    }
+    
+    private IEnumerator GetObjectMaterialSwitchers()
+    {
+        GameObject[] realityObjects = GameObject.FindGameObjectsWithTag("RealityObject");
+        GameObject[] backgroundObjects = GameObject.FindGameObjectsWithTag("Background");
+        List<GameObject> gameObjectsToChange = new();
+        gameObjectsToChange.AddRange(realityObjects);
+        gameObjectsToChange.AddRange(backgroundObjects);
 
-        if (Input.GetKeyDown(_noclipOptions.noclipKey) && _playerCanDisableNoclip)
+        ObjectMaterialSwitcher[] objectMaterialSwitchers = new ObjectMaterialSwitcher[gameObjectsToChange.Count];
+        
+        for (int i = 0; i < gameObjectsToChange.Count; i++)
         {
-            DisableNoclip();
-            _playerCanDisableNoclip = false;
-            // The camera/bodies are still in the correct area, this should be set to false when the player exits
-            // the platform
-            _playerCanEnableNoclip = true;
+            Material[] noclipMaterials;
+            GameObject obj = gameObjectsToChange[i];
+            NoclipMaterialHolder noclipMaterialHolder = obj.GetComponent<NoclipMaterialHolder>();
+            
+            if (noclipMaterialHolder)
+                noclipMaterials = noclipMaterialHolder.GetNoclipMaterials();
+            else if (obj.CompareTag("Background"))
+                noclipMaterials = _noclipOptions.noClipMaterialsForBackgroundObjects;
+            else
+                noclipMaterials = _noclipOptions.noClipMaterialsForRealityObjects;
+
+            ObjectMaterialSwitcher objectMaterialSwitcher = new ObjectMaterialSwitcher(obj, noclipMaterials);
+            objectMaterialSwitchers[i] = objectMaterialSwitcher;
+        }
+        _objectMaterialSwitchers = objectMaterialSwitchers;
+        
+        yield return null;
+    }
+
+    private void RenderNoclipMode()
+    {
+        RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
+        foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
+        {
+            objectMaterialSwitcher.SetNoclipMaterials();
+        }
+    }
+    
+    private void RenderRealityMode()
+    {
+        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
+        foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
+        {
+            objectMaterialSwitcher.SetOriginalMaterials();
         }
     }
 }

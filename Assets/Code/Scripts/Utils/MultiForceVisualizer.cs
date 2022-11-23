@@ -5,7 +5,7 @@ using UnityEngine;
 public class MultiForceVisualizer : MonoBehaviour
 {
     //serialize player
-    [SerializeField] private GameObject _player;
+    private GameObject _player;
     //private Rigidbody
     private Rigidbody _rigidbody;
     private List<GameObject> _forceVisualizers = new List<GameObject>();
@@ -19,13 +19,13 @@ public class MultiForceVisualizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _player = GameObject.Find("RealityPlayer");
         //get rigidbody of RealityPlayer
         //_rigidbody = GameObject.Find("RealityPlayer").GetComponent<Rigidbody>();
         _rigidbody = _player.GetComponent<Rigidbody>();
         //get realityplayer realitymovementcalibration
         //RealityMovementCalibration realityMovementCalibration = GameObject.Find("RealityPlayer").GetComponent<RealityMovementCalibration>();
         realityMovementCalibration = _player.GetComponent<RealityMovementCalibration>();
-        Debug.Log("IMPORTANT: THE POLES SLOW DOWN THE PLAYER. REMOVE THEM IF YOU DON'T NEED THEM.");
         //for each color
         foreach(Color color in _colors){
             GameObject pole = GameObject.CreatePrimitive(PrimitiveType.Cube);

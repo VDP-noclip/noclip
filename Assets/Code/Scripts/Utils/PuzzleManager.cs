@@ -15,7 +15,7 @@ public class PuzzleManager : MonoBehaviour
     
     private void Awake()
     {
-        LoadCurrentPuzzle();
+        _currentPuzzleIndex = -1;
         _finalPuzzleIndex = _puzzlePrefabs.Length - 1;
     }
     
@@ -29,7 +29,7 @@ public class PuzzleManager : MonoBehaviour
         {
             _currentPuzzleIndex += 1;
             LoadCurrentPuzzle();
-            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().FindNoClipObjControllers();
+            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().GetReadyForPuzzle();
         }
         else
         {

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 using TMPro;
 using UnityEditor;
+using UnityEngine.Audio;
 
 /// <summary>
 /// This is the Menu Controller: a centralized structure where every menu element resides.
@@ -38,6 +39,9 @@ public class MenuController : MonoBehaviour
     [SerializeField] private TMP_Text volumeTextValue = null;
     [SerializeField] private Slider volumeSlider = null;
     [SerializeField] private float defaultVolume = 1.0f;
+    [SerializeField] private AudioMixer audioMixer;
+
+    private float currentVolume;
 
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
@@ -129,9 +133,12 @@ public class MenuController : MonoBehaviour
     {
         _qualityLevel = qualityIndex;
     }
+    
+    // Sets volume in Mixer
     public void SetVolume(float volume)
     {
-        AudioListener.volume = volume;
+        currentVolume = volume;
+        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(currentVolume) * 20);
         volumeTextValue.text = volume.ToString("0.0");
     }
     public void SetControllerSensitivity(float sensitivity)
@@ -151,9 +158,12 @@ public class MenuController : MonoBehaviour
 
         StartCoroutine(ConfirmationBox());
     }
+    
+    // Applies changes
     public void VolumeApply()
     {
-        PlayerPrefs.SetFloat("masterVolume", AudioListener.volume);
+        PlayerPrefs.SetFloat("soundtrackVolume", currentVolume);
+        Debug.Log(currentVolume);
         StartCoroutine(ConfirmationBox());
     }
     public void GameplayApply()
@@ -178,7 +188,7 @@ public class MenuController : MonoBehaviour
     {
         if (MenuType == "Audio")
         {
-            AudioListener.volume = defaultVolume;
+            audioMixer.SetFloat("soundtrackVolume", Mathf.Log(defaultVolume) * 20);
             volumeSlider.value = defaultVolume;
             volumeTextValue.text = defaultVolume.ToString("0.0");
             

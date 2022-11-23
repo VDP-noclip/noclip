@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
-    private enum MovementState       // define player states
+    public enum MovementState       // define player states
     {
         Walking,
         Sprinting,
@@ -148,6 +148,21 @@ public class RealityMovement : MonoBehaviour
     public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
+    }
+
+    public bool IsGrounded()
+    {
+        return _grounded;
+    }
+
+    public float GetVelocity()
+    {
+        return _rigidbody.velocity.magnitude;
+    }
+
+    public MovementState GetState()
+    {
+        return _state;
     }
 
     /// <summary>
