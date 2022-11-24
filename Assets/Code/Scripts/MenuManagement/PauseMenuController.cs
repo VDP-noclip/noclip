@@ -103,6 +103,13 @@ public class PauseMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        OverlayUpdate();
+
+        _isPaused = false;
+    }
+
+    public void OverlayUpdate()
+    {
         _pauseMenuUI.SetActive(false);
         _audioMenuUI.SetActive(false);
         _settingsMenuUI.SetActive(false);
@@ -124,7 +131,7 @@ public class PauseMenuController : MonoBehaviour
         _gameplayText.alpha = 1;
         
         _return.enabled = true;
-        _isPaused = false;
+        _returnText.alpha = 1;
     }
 
     public void ReturnToMenu()
