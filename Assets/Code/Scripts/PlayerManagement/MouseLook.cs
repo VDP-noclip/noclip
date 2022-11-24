@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using POLIMIGameCollective;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -44,6 +46,9 @@ public class MouseLook : MonoBehaviour
 
     void Start()
     {
+        EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
+       
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         
@@ -109,5 +114,19 @@ public class MouseLook : MonoBehaviour
     public void setSensitivity(float sensitivity)
     {
         _sensitivity = sensitivity;
+    }
+
+    // TODO: This doesn't work with floats. Why..........
+    private void SetSensitivityFromPause(string sensitivityPlaceholder)
+    {
+        EventManager.StopListening("setSensitivity", SetSensitivityFromPause);
+        StartCoroutine(SetSensitivityFromPauseCoroutine(sensitivityPlaceholder));
+        EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
+    }
+
+    private IEnumerator SetSensitivityFromPauseCoroutine(string sensitivityPlaceholder)
+    {
+        _sensitivity = float.Parse(sensitivityPlaceholder);
+        yield return null;
     }
 }

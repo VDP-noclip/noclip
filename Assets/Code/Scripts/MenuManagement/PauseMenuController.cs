@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
+using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -104,6 +106,8 @@ public class PauseMenuController : MonoBehaviour
         Time.timeScale = 1;
         AudioListener.pause = false;
         
+        VolumeApply();
+        
         _isPaused = false;
         
         SceneManager.LoadScene("Menu_0");
@@ -111,6 +115,7 @@ public class PauseMenuController : MonoBehaviour
     
     public void SetControllerSensitivity(float sensitivity)
     {
+        EventManager.TriggerEvent("setSensitivity", sensitivity.ToString());
         mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
     }
     public void SetVolumeSoundtrack(float volume)
@@ -141,7 +146,8 @@ public class PauseMenuController : MonoBehaviour
         {
             PlayerPrefs.SetInt("masterInvertY", 0);
         }
-        
+
+        Debug.Log("Setting sensitivity in LoadPrefs: " + mainControllerSensitivity);
         PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
     }
     

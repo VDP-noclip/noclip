@@ -20,8 +20,8 @@ public class LoadPrefs : MonoBehaviour
 
     [SerializeField] private MenuController menuController;
 
-    [Header("Volume Settings")]
-    [SerializeField] private TMP_Text volumeTextValue = null;
+    [Header("Volume Settings")] 
+    [SerializeField] private TMP_Text volumeTextValue;
     [SerializeField] private Slider volumeSlider = null;
     [SerializeField] private AudioMixer audioMixer;
 
@@ -46,17 +46,33 @@ public class LoadPrefs : MonoBehaviour
             if (PlayerPrefs.HasKey("soundtrackVolume"))
             {
                 
-                float localVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-
-                volumeTextValue.text = localVolume.ToString("0.0");
-                volumeSlider.value = localVolume;
-                menuController.SetVolume(localVolume);
-                //audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localVolume) * 20);
+                float localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
+                Debug.Log("local volume menu " + localSoundVolume);
+                
+                volumeSlider.value = localSoundVolume;
+                audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
             }
-            else
+            
+            
+            if (PlayerPrefs.HasKey("effectsVolume"))
             {
-                menuController.ResetButton("Audio");
+                
+                float localEffectsVolume = PlayerPrefs.GetFloat("effectsVolume");
+                
+                volumeSlider.value = localEffectsVolume;
+                audioMixer.SetFloat("effectsVolume", Mathf.Log(localEffectsVolume) * 20);
             }
+
+            
+            if (PlayerPrefs.HasKey("globalVolume"))
+            {
+                
+                float localGlobalVolume = PlayerPrefs.GetFloat("globalVolume");
+
+                volumeSlider.value = localGlobalVolume;
+                audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume) * 20);
+            }
+            
 
             if (PlayerPrefs.HasKey("masterQuality"))
             {

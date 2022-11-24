@@ -24,9 +24,9 @@ public class LoadPrefsLevels : MonoBehaviour
     [SerializeField] private AudioMixer _audioMixer;
 
     [Header("Volume Settings")]
-    [SerializeField] private Slider _volumeSoundtrackSlider;
-    [SerializeField] private Slider _volumeEffectsSlider;
-    [SerializeField] private Slider _volumeGlobalSlider;
+    [SerializeField] private Slider _volumeSoundtrackSlider = null;
+    [SerializeField] private Slider _volumeEffectsSlider = null;
+    [SerializeField] private Slider _volumeGlobalSlider = null;
     [SerializeField] private float _defaultVolume = 1.0f;
     
     [Header("Sensitivity Settings")]
@@ -42,33 +42,36 @@ public class LoadPrefsLevels : MonoBehaviour
         {
             if (PlayerPrefs.HasKey("soundtrackVolume"))
             {
-                float _localSoundtrackVolume = PlayerPrefs.GetFloat("soundtrackVolume");
+                float localSoundtrackVolume = PlayerPrefs.GetFloat("soundtrackVolume");
                 
-                _volumeSoundtrackSlider.value = _localSoundtrackVolume;
-                _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_localSoundtrackVolume) * 20);
+                _volumeSoundtrackSlider.value = localSoundtrackVolume;
+                _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundtrackVolume) * 20);
             }
+            
             
             if (PlayerPrefs.HasKey("effectsVolume"))
             {
-                float _localEffectsVolume = PlayerPrefs.GetFloat("effectsVolume");
+                float localEffectsVolume = PlayerPrefs.GetFloat("effectsVolume");
                 
-                _volumeEffectsSlider.value = _localEffectsVolume;
-                _audioMixer.SetFloat("effectsVolume", Mathf.Log(_localEffectsVolume) * 20);
+                _volumeEffectsSlider.value = localEffectsVolume;
+                _audioMixer.SetFloat("effectsVolume", Mathf.Log(localEffectsVolume) * 20);
             }
             
             if (PlayerPrefs.HasKey("globalVolume"))
             {
-                float _localGlobalVolume = PlayerPrefs.GetFloat("globalVolume");
+                float localGlobalVolume = PlayerPrefs.GetFloat("globalVolume");
                 
-                _volumeGlobalSlider.value = _localGlobalVolume;
-                _audioMixer.SetFloat("globalVolume", Mathf.Log(_localGlobalVolume * 20));
+                _volumeGlobalSlider.value = localGlobalVolume;
+                _audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume * 20));
             }
+            
 
             // More infos about these two checks in MouseLook.cs.
             if (PlayerPrefs.HasKey("masterSensitivity"))
             {
                 float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
                 
+                Debug.Log("LoadPrefsLevels: " + localSensitivity);
                 controllerSensitivitySlider.value = localSensitivity;
                 pauseMenuController.mainControllerSensitivity = Mathf.RoundToInt(localSensitivity);
             }

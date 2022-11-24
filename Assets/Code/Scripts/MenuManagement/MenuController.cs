@@ -139,7 +139,7 @@ public class MenuController : MonoBehaviour
     {
         currentVolume = volume;
         audioMixer.SetFloat("soundtrackVolume", Mathf.Log(currentVolume) * 20);
-        volumeTextValue.text = volume.ToString("0.0");
+        Debug.Log("saving volume " + volume);
     }
     public void SetControllerSensitivity(float sensitivity)
     {
