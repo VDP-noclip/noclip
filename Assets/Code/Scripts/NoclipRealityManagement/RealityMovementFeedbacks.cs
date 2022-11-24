@@ -31,7 +31,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
     [SerializeField] private Camera _camera;
     private RealityMovementCalibration _realityMovementCalibration;
 
-    private RealityMovementCalibration.MovementState _lastState;
+    private MovementState _lastState;
     
     private void Awake()
     {
@@ -55,7 +55,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
     private void HandleHeadbob()
     {
 
-        if (_realityMovementCalibration.GetState() == RealityMovementCalibration.MovementState.Walking)
+        if (_realityMovementCalibration.GetState() == MovementState.Walking)
         {
             _headbobVariation = _headbobVariationWalking;
         }
@@ -82,7 +82,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
     private void HandleFootstep()
     {
         // If the reality player is in contact with an object of the ground layer
-        if (_realityMovementCalibration.GetState() != RealityMovementCalibration.MovementState.Air)
+        if (_realityMovementCalibration.GetState() != MovementState.Air)
         {
             _footstepTimer -= Time.deltaTime * _realityMovementCalibration.GetMaxVelocity();
             //checks the minimum speed of audio activation, if the audio is still playing and if the camera is at the low position of the headbob sine wave
@@ -94,7 +94,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
             }
             
             // if the player go from a state of air to a state of ground. so this is the sound when the player land on the ground
-            if (_lastState == RealityMovementCalibration.MovementState.Air) 
+            if (_lastState == MovementState.Air) 
             {
                 _audioSource.PlayOneShot(_landSound); 
                 _audioSource.volume = 1.5f;
