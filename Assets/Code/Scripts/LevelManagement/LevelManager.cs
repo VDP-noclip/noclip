@@ -56,6 +56,7 @@ public class LevelManager : MonoBehaviour
             Debug.Log("LoadNextPuzzle");
             _currentPuzzleIndex++;
             transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
+            GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().GetReadyForPuzzle();
         }
         else
         {
