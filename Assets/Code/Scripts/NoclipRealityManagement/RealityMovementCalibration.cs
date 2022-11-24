@@ -15,7 +15,7 @@ public class RealityMovementCalibration : MonoBehaviour
         Air
     }
     //[SerializeField] private bool _calibration = true;
-    [SerializeField] private bool _calibrationMenu = false;
+    [SerializeField] private bool _calibrationMenu = true;
     private bool _showForces = false;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
@@ -113,21 +113,7 @@ public class RealityMovementCalibration : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //IMPORTANT LESSON materials loaded at runtime should be instantiated
-        //find ErrorCube and enable its mesh
-        //GameObject errorCube = GameObject.Find("ErrorCube");
-        //find realitybody
-        //GameObject realityBody = GameObject.Find("RealityBody");
-        //set material of errorCube to material of RealityBody
-        //errorCube.GetComponent<MeshRenderer>().material = realityBody.GetComponent<MeshRenderer>().material;
-
-        //if c is pressed toggle calibration menu
-        /*if (Input.GetKeyDown(KeyCode.C))
-        {
-            _calibrationMenu = !_calibrationMenu;
-            ToggleCalibrationMenu();
-        }
-        CalibrationMenu();*/
+        CalibrationMenu();
 
         if (!_noclipManager.IsNoclipEnabled())
         {
@@ -405,6 +391,14 @@ public class RealityMovementCalibration : MonoBehaviour
         catch{
             Debug.Log("PlayerPrefs not found");
         }
+        //find calibration menu
+        GameObject calibrationMenu = GameObject.Find("CalibratePlayerGUI");
+        //find canvas among children
+        GameObject canvas = calibrationMenu.transform.Find("Canvas").gameObject;
+        //find sliders among children
+        GameObject sliders = canvas.transform.Find("Sliders").gameObject;
+        //toggle sliders
+        sliders.SetActive(!sliders.activeSelf);
     }
 
     private MultiForceVisualizer _forceVisualizer;
@@ -412,18 +406,8 @@ public class RealityMovementCalibration : MonoBehaviour
     //variable size list vector3 of forces
     private List<Vector3> _forces;
 
-    private void ToggleCalibrationMenu(){
-        if(!_calibrationMenu){
-            GameObject.Find("CalibratePlayerGUI").SetActive(false);
-            _calibrationMenu = false;
-        }
-        if(_calibrationMenu){
-            GameObject.Find("CalibratePlayerGUI").SetActive(true);
-            _calibrationMenu = true;
-        }
-    }
     private void CalibrationMenu(){
-        if(!_calibrationMenu){
+        /*if(!_calibrationMenu){
             if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
                 InitCalibrationMenu();
                 _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
@@ -432,7 +416,7 @@ public class RealityMovementCalibration : MonoBehaviour
             _forces = new List<Vector3>();
             return;
         }
-        else{
+        else{*/
             if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
                 InitCalibrationMenu();
                 _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
@@ -452,15 +436,16 @@ public class RealityMovementCalibration : MonoBehaviour
             //_maxAirSpeed = _airSpeedSlider.GetComponent<Slider>().value;
             _maxSlopeAngle = _slopeSlider.GetComponent<Slider>().value;
             _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
-            _mouseLook.setSensitivity(_sensitivitySlider.GetComponent<Slider>().value);
+            //_mouseLook.setSensitivity(_sensitivitySlider.GetComponent<Slider>().value);
 
             //set speed monitor value to current speed
             _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
 
             Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
             //g button toggle
-            if (Input.GetKeyDown(KeyCode.G) && !_gPressed)
+            if (Input.GetKeyDown(KeyCode.G))
             {
+                Debug.Log("Toggle cursor");
                 _calibrationMenu = !_calibrationMenu;
                 if(_calibrationMenu){
                     Cursor.lockState = CursorLockMode.None;
@@ -470,16 +455,19 @@ public class RealityMovementCalibration : MonoBehaviour
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
                 }
-
-                _gPressed = true;
+                _hPressed = true;
+                //find calibration menu
+                GameObject calibrationMenu = GameObject.Find("CalibratePlayerGUI");
+                //find canvas among children
+                GameObject canvas = calibrationMenu.transform.Find("Canvas").gameObject;
+                //find sliders among children
+                GameObject sliders = canvas.transform.Find("Sliders").gameObject;
+                //toggle sliders
+                sliders.SetActive(!sliders.activeSelf);
             }
-            if (!Input.GetKeyDown(KeyCode.G))
-            {
-                _gPressed = false;
-            }
 
-            
-            if (Input.GetKeyDown(KeyCode.H) && !_hPressed)
+            /*
+            if (Input.GetKeyDown(KeyCode.H))
             {
                 _hPressed = true;
                 //find calibration menu
@@ -491,16 +479,12 @@ public class RealityMovementCalibration : MonoBehaviour
                 //toggle sliders
                 sliders.SetActive(!sliders.activeSelf);
             }
-            if (!Input.GetKeyDown(KeyCode.G))
-            {
-                _hPressed = false;
-            }
             
             if (Input.GetKeyDown(KeyCode.T))
             {
                 _showForces = !_showForces;
-            }
-        }
+            }*/
+        //}
     }
 
     void ApplyForce(Vector3 force)
@@ -533,7 +517,7 @@ public class RealityMovementCalibration : MonoBehaviour
         PlayerPrefs.SetFloat("AirAcceleration", _airMultiplier);
         PlayerPrefs.SetFloat("MaxSlope", _maxSlopeAngle);
         PlayerPrefs.SetFloat("RunAcceleration", _runForceMultiplier);
-        PlayerPrefs.SetFloat("Sensitivity", _sensitivitySlider.GetComponent<Slider>().value);
+        //PlayerPrefs.SetFloat("Sensitivity", _sensitivitySlider.GetComponent<Slider>().value);
         PlayerPrefs.Save();
     }
 }

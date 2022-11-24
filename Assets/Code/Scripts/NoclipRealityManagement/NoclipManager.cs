@@ -66,7 +66,12 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator EnableNoclip()
     {
         _playerCanEnableNoclip = false;
-        _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
+        try{
+            _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
+        }
+        catch{
+            Debug.LogError("EnableNoclip() failed");
+        }
         _noclipEnabled = true;
         _cameraManager.SwitchCamera();
         RenderNoclipMode();
@@ -79,7 +84,12 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         _playerCanDisableNoclip = false;
-        _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
+        try{
+            _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
+        }
+        catch{
+            Debug.LogError("DisableNoclip() failed");
+        }
         _noclipEnabled = false;
         _cameraManager.SwitchCamera();
         // The camera/bodies are still in the correct area, this should be set to false when the player exits

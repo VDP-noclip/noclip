@@ -16,14 +16,22 @@ public class FadeIn2 : MonoBehaviour
     void Start()
     {
         //store material texture into variable
-        _tex = GetComponent<Renderer>().material.mainTexture;
-        _col = GetComponent<Renderer>().material.color;
-        GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow_transparent", typeof(Material)) as Material);
-        GetComponent<Renderer>().material.mainTexture = _tex;
-        GetComponent<Renderer>().material.color = _col;
-        GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
-        //zwrite 0
-        GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
+        try
+        {
+            _tex = GetComponent<Renderer>().material.mainTexture;
+            _col = GetComponent<Renderer>().material.color;
+            GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow_transparent", typeof(Material)) as Material);
+            GetComponent<Renderer>().material.mainTexture = _tex;
+            GetComponent<Renderer>().material.color = _col;
+            GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
+            //zwrite 0
+            GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
+        }
+        catch
+        {
+            Debug.LogError("No renderer found");
+        }
+        
     }
 
     // Update is called once per frame
@@ -36,18 +44,25 @@ public class FadeIn2 : MonoBehaviour
     void FixedUpdate()
     {
         //if mesh is not fully opaque
-        if (GetComponent<Renderer>().material.color.a < 1)
+        try
         {
-            //make mesh more opaque
-            GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
+            if (GetComponent<Renderer>().material.color.a < 1)
+            {
+                //make mesh more opaque
+                GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
+            }
+            //else switch to ProBuilder_yellow
+            else if (!_finished)
+            {
+                GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow", typeof(Material)) as Material);
+                GetComponent<Renderer>().material.mainTexture = _tex;
+                GetComponent<Renderer>().material.color = _col;
+                _finished = true;
+            }
         }
-        //else switch to ProBuilder_yellow
-        else if (!_finished)
+        catch
         {
-            GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow", typeof(Material)) as Material);
-            GetComponent<Renderer>().material.mainTexture = _tex;
-            GetComponent<Renderer>().material.color = _col;
-            _finished = true;
+            Debug.LogError("No renderer found");
         }
     }
 }
