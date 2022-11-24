@@ -42,7 +42,11 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //if k is pressed find AllPlayer and move it to EndAnchor child of next puzzle
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            CompleteCurrentPuzzle();
+        }
     }
 
     public void LoadNextPuzzle()
@@ -58,5 +62,20 @@ public class LevelManager : MonoBehaviour
             Debug.Log("Area finished!");
             GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
         }
+    }
+
+    public void CompleteCurrentPuzzle()
+    {
+        //find AllPlayer
+        GameObject player = GameObject.Find("AllPlayer").gameObject;
+        //find EndAnchor of next puzzle
+        GameObject endAnchor = transform.Find("Puzzle_" + _currentPuzzleIndex).Find("Save").gameObject;
+        //get Save child of endAnchor
+        GameObject checkpoint = endAnchor.transform.Find("AnchorCheckpoint").gameObject;
+        //position of checkpoint
+        Vector3 checkpointPosition = checkpoint.transform.position;
+        //move the player to the geometric center of save plus 1 meter
+        player.transform.position = checkpointPosition + new Vector3(0, 1, 0);
+        Debug.Log("Moving you to the end of the puzzle, shame on you!");
     }
 }

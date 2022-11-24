@@ -20,6 +20,10 @@ public class AnchorCheckpointController : MonoBehaviour
             return;
         _anchorRenderer.material.color = Color.green;
         _alreadyAskedForNextPuzzle = true;
+        //disable the parent
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
+        //find save object among children of parent and disable it
+        transform.parent.Find("Save").gameObject.SetActive(false);
+
     }
 }
