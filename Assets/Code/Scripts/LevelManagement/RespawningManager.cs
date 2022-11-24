@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using POLIMIGameCollective;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -50,6 +51,7 @@ public class RespawningManager : MonoBehaviour
             _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
         }
         _realityMovement.ResetSpeedOnRespawn();
+        EventManager.TriggerEvent("SetLastCheckpointRotation");    
     }
 
     /// <summary>
@@ -68,6 +70,7 @@ public class RespawningManager : MonoBehaviour
             _lastCheckPointChildrenPositions.Add(childTransform.position);
             _lastCheckPointChildrenRotations.Add(childTransform.rotation);
         }
+        EventManager.TriggerEvent("StoreCheckpointRotation");
     }
     
     /// <summary>
