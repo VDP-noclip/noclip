@@ -4,10 +4,10 @@ using POLIMIGameCollective;
 using Unity.VisualScripting;
 using UnityEngine;
 
-    /// <summary>
-    /// Everything here is linked to how cursor input is processed and used.
-    /// Rotation, orientation, sensitivity handling and eventual added preferences such as inverted vertical axis.
-    /// </summary>
+/// <summary>
+/// Everything here is linked to how cursor input is processed and used.
+/// Rotation, orientation, sensitivity handling and eventual added preferences such as inverted vertical axis.
+/// </summary>
 public class MouseLook : MonoBehaviour
 {
     [SerializeField]
@@ -114,6 +114,22 @@ public class MouseLook : MonoBehaviour
     public void setSensitivity(float sensitivity)
     {
         _sensitivity = sensitivity;
+    }
+
+    public void CopyRotationCoordinates(MouseLook mouseLook)
+    {
+        _xRotation = mouseLook.GetXRotation();
+        _yRotation = mouseLook.GetYRotation();
+    }
+
+    public float GetXRotation()
+    {
+        return _xRotation;
+    }
+    
+    public float GetYRotation()
+    {
+        return _yRotation;
     }
 
     // TODO: This doesn't work with floats. Why..........
