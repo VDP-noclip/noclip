@@ -19,8 +19,22 @@ public class PauseMenuController : MonoBehaviour
     
     [Header("Buttons")]
     [SerializeField] private Button _resume;
+    [SerializeField] private TMP_Text _resumeText;
+    
     [SerializeField] private Button _settings;
+    [SerializeField] private TMP_Text _settingsText;
+        
     [SerializeField] private Button _exit;
+    [SerializeField] private TMP_Text _exitText;
+        
+    [SerializeField] private Button _audio;
+    [SerializeField] private TMP_Text _audioText;
+        
+    [SerializeField] private Button _gameplay;
+    [SerializeField] private TMP_Text _gameplayText;
+        
+    [SerializeField] private Button _return;
+    [SerializeField] private TMP_Text _returnText;
 
     [Header("Pause Status")]
     [SerializeField] private bool _isPaused;
@@ -89,16 +103,35 @@ public class PauseMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        OverlayUpdate();
+
+        _isPaused = false;
+    }
+
+    public void OverlayUpdate()
+    {
         _pauseMenuUI.SetActive(false);
         _audioMenuUI.SetActive(false);
         _settingsMenuUI.SetActive(false);
         _gameplayMenuUI.SetActive(false);
         
         _resume.enabled = true;
-        _settings.enabled = true;
-        _exit.enabled = true;
+        _resumeText.alpha = 1;
         
-        _isPaused = false;
+        _settings.enabled = true;
+        _settingsText.alpha = 1;
+        
+        _exit.enabled = true;
+        _exitText.alpha = 1;
+
+        _audio.enabled = true;
+        _audioText.alpha = 1;
+        
+        _gameplay.enabled = true;
+        _gameplayText.alpha = 1;
+        
+        _return.enabled = true;
+        _returnText.alpha = 1;
     }
 
     public void ReturnToMenu()
