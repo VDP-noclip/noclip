@@ -372,12 +372,12 @@ public class RealityMovementCalibration : MonoBehaviour
         _speedSlider = GameObject.Find("RunSpeed"); //walk is half
         _jumpForceSlider = GameObject.Find("JumpForce");
         _gravitySlider = GameObject.Find("Gravity");
-        _sensitivitySlider = GameObject.Find("Sensitivity");
         _mouseLook = GameObject.Find("RealityCamera").GetComponent<MouseLook>();
 
         _speedMonitor = GameObject.Find("SpeedMonitor");
         try{
             //load slider values from playerprefs
+            /*
             _slopeSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MaxSlope");
             _airSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("AirAcceleration");
             _dragSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Drag");
@@ -386,7 +386,16 @@ public class RealityMovementCalibration : MonoBehaviour
             _speedSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("RunSpeed");
             _jumpForceSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("JumpForce");
             _gravitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Gravity");
-            _sensitivitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Sensitivity");
+        */
+            //61 0.3 20 12 20 12 3
+            _slopeSlider.GetComponent<Slider>().value = 61;
+            _airSlider.GetComponent<Slider>().value = 0.3f;
+            _dragSlider.GetComponent<Slider>().value = 20;
+            _accSlider.GetComponent<Slider>().value = 12;
+            _speedSlider.GetComponent<Slider>().value = 20;
+            _jumpForceSlider.GetComponent<Slider>().value = 12;
+            _gravitySlider.GetComponent<Slider>().value = 2;
+
         }
         catch{
             Debug.Log("PlayerPrefs not found");

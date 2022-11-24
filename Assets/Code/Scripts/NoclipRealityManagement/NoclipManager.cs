@@ -106,7 +106,7 @@ public class NoclipManager : MonoBehaviour
             else if (_noclipEnabled)
                 EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP"); 
 
-            //switch materials without the need of an Oxford degree
+            //switch materials
             GameObject environment = GameObject.Find("Environment");
             try{
                 //find RealityObjectsHolder among the children of Environment

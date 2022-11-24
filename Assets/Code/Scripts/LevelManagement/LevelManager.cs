@@ -68,7 +68,7 @@ public class LevelManager : MonoBehaviour
     public void CompleteCurrentPuzzle()
     {
         //find AllPlayer
-        GameObject player = GameObject.Find("AllPlayer").gameObject;
+        GameObject player = GameObject.Find("RealityPlayer").gameObject;
         //find EndAnchor of next puzzle
         GameObject endAnchor = transform.Find("Puzzle_" + _currentPuzzleIndex).Find("Save").gameObject;
         //get Save child of endAnchor
