@@ -107,6 +107,18 @@ public class NoclipManager : MonoBehaviour
                 EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP"); 
 
             //switch materials without the need of an Oxford degree
+            GameObject environment = GameObject.Find("Environment");
+            try{
+                //find RealityObjectsHolder among the children of Environment
+                GameObject realityObjectsHolder = environment.transform.Find("RealityObjectsHolder").gameObject;
+                //find AutomaticNoclipMaterial
+                AutomaticNoclipMaterial automaticNoclipMaterial = realityObjectsHolder.GetComponent<AutomaticNoclipMaterial>();
+                //call SwitchMaterials
+                automaticNoclipMaterial.SwitchMaterials(_noclipEnabled);
+            }
+            catch{
+                Debug.LogError("Problem with " + environment.name);
+            }
             //gameobject.find puzzles
             GameObject puzzles = GameObject.Find("Puzzles");
             //for each endabled child of puzzles find RealityObjectsHolder
@@ -121,7 +133,7 @@ public class NoclipManager : MonoBehaviour
                     automaticNoclipMaterial.SwitchMaterials(_noclipEnabled);
                 }
                 catch{
-                    Debug.Log("Problem with " + puzzle.name);
+                    Debug.LogError("Problem with " + puzzle.name);
                 }
             }
         }
