@@ -56,11 +56,7 @@ public class MenuManager : Singleton<MenuManager>
             
         }
     }
-
-    public void Play()
-    {
-        
-    }
+    
     // Start is called before the first frame update
     void Start()
     {    
@@ -69,7 +65,7 @@ public class MenuManager : Singleton<MenuManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             SetMenu(Menu.Main);
         }
