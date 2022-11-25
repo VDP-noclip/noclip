@@ -136,7 +136,6 @@ public class SendToGoogle : MonoBehaviour
             gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice1 = SaveChoice(gameObject.name, _multipleChoices1 ); });
         }
         
-        _nextPage1.onClick.AddListener(SaveSuggestion1);
         
         //Page2
         foreach (GameObject gameObject in _multipleChoices20)
@@ -149,7 +148,6 @@ public class SendToGoogle : MonoBehaviour
             gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice21 = SaveChoice(gameObject.name, _multipleChoices21 ); });
         }
         
-        _nextPage2.onClick.AddListener(SaveSuggestion2);
         
         //Page3
         foreach (GameObject gameObject in _multipleChoices3)
@@ -157,7 +155,6 @@ public class SendToGoogle : MonoBehaviour
             gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice3 = SaveChoice(gameObject.name, _multipleChoices3); });
         }
         
-        _nextPage3.onClick.AddListener(SaveSuggestion3);
 
     }
 
