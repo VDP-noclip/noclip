@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -71,7 +72,19 @@ public class SendToGoogle : MonoBehaviour
     [SerializeField] private VideoGamesName Videogame;
     [SerializeField] private InputField Feedback;
     private string feedback2 = "null";
-    
+
+    [SerializeField] private Button[] _multipleChoices;
+    private ColorBlock _defaultColor;
+
+    private void Awake()
+    {
+        _defaultColor = _multipleChoices[0].colors;
+        foreach(Button button in _multipleChoices)
+        {
+            button.onClick.AddListener(delegate { feedback2button(button.name); });
+        }
+    }
+
     public void SendFeedback()
     {
         string feedback = Feedback.text;
@@ -145,8 +158,16 @@ public class SendToGoogle : MonoBehaviour
     }
 
 
-    public void feedback2button()
+    public void feedback2button(string name)
     {
-        feedback2 = "goodGame";
+        feedback2 = name;
+        Debug.Log(feedback2);
+        foreach (Button button in _multipleChoices)
+        {
+            if (button.name != name)
+            {
+                button.colors = _defaultColor;
+            }
+        }
     }
 }
