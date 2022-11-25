@@ -70,34 +70,112 @@ public class SendToGoogle : MonoBehaviour
     };
     
     [SerializeField] private VideoGamesName Videogame;
-    [SerializeField] private InputField Feedback;
-    private string feedback2 = "null";
 
-    [SerializeField] private Button[] _multipleChoices;
-    private ColorBlock _defaultColor;
+    [Space]
+    
+    [Header("Feedback0")]
+    [SerializeField] private GameObject[] _multipleChoices00;
+    [SerializeField] private GameObject[] _multipleChoices01;
+    private string _multipleChoice00 = "null";
+    private string _multipleChoice01 = "null";
+
+    [Space]
+    
+    [Header("Feedback1")]
+    [SerializeField] private GameObject[] _multipleChoices1;
+    [SerializeField] private InputField _suggestions1;
+    [SerializeField] private Button _nextPage1;
+    private string _multipleChoice1 = "null";
+    private string _suggestion1 = "null"; 
+    
+    [Space]
+    
+    [Header("Feedback2")]
+    [SerializeField] private GameObject[] _multipleChoices20;
+    [SerializeField] private GameObject[] _multipleChoices21;
+    [SerializeField] private InputField _suggestions2;
+    [SerializeField] private Button _nextPage2;
+    private string _multipleChoice20 = "null";
+    private string _multipleChoice21 = "null";
+    private string _suggestion2 = "null";
+    
+    [Space]
+    
+    [Header("Feedback3")]
+    [SerializeField] private GameObject[] _multipleChoices3;
+    [SerializeField] private InputField _suggestions3;
+    [SerializeField] private Button _nextPage3;
+    private string _multipleChoice3 = "null";
+    private string _suggestion3 = "null";
+    
+    [Space]
+    
+    [Header("Feedback4")]
+    [SerializeField] private InputField _suggestions4;
+    [SerializeField] private Button _nextPage4;
+    private string _multipleChoice4 = "null";
+    private string _suggestion4 = "null";
+
 
     private void Awake()
     {
-        _defaultColor = _multipleChoices[0].colors;
-        foreach(Button button in _multipleChoices)
+        // Page0
+        foreach (GameObject gameObject in _multipleChoices00)
         {
-            button.onClick.AddListener(delegate { feedback2button(button.name); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice00 = SaveChoice(gameObject.name, _multipleChoices00); });
         }
+        
+        foreach (GameObject gameObject in _multipleChoices01)
+        {
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice01 = SaveChoice(gameObject.name, _multipleChoices01 ); });
+        }
+        
+        //Page1
+        foreach (GameObject gameObject in _multipleChoices1)
+        {
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice1 = SaveChoice(gameObject.name, _multipleChoices1 ); });
+        }
+        
+        _nextPage1.onClick.AddListener(SaveSuggestion1);
+        
+        //Page2
+        foreach (GameObject gameObject in _multipleChoices20)
+        {
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice20 = SaveChoice(gameObject.name, _multipleChoices20 ); });
+        }
+        
+        foreach (GameObject gameObject in _multipleChoices21)
+        {
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice21 = SaveChoice(gameObject.name, _multipleChoices21 ); });
+        }
+        
+        _nextPage2.onClick.AddListener(SaveSuggestion2);
+        
+        //Page3
+        foreach (GameObject gameObject in _multipleChoices3)
+        {
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice3 = SaveChoice(gameObject.name, _multipleChoices3); });
+        }
+        
+        _nextPage3.onClick.AddListener(SaveSuggestion3);
+
     }
 
     public void SendFeedback()
     {
-        string feedback = Feedback.text;
+        
         if (_sendToProf)
         {
+            string feedback = _suggestion1 + _suggestion2 + _suggestion3 + _suggestion4;
             StartCoroutine(PostFeedback(_videogames_names[(int) Videogame],feedback));
         }
         
-        StartCoroutine(PostFeedbackToUs(_videogames_names[(int) Videogame],feedback, feedback2));
+        
+        StartCoroutine(PostFeedbackToUs(_videogames_names[(int) Videogame]));
         
     }
 
-    IEnumerator PostFeedbackToUs(string videogame_name, string feedback, string feedback2)
+    IEnumerator PostFeedbackToUs(string videogame_name)
     {
         string URL =
             "https://docs.google.com/forms/u/0/d/e/1FAIpQLScXqp9PAHN-KchAizf4vTC3u5GREqvhrbpjt_ar8Sv7aWlXRQ/formResponse";
@@ -105,8 +183,26 @@ public class SendToGoogle : MonoBehaviour
         WWWForm form = new WWWForm();
 
         form.AddField("entry.2019945724", videogame_name);
-        form.AddField("entry.440272437", feedback);
-        form.AddField("entry.636889256", feedback2);
+
+        //Page 0
+        form.AddField("entry.977593355", _multipleChoice00);
+        form.AddField("entry.1727891243", _multipleChoice01);
+        
+        //Page 1
+        form.AddField("entry.885016062", _multipleChoice1);
+        form.AddField("entry.723035808", _suggestion1);
+        
+        //Page 2
+        form.AddField("entry.1632853779", _multipleChoice20);
+        form.AddField("entry.1594325674", _multipleChoice21);
+        form.AddField("entry.995350686", _suggestion2);
+        
+        //Page 3
+        form.AddField("entry.264692402", _multipleChoice3);
+        form.AddField("entry.1358697629", _suggestion3);
+        
+        //Page 4
+        form.AddField("entry.776490464", _suggestion4);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -157,17 +253,42 @@ public class SendToGoogle : MonoBehaviour
         MenuManager.Instance.OpenMainMenu();
     }
 
-
-    public void feedback2button(string name)
+    public string SaveChoice(string choice, GameObject[] list)
     {
-        feedback2 = name;
-        Debug.Log(feedback2);
-        foreach (Button button in _multipleChoices)
+        
+        
+        foreach (GameObject button in list)
         {
-            if (button.name != name)
+            if (button.name != choice)
             {
-                button.colors = _defaultColor;
+                button.GetComponent<Button>().image.color = Color.white;
+            }
+            else
+            {
+                button.GetComponent<Button>().image.color = Color.green;
             }
         }
+
+        return choice;
+    }
+
+    public void SaveSuggestion1()
+    {
+        _suggestion1 = _suggestions1.text;
+    }
+    
+    public void SaveSuggestion2()
+    {
+        _suggestion2 = _suggestions2.text;
+    }
+    
+    public void SaveSuggestion3()
+    {
+        _suggestion3 = _suggestions3.text;
+    }
+    
+    public void SaveSuggestion4()
+    {
+        _suggestion4 = _suggestions4.text;
     }
 }
