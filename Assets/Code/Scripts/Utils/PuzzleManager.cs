@@ -49,6 +49,8 @@ public class PuzzleManager : MonoBehaviour
             GameObject beginAnchor = newPuzzle.transform.Find("BeginAnchor").gameObject;
             //find geometric center of begin anchor in world space
             Vector3 beginAnchorPosition = beginAnchor.GetComponent<Renderer>().bounds.center;
+            //destroy begin anchor
+            Destroy(beginAnchor);
             
             /*Check with visual debugging
             //spawn a red vertical pole at beginAnchorPosition
@@ -67,7 +69,6 @@ public class PuzzleManager : MonoBehaviour
             GameObject endAnchor = newPuzzle.transform.Find("EndAnchor").gameObject;
             //find geometric center of end anchor in world space
             _puzzlePosition = endAnchor.GetComponent<Renderer>().bounds.center;
-
             /*Check with visual debugging
             //spawn a green horizontal pole at beginAnchorPosition
             pole = GameObject.CreatePrimitive(PrimitiveType.Cylinder);

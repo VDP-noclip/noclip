@@ -121,7 +121,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.2
-  far clip plane: 1000
+  far clip plane: 5000
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -189,7 +189,7 @@ MonoBehaviour:
   _orientation: {fileID: 6423799784713560806}
   _xSensitivity: 1
   _ySensitivity: 1
-  _sensitivity: 1
+  _sensitivity: 0.5
 --- !u!81 &436167084411905872
 AudioListener:
   m_ObjectHideFlags: 0
@@ -423,13 +423,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b582ca40adeff49882c2f64ad173bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _calibrationMenu: 0
-  _maxRunSpeed: 6
+  _calibrationMenu: 1
+  _maxRunSpeed: 21
   _runForceMultiplier: 10
-  _maxWalkSpeed: 3
+  _maxWalkSpeed: 12
   _walkForceMultiplier: 3
   _groundDrag: 4
-  _jumpForce: 8
+  _jumpForce: 30
   _jumpCooldown: 0.25
   _airMultiplier: 0.4
   _crouchSpeed: 2
@@ -570,7 +570,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _headbobVariationSprinting: 0.06
   _headbobVariationWalking: 0.06
-  _headbobFrequency: 3
+  _headbobFrequency: 1
   _speedAudioActivation: 2
   _audioSource: {fileID: 58928047651188944}
   _footstepClips:

@@ -16,10 +16,10 @@ public class AdditiveSceneLoader : MonoBehaviour
 
     private void Start()
     {
-        PuzzleManager puzzleManager = GameObject.Find("PuzzleManager").GetComponent<PuzzleManager>();
-        if (puzzleManager)
-            puzzleManager.LoadNextPuzzle();
-        else
-            Debug.LogError("Did not find a puzzle manager, are you sure on the Scene setup?");
+        //PuzzleManager puzzleManager = GameObject.Find("PuzzleManager").GetComponent<PuzzleManager>();
+        //if (puzzleManager)
+        //    puzzleManager.LoadNextPuzzle();
+        //else
+        //    Debug.LogError("Did not find a puzzle manager, are you sure on the Scene setup?");
     }
 }
