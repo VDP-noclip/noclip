@@ -8,18 +8,16 @@ public class FadeIn2 : MonoBehaviour
     private Texture _tex;
     private Color _col;
     private bool _finished = false;
-    // Awake is called when the script instance is being loaded.
-    void Awake()
-    {
 
-    }
     void Start()
     {
         //store material texture into variable
-        try
+        if (gameObject.tag != "NoclipObject")
         {
             _tex = GetComponent<Renderer>().material.mainTexture;
-            _col = GetComponent<Renderer>().material.color;
+            Renderer renderer = GetComponent<Renderer>();
+            Material material = renderer.material;
+            _col = material.color;
             GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow_transparent", typeof(Material)) as Material);
             GetComponent<Renderer>().material.mainTexture = _tex;
             GetComponent<Renderer>().material.color = _col;
@@ -27,11 +25,6 @@ public class FadeIn2 : MonoBehaviour
             //zwrite 0
             GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
         }
-        catch
-        {
-            Debug.LogError("No renderer found");
-        }
-        
     }
 
     // Update is called once per frame
@@ -43,8 +36,7 @@ public class FadeIn2 : MonoBehaviour
     //fixedupdate
     void FixedUpdate()
     {
-        //if mesh is not fully opaque
-        try
+        if (gameObject.tag != "NoclipObject")
         {
             if (GetComponent<Renderer>().material.color.a < 1)
             {
@@ -59,10 +51,6 @@ public class FadeIn2 : MonoBehaviour
                 GetComponent<Renderer>().material.color = _col;
                 _finished = true;
             }
-        }
-        catch
-        {
-            Debug.LogError("No renderer found");
         }
     }
 }
