@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//NOCLIP OBJECT CAN'T FADE IN IF THEY USE SPATIALWIREFRAME MATERIAL
+
 public class FadeIn2 : MonoBehaviour
 {
     [SerializeField] private float _fadeSpeed = 0.02f; //透明化の速さ
