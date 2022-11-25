@@ -3,13 +3,6 @@ using UnityEngine;
 
 public class RealityMovement : MonoBehaviour
 {
-    public enum MovementState       // define player states
-    {
-        Walking,
-        Sprinting,
-        Crouching,
-        Air
-    }
 
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
