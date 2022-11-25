@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class RealityMovement : MonoBehaviour
 {
-
+    private bool _calibrationMenu = false;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [Range(0, 30)]
