@@ -7,15 +7,6 @@ using UnityEngine.UI;
 
 public class RealityMovement : MonoBehaviour
 {
-    [SerializeField] private bool _calibrationMenu = false;
-
-    public enum MovementState       // define player states
-    {
-        Walking,
-        Sprinting,
-        Crouching,
-        Air
-    }
 
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]

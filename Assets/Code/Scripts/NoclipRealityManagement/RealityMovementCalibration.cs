@@ -7,13 +7,6 @@ using TMPro;
 using System.Collections.Generic;
 public class RealityMovementCalibration : MonoBehaviour
 {
-    public enum MovementState       // define player states
-    {
-        Walking,
-        Sprinting,
-        Crouching,
-        Air
-    }
     //[SerializeField] private bool _calibration = true;
     [SerializeField] private bool _calibrationMenu = true;
     private bool _showForces = false;
