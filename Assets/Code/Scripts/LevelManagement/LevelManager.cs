@@ -61,7 +61,12 @@ public class LevelManager : MonoBehaviour
         else
         {
             Debug.Log("Area finished!");
-            GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
+            try{
+                Debug.Log("GameManager not found");
+                GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
+            }catch{
+                
+            }
         }
     }
 

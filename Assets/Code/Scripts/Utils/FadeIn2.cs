@@ -7,13 +7,17 @@ using UnityEngine;
 public class FadeIn2 : MonoBehaviour
 {
     [SerializeField] private float _fadeSpeed = 0.02f; //透明化の速さ
+    //show a tooltip saying material is in Resources folder
+    [SerializeField, Tooltip("Material is in Resources folder")] private string _fadeMaterialPath = "Materials/ProBuilder_yellow_transparent";
     private Texture _tex;
     private Color _col;
     private bool _finished = false;
     private Material _originalMaterial;
+    private Material _transparentMaterial;
 
     void Start()
     {
+        _transparentMaterial = Resources.Load(_fadeMaterialPath, typeof(Material)) as Material;
         //store material texture into variable
         if (gameObject.tag != "NoclipObject")
         {
@@ -23,7 +27,7 @@ public class FadeIn2 : MonoBehaviour
             //create copy of material
             _originalMaterial = new Material(material);
             _col = material.color;
-            GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow_transparent", typeof(Material)) as Material);
+            GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
             GetComponent<Renderer>().material.mainTexture = _tex;
             GetComponent<Renderer>().material.color = _col;
             GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private int _currentGameAreaIndex;
     private int _finalGameAreaIndex;
     [SerializeField] private GameState _gameState = GameState.InitializeGame;
-
+    private bool _mainStarted = false;
     //enum game states
     private enum GameState
     {
@@ -26,30 +26,52 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        Physics.gravity = new Vector3(0, 0, 0);
-        SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
-        _finalGameAreaIndex = _gameAreas.Count - 1;
+        //Physics.gravity = new Vector3(0, 0, 0);
+        //SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+        //_finalGameAreaIndex = _gameAreas.Count - 1;
     }
     
     private void Update()
     {
-        //if area is finished load next area, complete the game if it is the last one
-        if (_gameState == GameState.AreaFinished)
+        //if not mainstarted check if 0_Main is the only scene loaded
+        if (!_mainStarted)
         {
-            if (_currentGameAreaIndex == _finalGameAreaIndex)
+            //get active scenes names
+            List<string> activeScenes = new List<string>();
+            for (int i = 0; i < SceneManager.sceneCount; i++)
             {
-                _gameState = GameState.GameCompleted;
-                Debug.Log("Congratulations, you have completed the game!");
+                activeScenes.Add(SceneManager.GetSceneAt(i).name);
             }
-            else
+            if (SceneManager.sceneCount == 1)
             {
-                _gameState = GameState.NewArea;
-                CloseAllScenes();
-                DestroyOtherGameObjects();
-                _currentGameAreaIndex += 1;
-                SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+                _mainStarted = true;
+                Physics.gravity = new Vector3(0, 0, 0);
+                //load scene if name is not in active scenes
+                if (!activeScenes.Contains(_gameAreas[_currentGameAreaIndex]))
+                {
+                    SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+                    _finalGameAreaIndex = _gameAreas.Count - 1;
+                }
             }
         }
+        else
+            //if area is finished load next area, complete the game if it is the last one
+            if (_gameState == GameState.AreaFinished)
+            {
+                if (_currentGameAreaIndex == _finalGameAreaIndex)
+                {
+                    _gameState = GameState.GameCompleted;
+                    Debug.Log("Congratulations, you have completed the game!");
+                }
+                else
+                {
+                    _gameState = GameState.NewArea;
+                    CloseAllScenes();
+                    DestroyOtherGameObjects();
+                    _currentGameAreaIndex += 1;
+                    SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
+                }
+            }
     }
 
     public void CloseAllScenes()
