@@ -45,6 +45,10 @@ public class NoclipManager : MonoBehaviour
     public void SetPlayerCanEnableNoClip(bool playerCanEnableNoclip)
     {
         _playerCanEnableNoclip = playerCanEnableNoclip;
+        if (playerCanEnableNoclip)
+            EventManager.TriggerEvent("DisplayHint", "PRESS P TO NOCLIP");
+        else
+            EventManager.TriggerEvent("ClearHints");
     }
 
     /// <summary>
@@ -53,6 +57,24 @@ public class NoclipManager : MonoBehaviour
     public void SetPlayerCanDisableNoclip(bool playerCanDisableNoclip)
     {
         _playerCanDisableNoclip = playerCanDisableNoclip;
+    }
+    
+    /// <summary>
+    /// Allow the player to disable no clip, or disable noclip automatically
+    /// </summary>
+    public void NoClipReturnedToBody()
+    {
+        _playerCanDisableNoclip = true;
+        if (_noclipOptions.automaticReturnToBody)
+            StartCoroutine(DisableNoclip());
+    }
+    
+    /// <summary>
+    /// Inform noclip manager that the noclip camera is outside the body and block the option to disable noclip mode
+    /// </summary>
+    public void NoClipExitedToBody()
+    {
+        _playerCanDisableNoclip = false;
     }
 
     public bool IsNoclipEnabled()

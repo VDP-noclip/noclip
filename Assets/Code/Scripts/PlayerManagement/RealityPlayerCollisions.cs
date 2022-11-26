@@ -1,4 +1,3 @@
-using POLIMIGameCollective;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,20 +6,17 @@ public class RealityPlayerCollisions : MonoBehaviour
 
     private RespawningManager _respawningManager;
     private NoclipManager _noclipManager;
-    private TutorialController _tutorialController;
     private bool _touchingNoclipEnabler;
     
     private void Awake()
     {
         _noclipManager = GetComponent<NoclipManager>();
         _respawningManager = GetComponentInParent<RespawningManager>();
-        _tutorialController = GetComponent<TutorialController>();
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("NoclipEnabler"))
         {
-            EventManager.TriggerEvent("DisplayHint", "PRESS P TO NOCLIP");
             _noclipManager.SetPlayerCanEnableNoClip(true);
         }
         else if (other.CompareTag("Checkpoint"))
