@@ -10,6 +10,7 @@ public class FadeIn2 : MonoBehaviour
     private Texture _tex;
     private Color _col;
     private bool _finished = false;
+    private Material _originalMaterial;
 
     void Start()
     {
@@ -19,6 +20,8 @@ public class FadeIn2 : MonoBehaviour
             _tex = GetComponent<Renderer>().material.mainTexture;
             Renderer renderer = GetComponent<Renderer>();
             Material material = renderer.material;
+            //create copy of material
+            _originalMaterial = new Material(material);
             _col = material.color;
             GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow_transparent", typeof(Material)) as Material);
             GetComponent<Renderer>().material.mainTexture = _tex;
@@ -48,9 +51,7 @@ public class FadeIn2 : MonoBehaviour
             //else switch to ProBuilder_yellow
             else if (!_finished)
             {
-                GetComponent<Renderer>().material.CopyPropertiesFromMaterial(Resources.Load("Materials/ProBuilder_yellow", typeof(Material)) as Material);
-                GetComponent<Renderer>().material.mainTexture = _tex;
-                GetComponent<Renderer>().material.color = _col;
+                GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
                 _finished = true;
             }
         }
