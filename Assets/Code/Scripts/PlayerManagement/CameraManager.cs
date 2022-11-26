@@ -8,6 +8,7 @@ public class CameraManager : MonoBehaviour
     
     [SerializeField] private GameObject _realPlayer;
     [SerializeField] private GameObject _realPlayerCamera;
+    private RealityMovementCalibration _realityMovement;
     private MouseLook _realMouseLook;
     
     [SerializeField] private GameObject _noclipCamera;
@@ -18,7 +19,8 @@ public class CameraManager : MonoBehaviour
     private void Awake()
     {
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
-
+        _realityMovement = _realPlayer.GetComponent<RealityMovementCalibration>();
+        
         _realMouseLook = _realPlayerCamera.GetComponent<MouseLook>();
         _noclipMouseLook = _noclipCamera.GetComponent<MouseLook>();
         
@@ -48,8 +50,10 @@ public class CameraManager : MonoBehaviour
         
         if (isNoclipEnabled) //When the switch from reality mode to noclip mode happened
         {
+            
             _noclipMovement.SetPositionAndRotation(_realPlayer.transform.position, _realPlayerCamera.transform.rotation); //Set the noclip position in the realBody position
             _noclipMouseLook.CopyRotationCoordinates(_realMouseLook);
+            _realityMovement.ResetMovementAtSwitch();
         }
         else
         {

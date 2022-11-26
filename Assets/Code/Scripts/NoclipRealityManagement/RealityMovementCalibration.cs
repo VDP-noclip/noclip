@@ -137,6 +137,7 @@ public class RealityMovementCalibration : MonoBehaviour
     public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
     }
 
     
@@ -159,6 +160,12 @@ public class RealityMovementCalibration : MonoBehaviour
     public MovementState GetState()
     {
         return _state;
+    }
+
+    public void ResetMovementAtSwitch()
+    {
+        Debug.Log("reset");
+        _rigidbody.velocity = Vector3.zero;
     }
     
     private void LateUpdate()
