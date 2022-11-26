@@ -62,7 +62,13 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private Slider _volumeGlobalSlider;
     
     [SerializeField] private float _defaultVolume = 1.0f;
-    
+
+    private void Start()
+    {
+        SetVolumeEffects(PlayerPrefs.GetFloat("effectsVolume"));
+        SetVolumeGlobal(PlayerPrefs.GetFloat("globalVolume"));
+        SetVolumeSoundtrack(PlayerPrefs.GetFloat("soundtrackVolume"));
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -80,6 +86,10 @@ public class PauseMenuController : MonoBehaviour
 
     public void ActivateMenu()
     {
+        SetVolumeEffects(PlayerPrefs.GetFloat("effectsVolume"));
+        SetVolumeGlobal(PlayerPrefs.GetFloat("globalVolume"));
+        SetVolumeSoundtrack(PlayerPrefs.GetFloat("soundtrackVolume"));
+
         Time.timeScale = 0;
         AudioListener.pause = true;
         
