@@ -23,15 +23,16 @@ public class MenuManager : Singleton<MenuManager>
     public GameObject FeedbackMenu2;
     public GameObject FeedbackMenu3;
     public GameObject FeedbackMenu4;
+    public GameObject FeedbackContainer;
 
     private void SetMenu(Menu menu)
     {
-        MainMenu.SetActive(false);
         FeedbackMenu0.SetActive(false);
         FeedbackMenu1.SetActive(false);
         FeedbackMenu2.SetActive(false);
         FeedbackMenu3.SetActive(false);
         FeedbackMenu4.SetActive(false);
+        FeedbackContainer.SetActive(true);
 
         switch (menu)
         {
@@ -56,28 +57,16 @@ public class MenuManager : Singleton<MenuManager>
             
         }
     }
-    
-    // Start is called before the first frame update
-    void Start()
-    {    
-        SetMenu(Menu.Main);
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            SetMenu(Menu.Main);
-        }
-    }
-    
     public void OpenMainMenu()
     {
         SetMenu(Menu.Main);
+        FeedbackContainer.SetActive(false);
     }
 
     public void OpenFeedbackMenu0()
     {
+        FeedbackContainer.SetActive(true);
         SetMenu(Menu.Feedback0);
     }
     

@@ -9,7 +9,7 @@ public class SendToGoogle : MonoBehaviour
 
 
     /*[SerializeField]*/ private bool _sendToProf = false;
-    private string[] _videogames_names = new string[26]
+    private string[] _videogamesNames = new string[26]
     {
         "AnotherD",
         "Arrow",
@@ -69,90 +69,91 @@ public class SendToGoogle : MonoBehaviour
         Test=25
     };
     
-    [SerializeField] private VideoGamesName Videogame;
+    [SerializeField] private VideoGamesName VideogameName;
 
     [Space]
     
     [Header("Feedback0")]
-    [SerializeField] private GameObject[] _multipleChoices00;
-    [SerializeField] private GameObject[] _multipleChoices01;
-    private string _multipleChoice00 = "null";
-    private string _multipleChoice01 = "null";
+    [SerializeField] private GameObject[] _multipleChoices0_0;
+    [SerializeField] private GameObject[] _multipleChoices0_1;
+    [SerializeField] private Button _nextPage0_0;
+    private string _multipleChoice0_0 = "null";
+    private string _multipleChoice0_1 = "null";
 
     [Space]
     
     [Header("Feedback1")]
-    [SerializeField] private GameObject[] _multipleChoices1;
-    [SerializeField] private InputField _suggestions1;
-    [SerializeField] private Button _nextPage1;
-    private string _multipleChoice1 = "null";
-    private string _suggestion1 = "null"; 
+    [SerializeField] private GameObject[] _multipleChoices1_0;
+    [SerializeField] private InputField _suggestions1_0;
+    [SerializeField] private Button _nextPage1_0;
+    private string _multipleChoice1_0 = "null";
+    private string _suggestion1_0 = "null"; 
     
     [Space]
     
     [Header("Feedback2")]
-    [SerializeField] private GameObject[] _multipleChoices20;
-    [SerializeField] private GameObject[] _multipleChoices21;
-    [SerializeField] private InputField _suggestions2;
-    [SerializeField] private Button _nextPage2;
-    private string _multipleChoice20 = "null";
-    private string _multipleChoice21 = "null";
-    private string _suggestion2 = "null";
+    [SerializeField] private GameObject[] _multipleChoices2_0;
+    [SerializeField] private GameObject[] _multipleChoices2_1;
+    [SerializeField] private InputField _suggestions2_0;
+    [SerializeField] private Button _nextPage2_0;
+    private string _multipleChoice2_0 = "null";
+    private string _multipleChoice2_1 = "null";
+    private string _suggestion2_0 = "null";
     
     [Space]
     
     [Header("Feedback3")]
-    [SerializeField] private GameObject[] _multipleChoices3;
-    [SerializeField] private InputField _suggestions3;
-    [SerializeField] private Button _nextPage3;
-    private string _multipleChoice3 = "null";
-    private string _suggestion3 = "null";
+    [SerializeField] private GameObject[] _multipleChoices3_0;
+    [SerializeField] private InputField _suggestions3_0;
+    [SerializeField] private Button _nextPage3_0;
+    private string _multipleChoice3_0 = "null";
+    private string _suggestion3_0 = "null";
     
     [Space]
     
     [Header("Feedback4")]
-    [SerializeField] private InputField _suggestions4;
-    [SerializeField] private Button _nextPage4;
-    private string _multipleChoice4 = "null";
-    private string _suggestion4 = "null";
+    [SerializeField] private InputField _suggestions4_0;
+    [SerializeField] private Button _nextPage4_0;
+    private string _multipleChoice4_0 = "null";
+    private string _suggestion4_0 = "null";
 
 
     private void Awake()
     {
         // Page0
-        foreach (GameObject gameObject in _multipleChoices00)
+        foreach (GameObject gameObject in _multipleChoices0_0)
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice00 = SaveChoice(gameObject.name, _multipleChoices00); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice0_0 = SaveChoice(gameObject.name, _multipleChoices0_0); });
         }
         
-        foreach (GameObject gameObject in _multipleChoices01)
+        foreach (GameObject gameObject in _multipleChoices0_1)
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice01 = SaveChoice(gameObject.name, _multipleChoices01 ); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice0_1 = SaveChoice(gameObject.name, _multipleChoices0_1 ); });
         }
         
         //Page1
-        foreach (GameObject gameObject in _multipleChoices1)
+        foreach (GameObject gameObject in _multipleChoices1_0)
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice1 = SaveChoice(gameObject.name, _multipleChoices1 ); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice1_0 = SaveChoice(gameObject.name, _multipleChoices1_0 ); });
         }
         
         
         //Page2
-        foreach (GameObject gameObject in _multipleChoices20)
+        foreach (GameObject gameObject in _multipleChoices2_0)
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice20 = SaveChoice(gameObject.name, _multipleChoices20 ); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice2_0 = SaveChoice(gameObject.name, _multipleChoices2_0 ); });
         }
         
-        foreach (GameObject gameObject in _multipleChoices21)
+        foreach (GameObject gameObject in _multipleChoices2_1)
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice21 = SaveChoice(gameObject.name, _multipleChoices21 ); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice2_1 = SaveChoice(gameObject.name, _multipleChoices2_1 ); });
         }
         
         
         //Page3
-        foreach (GameObject gameObject in _multipleChoices3)
+        foreach (GameObject gameObject in _multipleChoices3_0)
         {
-            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice3 = SaveChoice(gameObject.name, _multipleChoices3); });
+            gameObject.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice3_0 = SaveChoice(gameObject.name, _multipleChoices3_0); });
         }
         
 
@@ -163,12 +164,12 @@ public class SendToGoogle : MonoBehaviour
         
         if (_sendToProf)
         {
-            string feedback = _suggestion1 + _suggestion2 + _suggestion3 + _suggestion4;
-            StartCoroutine(PostFeedback(_videogames_names[(int) Videogame],feedback));
+            string feedback = _suggestion1_0 + _suggestion2_0 + _suggestion3_0 + _suggestion4_0;
+            StartCoroutine(PostFeedback(_videogamesNames[(int) VideogameName],feedback));
         }
         
         
-        StartCoroutine(PostFeedbackToUs(_videogames_names[(int) Videogame]));
+        StartCoroutine(PostFeedbackToUs(_videogamesNames[(int) VideogameName]));
         
     }
 
@@ -182,24 +183,24 @@ public class SendToGoogle : MonoBehaviour
         form.AddField("entry.2019945724", videogame_name);
 
         //Page 0
-        form.AddField("entry.977593355", _multipleChoice00);
-        form.AddField("entry.1727891243", _multipleChoice01);
+        form.AddField("entry.977593355", _multipleChoice0_0);
+        form.AddField("entry.1727891243", _multipleChoice0_1);
         
         //Page 1
-        form.AddField("entry.885016062", _multipleChoice1);
-        form.AddField("entry.723035808", _suggestion1);
+        form.AddField("entry.885016062", _multipleChoice1_0);
+        form.AddField("entry.723035808", _suggestion1_0);
         
         //Page 2
-        form.AddField("entry.1632853779", _multipleChoice20);
-        form.AddField("entry.1594325674", _multipleChoice21);
-        form.AddField("entry.995350686", _suggestion2);
+        form.AddField("entry.1632853779", _multipleChoice2_0);
+        form.AddField("entry.1594325674", _multipleChoice2_1);
+        form.AddField("entry.995350686", _suggestion2_0);
         
         //Page 3
-        form.AddField("entry.264692402", _multipleChoice3);
-        form.AddField("entry.1358697629", _suggestion3);
+        form.AddField("entry.264692402", _multipleChoice3_0);
+        form.AddField("entry.1358697629", _suggestion3_0);
         
         //Page 4
-        form.AddField("entry.776490464", _suggestion4);
+        form.AddField("entry.776490464", _suggestion4_0);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -271,21 +272,21 @@ public class SendToGoogle : MonoBehaviour
 
     public void SaveSuggestion1()
     {
-        _suggestion1 = _suggestions1.text;
+        _suggestion1_0 = _suggestions1_0.text;
     }
     
     public void SaveSuggestion2()
     {
-        _suggestion2 = _suggestions2.text;
+        _suggestion2_0 = _suggestions2_0.text;
     }
     
     public void SaveSuggestion3()
     {
-        _suggestion3 = _suggestions3.text;
+        _suggestion3_0 = _suggestions3_0.text;
     }
     
     public void SaveSuggestion4()
     {
-        _suggestion4 = _suggestions4.text;
+        _suggestion4_0 = _suggestions4_0.text;
     }
 }
