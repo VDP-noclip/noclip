@@ -1,24 +1,21 @@
 using System;
 using UnityEngine;
+//using list
+using System.Collections.Generic;
+//using slider
+using UnityEngine.UI;
 
 public class RealityMovement : MonoBehaviour
 {
-    public enum MovementState       // define player states
-    {
-        Walking,
-        Sprinting,
-        Crouching,
-        Air
-    }
-
+    private bool _calibrationMenu = false;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
     [Range(0, 30)]
-    [SerializeField] private float _maxRunSpeed = 6f;
+    [SerializeField] private float _maxRunSpeed = 21f;
     [Range(0, 30)]
-    [SerializeField] private float _runForceMultiplier = 10f;
+    [SerializeField] private float _runForceMultiplier = 7f;
     [Range(0, 25)]
-    [SerializeField] private float _maxWalkSpeed = 3f;
+    [SerializeField] private float _maxWalkSpeed = 10f;
     [Range(0, 25)]
     [SerializeField] private float _walkForceMultiplier = 3f;
     
@@ -27,15 +24,15 @@ public class RealityMovement : MonoBehaviour
     
     [Header("Drag")]
     [Range(0, 15)]
-    [SerializeField] private float _groundDrag = 4f;    // ground drag
+    [SerializeField] private float _groundDrag = 20f;    // ground drag
     
     [Header("Jump")]
     [Range(0, 25)]
-    [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [SerializeField] private float _jumpForce = 12f;     // set jump upward force
     [Range(0, 1)]
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [Range(0, 1f)]
-    [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
+    [SerializeField] private float _airMultiplier = 0.3f;     // set air movement limitation
     private bool _readyToJump;      //
 
     [Header("Crouch")]
@@ -46,7 +43,7 @@ public class RealityMovement : MonoBehaviour
     private float _startYScale;
     
     [Header("Slope handling")]
-    [SerializeField] private float _maxSlopeAngle;
+    [SerializeField] private float _maxSlopeAngle = 45;
     private RaycastHit _slopeHit;
     private bool _exitingOnSlope = false;
     
@@ -65,7 +62,7 @@ public class RealityMovement : MonoBehaviour
     private bool _grounded;
 
     [Range(0, 10)]
-    [SerializeField] private float _gravityMultiplier = 1f;
+    [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private Transform _orientation;
 
     private float _gravity = 9.81f;  // This is used for the movement force 
@@ -89,12 +86,14 @@ public class RealityMovement : MonoBehaviour
     
     private void Awake()
     {
-        //if gravity magnitude is not 0 (Gamemanager zeroes it on game boot)
-        if (Physics.gravity.magnitude != 0)
+        /*GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        //if gravity magnitude is not 0
+        if (gameManager.GetGravity() == 0)
         {
             //set gravity to gravity magnitude
-            Physics.gravity *= _gravityMultiplier;
-        }
+            gameManager.SetGravity(Physics.gravity.magnitude);
+        } */
+        Physics.gravity *= _gravityMultiplier;
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();
@@ -114,6 +113,7 @@ public class RealityMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        CalibrationMenu();
         if (!_noclipManager.IsNoclipEnabled())
         {
             //Alternative 1
@@ -332,5 +332,173 @@ public class RealityMovement : MonoBehaviour
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
+    }
+
+    //slider gameobject
+    private GameObject _speedSlider;
+    private GameObject _jumpForceSlider;
+    private GameObject _gravitySlider;
+    private GameObject _dragSlider;
+    private GameObject _airSlider;
+    private GameObject _slopeSlider;
+    private GameObject _accSlider;
+    private GameObject _speedMonitor;
+    private GameObject _saveButton;
+    private GameObject _sensitivitySlider;
+    private MouseLook _mouseLook;
+    private bool _gPressed = false;
+    private bool _hPressed = false;
+
+    private void InitCalibrationMenu(){
+        _saveButton = GameObject.Find("SaveButton");
+        _slopeSlider = GameObject.Find("MaxSlope");//
+        _airSlider = GameObject.Find("AirAcceleration");
+        _dragSlider = GameObject.Find("Drag");
+        //_airSpeedSlider = GameObject.Find("AirSpeed");//
+        _accSlider = GameObject.Find("RunAcceleration");//
+        _speedSlider = GameObject.Find("RunSpeed"); //walk is half
+        _jumpForceSlider = GameObject.Find("JumpForce");
+        _gravitySlider = GameObject.Find("Gravity");
+        _sensitivitySlider = GameObject.Find("Sensitivity");
+        _mouseLook = GameObject.Find("RealityCamera").GetComponent<MouseLook>();
+
+        _speedMonitor = GameObject.Find("SpeedMonitor");
+        try{
+            //load slider values from playerprefs
+            _slopeSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("MaxSlope");
+            _airSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("AirAcceleration");
+            _dragSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Drag");
+            //_airSpeedSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("AirSpeed", 10);
+            _accSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("RunAcceleration");
+            _speedSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("RunSpeed");
+            _jumpForceSlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("JumpForce");
+            _gravitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Gravity");
+            _sensitivitySlider.GetComponent<Slider>().value = PlayerPrefs.GetFloat("Sensitivity");
+        }
+        catch{
+            Debug.Log("PlayerPrefs not found");
+        }
+    }
+
+    private MultiForceVisualizer _forceVisualizer;
+
+    //variable size list vector3 of forces
+    private List<Vector3> _forces;
+
+    private void ToggleCalibrationMenu(){
+        if(!_calibrationMenu){
+            GameObject.Find("CalibratePlayerGUI").SetActive(false);
+            _calibrationMenu = false;
+        }
+        if(_calibrationMenu){
+            GameObject.Find("CalibratePlayerGUI").SetActive(true);
+            _calibrationMenu = true;
+        }
+    }
+    private void CalibrationMenu(){
+        if(!_calibrationMenu){
+            if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
+                InitCalibrationMenu();
+                _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
+            }
+            _forceVisualizer.UpdateForces(_forces);
+            _forces = new List<Vector3>();
+            return;
+        }
+        else{
+            if(_speedSlider == null || _jumpForceSlider == null || _gravitySlider == null || _dragSlider == null){
+                InitCalibrationMenu();
+                _forceVisualizer = GameObject.Find("ForceVisualizer").GetComponent<MultiForceVisualizer>();
+            }
+            _forceVisualizer.UpdateForces(_forces);
+            _forces = new List<Vector3>();
+            //_jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
+            //_moveSpeed = _speedSlider.GetComponent<Slider>().value;
+            _jumpForce = _jumpForceSlider.GetComponent<Slider>().value;
+            _maxRunSpeed = _speedSlider.GetComponent<Slider>().value;
+            _maxWalkSpeed = _maxRunSpeed / 2;
+            _groundDrag = _dragSlider.GetComponent<Slider>().value;
+            _gravityMultiplier = _gravitySlider.GetComponent<Slider>().value;
+            //cut airslider value to 2 decimal places
+            _airSlider.GetComponent<Slider>().value = (float)Math.Round(_airSlider.GetComponent<Slider>().value, 2);
+            _airMultiplier = _airSlider.GetComponent<Slider>().value;
+            //_maxAirSpeed = _airSpeedSlider.GetComponent<Slider>().value;
+            _maxSlopeAngle = _slopeSlider.GetComponent<Slider>().value;
+            _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
+            _mouseLook.setSensitivity(_sensitivitySlider.GetComponent<Slider>().value);
+
+            //set speed monitor value to current speed
+            _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
+
+            Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
+            //g button toggle
+            if (Input.GetKeyDown(KeyCode.G) && !_gPressed)
+            {
+                _calibrationMenu = !_calibrationMenu;
+                if(_calibrationMenu){
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+                else{
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                }
+
+                _gPressed = true;
+            }
+            if (!Input.GetKeyDown(KeyCode.G))
+            {
+                _gPressed = false;
+            }
+
+            
+            if (Input.GetKeyDown(KeyCode.H) && !_hPressed)
+            {
+                _hPressed = true;
+                //find calibration menu
+                GameObject calibrationMenu = GameObject.Find("CalibratePlayerGUI");
+                //find canvas among children
+                GameObject canvas = calibrationMenu.transform.Find("Canvas").gameObject;
+                //find sliders among children
+                GameObject sliders = canvas.transform.Find("Sliders").gameObject;
+                //toggle sliders
+                sliders.SetActive(!sliders.activeSelf);
+            }
+            if (!Input.GetKeyDown(KeyCode.G))
+            {
+                _hPressed = false;
+            }
+            
+        }
+    }
+
+    void ApplyForce(Vector3 force)
+    {
+        _rigidbody.AddForce(force, ForceMode.Force);
+        try{
+        _forces.Add(force);
+        }
+        catch{
+        }
+    }
+
+
+    public void SaveSettings(){
+        //save settings
+        Debug.Log("Saving settings");
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.transform.position = this.transform.position + this.transform.forward * 2;
+        cube.GetComponent<Renderer>().material.color = Color.blue;
+        Destroy(cube, 2);
+        PlayerPrefs.SetFloat("JumpForce", _jumpForce);
+        PlayerPrefs.SetFloat("RunSpeed", _maxRunSpeed);
+        PlayerPrefs.SetFloat("WalkSpeed", _maxWalkSpeed);
+        PlayerPrefs.SetFloat("Drag", _groundDrag);
+        PlayerPrefs.SetFloat("Gravity", _gravityMultiplier);
+        PlayerPrefs.SetFloat("AirAcceleration", _airMultiplier);
+        PlayerPrefs.SetFloat("MaxSlope", _maxSlopeAngle);
+        PlayerPrefs.SetFloat("RunAcceleration", _runForceMultiplier);
+        PlayerPrefs.SetFloat("Sensitivity", _sensitivitySlider.GetComponent<Slider>().value);
+        PlayerPrefs.Save();
     }
 }

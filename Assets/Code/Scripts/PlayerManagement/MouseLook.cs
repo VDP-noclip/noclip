@@ -15,6 +15,7 @@ public class MouseLook : MonoBehaviour
     private bool _activeScript = true;
     
     // link camera to body
+    // TODO check the right name for the orientation: in this way are a little confusing terms
     [Tooltip("Indicates the gameobject that has the orientation information: could be also the gameobject that own this script")]
     [SerializeField] private Transform _orientation;
     
@@ -29,8 +30,10 @@ public class MouseLook : MonoBehaviour
     private bool _activeCurrently;
     private Transform _transform;
 
-    private float _yRotation = 0f; // yaw movement variable
-    private float _xRotation = 0f; // pitch movement variable
+    private float _yRotation; // yaw movement variable
+    private float _yRotationCheckpoint;
+    private float _xRotation; // pitch movement variable
+    private float _xRotationCheckpoint;
     private int _invertY = 1;
     private void Awake()
     {
@@ -47,11 +50,10 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
-       
-
+        EventManager.StartListening("StoreCheckpointRotation", StoreCheckpointRotation);
+        EventManager.StartListening("SetLastCheckpointRotation", SetLastCheckpointRotation);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        
     }
     
     void Update()
@@ -77,12 +79,7 @@ public class MouseLook : MonoBehaviour
             _yRotation += mouseX; // the x screen axis corresponds to a rotation on the y axis of the camera 
             _xRotation -= mouseY; // the y screen axis corresponds to a rotation on the x axis of the camera 
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
-            
-            // TODO check the right name for the orientation: in this way are a little confusing terms
-            
-            // IMPORTANT: Don't change the order of the two following lines: if _orientation and _transform are the same gameobject it doesn't work due to value override.
-            _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);  // updates the orientation of the gameobject that has the orientation information of the camera on the y axis
-            _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);  // updates the camera orientation
+            UpdateRotation();
             
             // Checks whether there's local information about vertical axis preference and changes it.
             // I don't know the cost of this statement but it definitely doesn't belong here.
@@ -100,14 +97,9 @@ public class MouseLook : MonoBehaviour
         if (PlayerPrefs.HasKey("masterInvertY"))
         {
             if (PlayerPrefs.GetInt("masterInvertY") == 1)
-            {
                 _invertY = -1;
-            }
-        }
-        else
-        {
-            // You don't have a key. SORRY MAURICE!!!!!!!
-            throw new Exception("masterSensitivityY key is missing!");
+            else 
+                _invertY = 1;
         }
     }
 
@@ -120,6 +112,7 @@ public class MouseLook : MonoBehaviour
     {
         _xRotation = mouseLook.GetXRotation();
         _yRotation = mouseLook.GetYRotation();
+        UpdateRotation();
     }
 
     public float GetXRotation()
@@ -136,6 +129,7 @@ public class MouseLook : MonoBehaviour
     private void SetSensitivityFromPause(string sensitivityPlaceholder)
     {
         EventManager.StopListening("setSensitivity", SetSensitivityFromPause);
+        Debug.Log("SetSensitivityFromPause");
         StartCoroutine(SetSensitivityFromPauseCoroutine(sensitivityPlaceholder));
         EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
     }
@@ -144,5 +138,25 @@ public class MouseLook : MonoBehaviour
     {
         _sensitivity = float.Parse(sensitivityPlaceholder);
         yield return null;
+    }
+
+    private void StoreCheckpointRotation()
+    {
+        _xRotationCheckpoint = _xRotation;
+        _yRotationCheckpoint = _yRotation;
+    }
+
+    private void SetLastCheckpointRotation()
+    {
+        _xRotation = _xRotationCheckpoint;
+        _yRotation = _yRotationCheckpoint;
+        UpdateRotation();
+    }
+
+    private void UpdateRotation()
+    {
+        // IMPORTANT: Don't change the order of the two following lines: if _orientation and _transform are the same gameobject it doesn't work due to value override.
+        _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);  // updates the orientation of the gameobject that has the orientation information of the camera on the y axis
+        _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);  // updates the camera orientation
     }
 }

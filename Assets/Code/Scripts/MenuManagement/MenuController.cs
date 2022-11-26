@@ -37,11 +37,15 @@ public class MenuController : MonoBehaviour
 
     [Header("Volume Settings")] 
     [SerializeField] private TMP_Text volumeTextValue = null;
-    [SerializeField] private Slider volumeSlider = null;
+    [SerializeField] private Slider globalVolumeSlider = null;
+    [SerializeField] private Slider soundVolumeSlider = null;
+    [SerializeField] private Slider effectsVolumeSlider = null;
     [SerializeField] private float defaultVolume = 1.0f;
     [SerializeField] private AudioMixer audioMixer;
 
-    private float currentVolume;
+    private float _currentSoundVolume;
+    private float _currentGlobalVolume;
+    private float _currentEffectsVolume;
 
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
@@ -60,6 +64,10 @@ public class MenuController : MonoBehaviour
     // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
     private void Start()
     {
+        SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
+        SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
+        SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
+        
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
@@ -135,11 +143,25 @@ public class MenuController : MonoBehaviour
     }
     
     // Sets volume in Mixer
-    public void SetVolume(float volume)
+    public void SetSoundVolume(float volume)
     {
-        currentVolume = volume;
-        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(currentVolume) * 20);
-        Debug.Log("saving volume " + volume);
+        _currentSoundVolume = volume;
+        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
+
+    }
+    
+    public void SetGlobalVolume(float volume)
+    {
+        _currentGlobalVolume = volume;
+        audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
+
+    }
+    
+    public void SetEffectsVolume(float volume)
+    {
+        _currentEffectsVolume = volume;
+        audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
+
     }
     public void SetControllerSensitivity(float sensitivity)
     {
@@ -162,7 +184,9 @@ public class MenuController : MonoBehaviour
     // Applies changes
     public void VolumeApply()
     {
-        PlayerPrefs.SetFloat("soundtrackVolume", currentVolume);
+        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
+        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
+        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
         
         StartCoroutine(ConfirmationBox());
     }
@@ -192,7 +216,9 @@ public class MenuController : MonoBehaviour
             audioMixer.SetFloat("globalVolume", Mathf.Log(defaultVolume) * 20);
             audioMixer.SetFloat("effectsVolume", Mathf.Log(defaultVolume) * 20);
             
-            volumeSlider.value = defaultVolume;
+            globalVolumeSlider.value = defaultVolume;
+            effectsVolumeSlider.value = defaultVolume;
+            soundVolumeSlider.value = defaultVolume;
             volumeTextValue.text = defaultVolume.ToString("0.0");
             
             VolumeApply();

@@ -5,7 +5,7 @@ public class NoclipMaterialHolder : MonoBehaviour
 {
     [SerializeField] private Material[] _noclipMaterials;
 
-    private void Awake()
+    private void Start()
     {
         if (_noclipMaterials == null)
         {

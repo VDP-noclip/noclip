@@ -79,7 +79,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         _playerCanDisableNoclip = false;
-        _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
+         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _cameraManager.SwitchCamera();
         // The camera/bodies are still in the correct area, this should be set to false when the player exits
@@ -105,6 +105,37 @@ public class NoclipManager : MonoBehaviour
                 EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND. PRESSING P HAS NO EFFECT"); 
             else if (_noclipEnabled)
                 EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP"); 
+
+            //switch materials
+            GameObject environment = GameObject.Find("Environment");
+            try{
+                //find RealityObjectsHolder among the children of Environment
+                GameObject realityObjectsHolder = environment.transform.Find("RealityObjectsHolder").gameObject;
+                //find AutomaticNoclipMaterial
+                AutomaticNoclipMaterial automaticNoclipMaterial = realityObjectsHolder.GetComponent<AutomaticNoclipMaterial>();
+                //call SwitchMaterials
+                automaticNoclipMaterial.SwitchMaterials(_noclipEnabled);
+            }
+            catch{
+                Debug.LogError("Problem with " + environment.name);
+            }
+            //gameobject.find puzzles
+            GameObject puzzles = GameObject.Find("Puzzles");
+            //for each endabled child of puzzles find RealityObjectsHolder
+            foreach (Transform puzzle in puzzles.transform)
+            {
+                try{
+                    //find RealityObjectsHolder
+                    GameObject realityObjectsHolder = puzzle.Find("RealityObjectsHolder").gameObject;
+                    //find AutomaticNoclipMaterial
+                    AutomaticNoclipMaterial automaticNoclipMaterial = realityObjectsHolder.GetComponent<AutomaticNoclipMaterial>();
+                    //call SwitchMaterials
+                    automaticNoclipMaterial.SwitchMaterials(_noclipEnabled);
+                }
+                catch{
+                    Debug.LogError("Problem with " + puzzle.name);
+                }
+            }
         }
     }
     
