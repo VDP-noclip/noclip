@@ -15,6 +15,9 @@ public class NoclipIntangibleController : BaseNoclipObjectController
         DisableNoclip();
     }
 
+    private void Start(){
+    }
+
     public override void ActivateNoclip()
     {
         _meshRender.material = _noclipMaterial;
@@ -24,4 +27,5 @@ public class NoclipIntangibleController : BaseNoclipObjectController
     {
         _meshRender.material = _intangibleMaterial;
     }
+
 }

@@ -38,10 +38,13 @@ public class FadeIn2 : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
+    public void Restart(){//not working
+        _finished = false;
+        GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
+        GetComponent<Renderer>().material.mainTexture = _tex;
+        GetComponent<Renderer>().material.color = _col;
+        GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
+        GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
     }
     
     //fixedupdate
