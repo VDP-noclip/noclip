@@ -161,7 +161,10 @@ public class RealityMovementCalibration : MonoBehaviour
     {
         return _state;
     }
-
+public void toggleKinematic(bool toggle)
+    {
+        _rigidbody.isKinematic = toggle;
+    }
     public void ResetMovementAtSwitch()
     {
         Debug.Log("reset");
