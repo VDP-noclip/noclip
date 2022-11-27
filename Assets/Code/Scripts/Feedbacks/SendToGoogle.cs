@@ -259,11 +259,11 @@ public class SendToGoogle : MonoBehaviour
         {
             if (button.name != choice)
             {
-                button.GetComponent<Button>().image.color = Color.white;
+                button.GetComponent<Button>().image.color = Color.gray;
             }
             else
             {
-                button.GetComponent<Button>().image.color = Color.green;
+                button.GetComponent<Button>().image.color = Color.cyan;
             }
         }
 
