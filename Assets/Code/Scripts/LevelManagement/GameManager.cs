@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
                 {
                     _gameState = GameState.NewArea;
                     CloseAllScenes();
-                    DestroyOtherGameObjects();
+                    //DestroyOtherGameObjects();
                     _currentGameAreaIndex += 1;
                     SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
                 }
