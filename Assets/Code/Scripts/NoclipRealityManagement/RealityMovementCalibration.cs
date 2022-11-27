@@ -137,6 +137,7 @@ public class RealityMovementCalibration : MonoBehaviour
     public void ResetSpeedOnRespawn()
     {
         _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
     }
 
     
@@ -160,6 +161,12 @@ public class RealityMovementCalibration : MonoBehaviour
     {
         return _state;
     }
+    
+    public void toggleKinematic(bool toggle)
+    {
+        _rigidbody.isKinematic = toggle;
+    }
+    
     
     private void LateUpdate()
     {
