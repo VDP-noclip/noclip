@@ -12,8 +12,8 @@ public class RealityMovementCalibration : MonoBehaviour
     private bool _showForces = false;
     [Header("Speed")] 
     [Tooltip("Suggestion: Max Run Speed < Run Force Multiplier")]
-    [SerializeField] private float _maxRunSpeed = 6f;
-    [SerializeField] private float _runForceMultiplier = 10f;
+    [SerializeField] private float _maxRunSpeed = 20f;
+    [SerializeField] private float _runForceMultiplier = 12f;
     [SerializeField] private float _maxWalkSpeed = 3f;
     [SerializeField] private float _walkForceMultiplier = 3f;
     
@@ -21,12 +21,12 @@ public class RealityMovementCalibration : MonoBehaviour
     private float _maxMoveSpeed;
     
     [Header("Drag")]
-    [SerializeField] private float _groundDrag = 4f;    // ground drag
+    [SerializeField] private float _groundDrag = 20f;    // ground drag
     
     [Header("Jump")]
-    [SerializeField] private float _jumpForce = 8f;     // set jump upward force
+    [SerializeField] private float _jumpForce = 12f;     // set jump upward force
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
-    [SerializeField] private float _airMultiplier = 0.4f;     // set air movement limitation
+    [SerializeField] private float _airMultiplier = 0.3f;     // set air movement limitation
     private bool _readyToJump;      //
 
     [Header("Crouch")]
@@ -35,7 +35,7 @@ public class RealityMovementCalibration : MonoBehaviour
     private float _startYScale;
     
     [Header("Slope handling")]
-    [SerializeField] private float _maxSlopeAngle;
+    [SerializeField] private float _maxSlopeAngle = 61f;
     private RaycastHit _slopeHit;
     private bool _exitingOnSlope = false;
     
@@ -106,7 +106,7 @@ public class RealityMovementCalibration : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        CalibrationMenu();
+        //CalibrationMenu();
 
         if (!_noclipManager.IsNoclipEnabled())
         {
