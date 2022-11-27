@@ -1,13 +1,14 @@
+using System.Collections;
 using System.Collections.Generic;
 using POLIMIGameCollective;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class RespawningManager : MonoBehaviour
 {
     private Transform _transform;
+
     private List<Transform> _childrenTransforms;
-    //private RealityMovement _realityMovement;
+    
     private RealityMovementCalibration _realityMovement;
 
     private Vector3 _lastCheckPointPosition;
@@ -19,11 +20,10 @@ public class RespawningManager : MonoBehaviour
     {
         _transform = GetComponent<Transform>();
         _childrenTransforms = GetAllChildrenTransforms(_transform);
-        //_realityMovement = _transform.GetComponentInChildren<RealityMovement>();
         _realityMovement = _transform.GetComponentInChildren<RealityMovementCalibration>();
-        
+
         Debug.Log($"Found {_childrenTransforms.Count} children!");
-        
+
         UpdateCheckpointValues();
     }
 
@@ -44,14 +44,17 @@ public class RespawningManager : MonoBehaviour
     {
         _transform.position = _lastCheckPointPosition;
         _transform.rotation = _lastCheckPointRotation;
-        
+
         for (int i = 0; i < _childrenTransforms.Count; i++)
         {
             _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
             _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
         }
+
         _realityMovement.ResetSpeedOnRespawn();
-        EventManager.TriggerEvent("SetLastCheckpointRotation");    
+        EventManager.TriggerEvent("SetLastCheckpointRotation");
+        EventManager.TriggerEvent("ResetTimeLimitConstraints");
+        EventManager.TriggerEvent("StartTimeConstraintsTimer");
     }
 
     /// <summary>
@@ -59,34 +62,42 @@ public class RespawningManager : MonoBehaviour
     /// </summary>
     public void UpdateCheckpointValues()
     {
+        StartCoroutine(UpdateCpValuesCoroutine());
+    }
+
+    private IEnumerator UpdateCpValuesCoroutine()
+    {
         _lastCheckPointPosition = _transform.position;
         _lastCheckPointRotation = _transform.rotation;
-        
+
         _lastCheckPointChildrenRotations = new List<Quaternion>();
         _lastCheckPointChildrenPositions = new List<Vector3>();
-        
+
         foreach (Transform childTransform in _childrenTransforms)
         {
             _lastCheckPointChildrenPositions.Add(childTransform.position);
             _lastCheckPointChildrenRotations.Add(childTransform.rotation);
         }
+
         EventManager.TriggerEvent("StoreCheckpointRotation");
+
+        yield return null;
     }
-    
+
     /// <summary>
     /// Get a list with all the transforms of the children of this gameobject.
     /// </summary>
     private List<Transform> GetAllChildrenTransforms(Transform _t)
     {
         List<Transform> ts = new List<Transform>();
- 
+
         foreach (Transform t in _t)
         {
             ts.Add(t);
             if (t.childCount > 0)
                 ts.AddRange(GetAllChildrenTransforms(t));
         }
-        
+
         return ts;
     }
 }
