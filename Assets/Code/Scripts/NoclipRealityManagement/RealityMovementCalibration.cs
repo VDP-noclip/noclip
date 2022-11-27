@@ -115,7 +115,7 @@ public class RealityMovementCalibration : MonoBehaviour
         
             //Alternative 2
             // ATTENTION!!! the 0.48f value is based on the player capsule radius
-            _grounded = Physics.CheckSphere(_groundCheck.position,  0.48f, _ground);
+            _grounded = Physics.CheckSphere(_groundCheck.position,  0.7208929f, _ground);
         
             // stefanofossati comment: I Think that this second alternative is a little more precise for the slopes
             _OnSlope = OnSlope(); // used to debug // TODO remove
