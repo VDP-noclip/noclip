@@ -1,11 +1,17 @@
 using System;
+using POLIMIGameCollective;
 using UnityEngine;
 
 public class AnchorCheckpointController : MonoBehaviour
 {
     [SerializeField] GameObject _endAnchor;
+    
+    [Header("If different from 0, this is the time limit to reach the new checkpoint")]
+    [SerializeField] float _maxTimeToFinishPuzzle = 30f;
+    
     private Renderer _anchorRenderer;
     private bool _alreadyAskedForNextPuzzle;
+
 
     private void Start()
     {
@@ -20,7 +26,7 @@ public class AnchorCheckpointController : MonoBehaviour
             return;
         _anchorRenderer.material.color = Color.green;
         _alreadyAskedForNextPuzzle = true;
-        
+        EventManager.TriggerEvent("SetNewTimeLimitConstraint", _maxTimeToFinishPuzzle.ToString());
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
         //find save object among children of parent and disable it
         transform.parent.Find("Save").gameObject.SetActive(false);

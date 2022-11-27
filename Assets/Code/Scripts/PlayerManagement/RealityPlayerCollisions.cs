@@ -21,6 +21,7 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("Checkpoint"))
         {
+            _respawningManager.UpdateCheckpointValues();
             other.GetComponent<AnchorCheckpointController>().ReactToPlayerCollision();
         }
         else if (other.CompareTag("OutOfBounds"))
