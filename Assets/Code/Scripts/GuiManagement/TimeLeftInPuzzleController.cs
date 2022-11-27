@@ -1,19 +1,30 @@
 using System;
 using System.Collections;
+using System.Net.Mime;
 using POLIMIGameCollective;
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace Code.Scripts.GuiManagement
 {
     public class TimeLeftInPuzzleController : MonoBehaviour
     {
+        [SerializeField] private TMP_Text _timerText;
+        [SerializeField] private Image _timerImage;
+        
         private bool _isActive;
         private bool _isRunning;
         private float _timeLeftInPuzzle;
-        
+        private float _totalTimeForPuzzle;
+
         private void Awake()
         {
+            _timerText.text = "";
+            _timerImage.fillAmount = 0;
+            
             EventManager.StartListening("ResetTimer", ResetTimer);
             EventManager.StartListening("ResumeTimer", ResumeTimer);
             EventManager.StartListening("PauseTimer", PauseTimer);
@@ -36,27 +47,29 @@ namespace Code.Scripts.GuiManagement
             EventManager.StartListening("PauseTimer", PauseTimer);
         }
         
-        private void ResetTimer(string timerTimeStr)
+        private void ResetTimer(string totalTimeForPuzzleStr)
         {
             EventManager.StopListening("ResetTimer", ResetTimer);
-            var timerTime = float.Parse(timerTimeStr);
+            var totalTimeForPuzzle = float.Parse(totalTimeForPuzzleStr);
             
             _isRunning = false;
             
-            if (timerTime == 0)
+            if (totalTimeForPuzzle == 0)
             {
                 Debug.Log("Reset timer: no time limit for this puzzle!");
+                _timerText.text = "NO TIME ZONE";
                 _isActive = false;
             }
-            else if (timerTime > 0)
+            else if (totalTimeForPuzzle > 0)
             {
-                Debug.Log($"Reset timer: time limit set {timerTime} for this puzzle!");
+                Debug.Log($"Reset timer: time limit set {totalTimeForPuzzle} for this puzzle!");
                 _isActive = true;
-                _timeLeftInPuzzle = timerTime;
+                _timeLeftInPuzzle = totalTimeForPuzzle;
+                _totalTimeForPuzzle = totalTimeForPuzzle;
             }
             else
             {
-                throw new Exception("The timer must have a value bigger than 0! Got + " + timerTime);
+                throw new Exception("The timer must have a value bigger than 0! Got + " + totalTimeForPuzzle);
             }
             EventManager.StartListening("ResetTimer", ResetTimer);
         }
@@ -69,7 +82,8 @@ namespace Code.Scripts.GuiManagement
             if (_isRunning)
             {
                 _timeLeftInPuzzle -= Time.deltaTime;
-                // Todo: update text...
+                _timerText.text = Mathf.RoundToInt(_timeLeftInPuzzle).ToString();
+                _timerImage.fillAmount = _timeLeftInPuzzle / _totalTimeForPuzzle;
             }
         }
     }
