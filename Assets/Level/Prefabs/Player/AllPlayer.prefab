@@ -121,7 +121,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.2
-  far clip plane: 5000
+  far clip plane: 3000
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -749,6 +749,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4137557435513412471, guid: 8030186c43e35384595d120598ea99b5,
+        type: 3}
+      propertyPath: far clip plane
+      value: 3000
       objectReference: {fileID: 0}
     - target: {fileID: 4674821149033968117, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
