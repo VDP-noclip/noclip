@@ -1,3 +1,4 @@
+using POLIMIGameCollective;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,8 +22,8 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("Checkpoint"))
         {
-            _respawningManager.UpdateCheckpointValues();
             other.GetComponent<AnchorCheckpointController>().ReactToPlayerCollision();
+            _respawningManager.UpdateCheckpointValues();
         }
         else if (other.CompareTag("OutOfBounds"))
         {
@@ -46,7 +47,7 @@ public class RealityPlayerCollisions : MonoBehaviour
             _noclipManager.SetPlayerCanEnableNoClip(false);
         } else if (other.CompareTag("Checkpoint"))
         {
-            _respawningManager.UpdateCheckpointValues();
+            EventManager.TriggerEvent("StartTimeConstraintsTimer");
         }
     }
 }

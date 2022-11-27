@@ -53,6 +53,8 @@ public class RespawningManager : MonoBehaviour
 
         _realityMovement.ResetSpeedOnRespawn();
         EventManager.TriggerEvent("SetLastCheckpointRotation");
+        EventManager.TriggerEvent("ResetTimeLimitConstraints");
+        EventManager.TriggerEvent("StartTimeConstraintsTimer");
     }
 
     /// <summary>

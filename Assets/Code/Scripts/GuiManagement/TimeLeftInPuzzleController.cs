@@ -25,31 +25,31 @@ namespace Code.Scripts.GuiManagement
             _timerText.text = "";
             _timerImage.fillAmount = 0;
             
-            EventManager.StartListening("ResetTimer", ResetTimer);
-            EventManager.StartListening("ResumeTimer", ResumeTimer);
-            EventManager.StartListening("PauseTimer", PauseTimer);
+            EventManager.StartListening("GuiResetTimer", ResetTimer);
+            EventManager.StartListening("GuiResumeTimer", ResumeTimer);
+            EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
         
         private void ResumeTimer()
         {
-            EventManager.StopListening("ResumeTimer", ResumeTimer);
+            EventManager.StopListening("GuiResumeTimer", ResumeTimer);
             _isActive = true;
             _isRunning = true;
             Debug.Log("Started timer"+ _timeLeftInPuzzle);
-            EventManager.StartListening("ResumeTimer", ResumeTimer);
+            EventManager.StartListening("GuiResumeTimer", ResumeTimer);
         }
 
         private void PauseTimer()
         {
-            EventManager.StopListening("PauseTimer", PauseTimer);
+            EventManager.StopListening("GuiPauseTimer", PauseTimer);
             _isRunning = false;
             Debug.Log("Timer paused!" + _timeLeftInPuzzle);
-            EventManager.StartListening("PauseTimer", PauseTimer);
+            EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
         
         private void ResetTimer(string totalTimeForPuzzleStr)
         {
-            EventManager.StopListening("ResetTimer", ResetTimer);
+            EventManager.StopListening("GuiResetTimer", ResetTimer);
             var totalTimeForPuzzle = float.Parse(totalTimeForPuzzleStr);
             
             _isRunning = false;
@@ -58,6 +58,7 @@ namespace Code.Scripts.GuiManagement
             {
                 Debug.Log("Reset timer: no time limit for this puzzle!");
                 _timerText.text = "NO TIME ZONE";
+                _timerImage.fillAmount = 0;
                 _isActive = false;
             }
             else if (totalTimeForPuzzle > 0)
@@ -66,12 +67,13 @@ namespace Code.Scripts.GuiManagement
                 _isActive = true;
                 _timeLeftInPuzzle = totalTimeForPuzzle;
                 _totalTimeForPuzzle = totalTimeForPuzzle;
+                UpdateRenderValues();
             }
             else
             {
                 throw new Exception("The timer must have a value bigger than 0! Got + " + totalTimeForPuzzle);
             }
-            EventManager.StartListening("ResetTimer", ResetTimer);
+            EventManager.StartListening("GuiResetTimer", ResetTimer);
         }
 
         private void Update()
@@ -82,9 +84,14 @@ namespace Code.Scripts.GuiManagement
             if (_isRunning)
             {
                 _timeLeftInPuzzle -= Time.deltaTime;
-                _timerText.text = Mathf.RoundToInt(_timeLeftInPuzzle).ToString();
-                _timerImage.fillAmount = _timeLeftInPuzzle / _totalTimeForPuzzle;
+                UpdateRenderValues();
             }
+        }
+
+        private void UpdateRenderValues()
+        {
+            _timerText.text = Mathf.RoundToInt(_timeLeftInPuzzle).ToString();
+            _timerImage.fillAmount = _timeLeftInPuzzle / _totalTimeForPuzzle;
         }
     }
 }

@@ -17,6 +17,8 @@ namespace Code.Scripts.PlayerManagement
         private float _realityTimeLeftInThisPuzzle;
         private bool _noclipModeWasActive;
 
+        private bool _isRunning;
+
         private void Awake()
         {
             _noclipManager = GetComponent<NoclipManager>();
@@ -25,14 +27,16 @@ namespace Code.Scripts.PlayerManagement
             _noclipModeWasActive = _noclipManager.IsNoclipEnabled();
             
             EventManager.StartListening("SetNewTimeLimitConstraint", SetNewTimeLimitConstraint);
+            EventManager.StartListening("ResetTimeLimitConstraints", ResetTimeLimitConstraints);
+            EventManager.StartListening("StartTimeConstraintsTimer", StartTimeConstraintsTimer);
         }
         
         void Update()
         {
-            if (!_timeLimitForPuzzleEnabled)
+            if (!_timeLimitForPuzzleEnabled || !_isRunning)
                 return;
-            
-            ResumeOrPauseTimer();
+
+            ResumeOrPauseGuiTimer();
             
             if (_noclipManager.IsNoclipEnabled())
                 return;
@@ -42,47 +46,49 @@ namespace Code.Scripts.PlayerManagement
                 StartCoroutine(GameLostCoroutine("GAME LOST! TO MUCH TIME TO FINISH THE PUZZLE"));
             
         }
-
-        private void ResumeOrPauseTimer()
+        
+        /// <summary>
+        /// This function is ONLY to trigger the start/stop of the GUI
+        /// </summary>
+        private void ResumeOrPauseGuiTimer()
         {
             if (_noclipManager.IsNoclipEnabled() && !_noclipModeWasActive)
-                EventManager.TriggerEvent("PauseTimer");
+                EventManager.TriggerEvent("GuiPauseTimer");
             else if (!_noclipManager.IsNoclipEnabled() && _noclipModeWasActive)
-                EventManager.TriggerEvent("ResumeTimer");
+                EventManager.TriggerEvent("GuiResumeTimer");
 
             _noclipModeWasActive = _noclipManager.IsNoclipEnabled();
         }
         
         /// <summary>
         /// Set the time that the player needs to finish this puzzle.
-        /// IMPORTANT: if maxTimeToFinishPuzzle is null, the puzzle does not have a time limit.
+        /// IMPORTANT: if maxTimeToFinishPuzzle is '0', the puzzle does not have a time limit.
         /// </summary>
-        private void SetNewTimeLimitConstraint([CanBeNull] string maxTimeToFinishPuzzle)
+        private void SetNewTimeLimitConstraint(string maxTimeToFinishPuzzleStr)
         {
-            if (maxTimeToFinishPuzzle == null)
+            var maxTimeToFinishPuzzle = float.Parse(maxTimeToFinishPuzzleStr);
+            if (maxTimeToFinishPuzzle == 0)
             {
-                Debug.Log("No time limits for this puzzle");
+                Debug.Log("TimeConstraints: No time limits for this puzzle!");
                 _timeLimitForPuzzleEnabled = false;
             }
             else
             {
                 Debug.Log($"Setting time constraint for this puzzle to {maxTimeToFinishPuzzle}");
                 _timeLimitForPuzzleEnabled = true;
-                _maxTimeToFinishPuzzle = float.Parse(maxTimeToFinishPuzzle);
-                ResetTimeLimitConstraints();
             }
+            
+            _maxTimeToFinishPuzzle = maxTimeToFinishPuzzle;
+            ResetTimeLimitConstraints();
         }
 
         private void ResetTimeLimitConstraints()
         {
             Debug.Log($"Resetting time limit constraints. Time to finish is {_maxTimeToFinishPuzzle}");
-
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
             _noclipModeWasActive = _noclipManager.IsNoclipEnabled();
-            
-            EventManager.TriggerEvent("ResetTimer", _maxTimeToFinishPuzzle.ToString());
-            if (!_noclipManager.IsNoclipEnabled())
-                EventManager.TriggerEvent("ResumeTimer");
+            EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
+            _isRunning = false;
         }
 
         private IEnumerator GameLostCoroutine(string gameLostMessage)
@@ -92,6 +98,21 @@ namespace Code.Scripts.PlayerManagement
             _respawningManager.RespawnAllTransforms();
             ResetTimeLimitConstraints();
             yield return null;
+        }
+        
+        /// <summary>
+        /// Start the internal timer and triggers the GUI
+        /// </summary>
+        private void StartTimeConstraintsTimer()
+        {
+            ResetTimeLimitConstraints();
+            
+            if (!_timeLimitForPuzzleEnabled)
+                return;
+            
+            if (!_noclipManager.IsNoclipEnabled())
+                EventManager.TriggerEvent("GuiResumeTimer");
+            _isRunning = true;
         }
     }
 }

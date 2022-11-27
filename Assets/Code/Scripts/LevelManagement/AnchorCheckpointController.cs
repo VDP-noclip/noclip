@@ -12,7 +12,6 @@ public class AnchorCheckpointController : MonoBehaviour
     private Renderer _anchorRenderer;
     private bool _alreadyAskedForNextPuzzle;
 
-
     private void Start()
     {
         _anchorRenderer = _endAnchor.GetComponent<Renderer>();
@@ -21,12 +20,12 @@ public class AnchorCheckpointController : MonoBehaviour
     public void ReactToPlayerCollision()
     {
         Debug.Log("You entered end anchor: " + gameObject.name);
+        EventManager.TriggerEvent("SetNewTimeLimitConstraint", _maxTimeToFinishPuzzle.ToString());
         Physics.SyncTransforms();  // needed?
         if (_alreadyAskedForNextPuzzle)
             return;
         _anchorRenderer.material.color = Color.green;
         _alreadyAskedForNextPuzzle = true;
-        EventManager.TriggerEvent("SetNewTimeLimitConstraint", _maxTimeToFinishPuzzle.ToString());
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
         //find save object among children of parent and disable it
         transform.parent.Find("Save").gameObject.SetActive(false);
