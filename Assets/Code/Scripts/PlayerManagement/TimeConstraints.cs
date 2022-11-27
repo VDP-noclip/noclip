@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Security.Cryptography;
 using JetBrains.Annotations;
 using POLIMIGameCollective;
 using UnityEngine;
@@ -14,8 +13,9 @@ namespace Code.Scripts.PlayerManagement
         private bool _timeLimitForPuzzleEnabled;
         private float _maxTimeToFinishPuzzle;
         private float _realityTimeLeftInThisPuzzle;
-        private float? _lastRealityModeActivationTimestamp;
-        private bool _realityModeIsActive;
+
+        private bool _justSwitchedMode = true;
+        private bool prevModeWasNoclip = false;
 
         private void Awake()
         {
@@ -28,39 +28,15 @@ namespace Code.Scripts.PlayerManagement
         // Update is called once per frame
         void Update()
         {
-            if (!_noclipManager.IsNoclipEnabled() && !_realityModeIsActive)
-            {
-                _lastRealityModeActivationTimestamp = Time.time;
-                _realityModeIsActive = true;
-            }
-
-            if (_noclipManager.IsNoclipEnabled())
-                _realityModeIsActive = false;
-            else
-                StartCoroutine(CheckTimeConstraints());
+            if (!_timeLimitForPuzzleEnabled || _noclipManager.IsNoclipEnabled())
+                return;
+            
+            _realityTimeLeftInThisPuzzle -= Time.deltaTime;
+            if (_realityTimeLeftInThisPuzzle <= 0)
+                StartCoroutine(GameLostCoroutine("GAME LOST! TO MUCH TIME TO FINISH THE PUZZLE"));
+            
         }
-    
-        private IEnumerator CheckTimeConstraints()
-        {
-            if (_timeLimitForPuzzleEnabled &&
-                !_noclipManager.IsNoclipEnabled() &&
-                GetRealityTimeLeftInThisPuzzle() <= 0)
-            {
-                GameLost( "GAME LOST! TO MUCH TIME TO FINISH THE PUZZLE");
-            }
-
-            yield return null;
-        }
-    
-        private float GetRealityTimeLeftInThisPuzzle()
-        {
-            if (!_realityModeIsActive || _lastRealityModeActivationTimestamp == null)
-                return _realityTimeLeftInThisPuzzle;
         
-            var currentTimeInRealityMode = Time.time - (float)_lastRealityModeActivationTimestamp;
-            return _realityTimeLeftInThisPuzzle - currentTimeInRealityMode;
-        }
-
         private void SetNewTimeLimitConstraint([CanBeNull] string maxTimeToFinishPuzzle)
         {
             if (maxTimeToFinishPuzzle == null)
@@ -76,23 +52,21 @@ namespace Code.Scripts.PlayerManagement
                 ResetTimeLimitConstraints();
             }
         }
-    
+
         private void ResetTimeLimitConstraints()
         {
             Debug.Log("Resetting time limit constraints. Time limits enabled = " + _timeLimitForPuzzleEnabled);
+            Debug.Log("Time value:" + _maxTimeToFinishPuzzle);
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
-            if (_realityModeIsActive)
-                _lastRealityModeActivationTimestamp = Time.time; // We start in reality mode!
-            else
-                _lastRealityModeActivationTimestamp = null;
         }
 
-        private void GameLost(string specialMessage)
+        private IEnumerator GameLostCoroutine(string gameLostMessage)
         {
-            Debug.Log(specialMessage);
-            EventManager.TriggerEvent("DisplayHint", specialMessage);
+            Debug.Log(gameLostMessage);
+            EventManager.TriggerEvent("DisplayHint", gameLostMessage);
             _respawningManager.RespawnAllTransforms();
             ResetTimeLimitConstraints();
+            yield return null;
         }
     }
 }
