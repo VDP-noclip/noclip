@@ -17,10 +17,6 @@ public class SpawnPlayer : MonoBehaviour
         if (!_puzzleReached){
             //find gameobject Puzzles
             GameObject puzzles = GameObject.Find("Puzzles");
-            //find level manager
-            LevelManager levelManager = puzzles.GetComponent<LevelManager>();
-            //unlock next puzzle
-            levelManager.LoadNextPuzzle();
             //print objects colliding with this object
             foreach (Collider collider in Physics.OverlapBox(transform.position, transform.localScale / 2))
             {
@@ -40,6 +36,12 @@ public class SpawnPlayer : MonoBehaviour
                     player.transform.rotation = transform.rotation;
                     //disable this game object
                     gameObject.SetActive(false);
+                }
+                else{
+                    //find level manager
+                    LevelManager levelManager = puzzles.GetComponent<LevelManager>();
+                    //unlock next puzzle
+                    levelManager.LoadNextPuzzle();
                 }
             }
             catch{
