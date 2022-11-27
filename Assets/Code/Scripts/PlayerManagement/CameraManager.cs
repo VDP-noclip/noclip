@@ -57,6 +57,7 @@ public class CameraManager : MonoBehaviour
         }
         else
         {
+            _realityMovement.toggleKinematic(isNoclipEnabled);
             _realMouseLook.CopyRotationCoordinates(_noclipMouseLook);
         }
         
