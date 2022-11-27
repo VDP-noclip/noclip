@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6929786617016666259}
   - component: {fileID: -4333610342915786002}
+  - component: {fileID: 2705507164286342254}
   m_Layer: 0
   m_Name: IntangibleNoclipObjectsHolder
   m_TagString: Untagged
@@ -46,3 +47,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tagToApply: NoclipObject
   _layerToApply: Default
+--- !u!114 &2705507164286342254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6776763273509828904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68e73ba196881fe4980a6c6d9b655ad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _intangibleMaterial: {fileID: 2100000, guid: 39714b74ead75a04ba045c4401d97c40, type: 2}
