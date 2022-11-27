@@ -97,14 +97,9 @@ public class MouseLook : MonoBehaviour
         if (PlayerPrefs.HasKey("masterInvertY"))
         {
             if (PlayerPrefs.GetInt("masterInvertY") == 1)
-            {
                 _invertY = -1;
-            }
-        }
-        else
-        {
-            // You don't have a key. SORRY MAURICE!!!!!!!
-            throw new Exception("masterSensitivityY key is missing!");
+            else 
+                _invertY = 1;
         }
     }
 

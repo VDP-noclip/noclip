@@ -121,7 +121,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.2
-  far clip plane: 3000
+  far clip plane: 5000
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -197,7 +197,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2740796908604963382}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &5413496004590197134
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +469,8 @@ AudioSource:
   m_GameObject: {fileID: 8332031875421162927}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2797744054959998249, guid: 966f75dff49d65b4a9d6827eea13a365,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -707,7 +708,7 @@ PrefabInstance:
     - target: {fileID: 1302707418389392505, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.4235401
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1302707418389392505, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
@@ -748,16 +749,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4137557435513412471, guid: 8030186c43e35384595d120598ea99b5,
-        type: 3}
-      propertyPath: far clip plane
-      value: 3000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4588941864700968468, guid: 8030186c43e35384595d120598ea99b5,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5999999
       objectReference: {fileID: 0}
     - target: {fileID: 4674821149033968117, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}

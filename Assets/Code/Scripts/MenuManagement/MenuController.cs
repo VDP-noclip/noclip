@@ -64,6 +64,10 @@ public class MenuController : MonoBehaviour
     // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
     private void Start()
     {
+        SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
+        SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
+        SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
+        
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 

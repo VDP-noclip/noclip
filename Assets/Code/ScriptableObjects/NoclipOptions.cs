@@ -8,6 +8,9 @@ namespace Code.ScriptableObjects
     {
         public KeyCode noclipKey = KeyCode.P;
         
+        [Header("Automatically return to body when you are close to it")]
+        public bool automaticReturnToBody = true;
+        
         [Header("Skybox change")] 
         public Material realitySkyboxMaterial;
         public Material noClipSkyboxMaterial;

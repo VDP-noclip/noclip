@@ -44,6 +44,8 @@ public class NoclipMovement : MonoBehaviour
     // These positions depends o the level 
     private Vector3 _initRotation;
     private Vector3 _initPosition;
+
+    private bool _insideRealityPlayer = true;
     
     
     private void Awake()
@@ -96,6 +98,11 @@ public class NoclipMovement : MonoBehaviour
         if (other.CompareTag("RealityPlayer") && _noclipManager.IsNoclipEnabled())
         {
             _noclipManager.SetPlayerCanDisableNoclip(true);
+            if (!_insideRealityPlayer)
+            {
+                _noclipManager.NoClipReturnedToBody();
+                _insideRealityPlayer = true;          
+            }
         }
     }
     
@@ -103,7 +110,8 @@ public class NoclipMovement : MonoBehaviour
     {
         if (other.CompareTag("RealityPlayer"))
         {
-            _noclipManager.SetPlayerCanDisableNoclip(false);
+            _insideRealityPlayer = false;
+            _noclipManager.NoClipExitedToBody();
         }
     }
 
