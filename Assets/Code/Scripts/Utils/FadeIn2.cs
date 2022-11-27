@@ -14,6 +14,7 @@ public class FadeIn2 : MonoBehaviour
     private bool _finished = false;
     private Material _originalMaterial;
     private Material _transparentMaterial;
+    private float _originalAlpha = 1f;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class FadeIn2 : MonoBehaviour
             Material material = renderer.material;
             //create copy of material
             _originalMaterial = new Material(material);
+            _originalAlpha = _originalMaterial.color.a;
             _col = material.color;
             GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
             GetComponent<Renderer>().material.mainTexture = _tex;
@@ -45,18 +47,20 @@ public class FadeIn2 : MonoBehaviour
     //fixedupdate
     void FixedUpdate()
     {
-        if (gameObject.tag != "NoclipObject")
-        {
-            if (GetComponent<Renderer>().material.color.a < 1)
+        if(!_finished){
+            if (gameObject.tag != "NoclipObject")
             {
-                //make mesh more opaque
-                GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
-            }
-            //else switch to ProBuilder_yellow
-            else if (!_finished)
-            {
-                GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
-                _finished = true;
+                if (GetComponent<Renderer>().material.color.a < _originalAlpha)
+                {
+                    //make mesh more opaque
+                    GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
+                }
+                //else switch to ProBuilder_yellow
+                else if (!_finished)
+                {
+                    GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
+                    _finished = true;
+                }
             }
         }
     }
