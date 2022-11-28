@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,28 @@ public class NoclipManager : MonoBehaviour
     private bool _noclipEnabled;
     private bool _playerCanSwitchMode;
     
-    // Variables needed for Tizio implementation
-    private bool moving = false;
-    public GameObject _noclipCamera;
-    public GameObject _realityCamera;
+    private bool _goingBackToBody;
+    private GameObject _noclipCamera;
+    private GameObject _realityCamera;
+    private MouseLook _realityMouseLook;
+    private MouseLook _noclipMouseLook;
 
     void Awake()
     {
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
+    }
+
+    private void Start()
+    {
+        GameObject allplayer = GameObject.Find("AllPlayer");
+        GameObject noclipplayer = allplayer.transform.Find("NoclipPlayer").gameObject;
+        GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
+        _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
+        _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
+        _realityMouseLook = realityplayer.GetComponentInChildren<MouseLook>();
+        _noclipMouseLook = noclipplayer.GetComponentInChildren<MouseLook>();
     }
 
     /// <summary>
@@ -65,7 +78,7 @@ public class NoclipManager : MonoBehaviour
     public void NoClipReturnedToBody()
     {
         _playerCanSwitchMode = true;
-        if (_noclipOptions.automaticReturnToBody && _noclipEnabled)
+        if (_goingBackToBody)
             StartCoroutine(DisableNoclip());
     }
     
@@ -99,6 +112,7 @@ public class NoclipManager : MonoBehaviour
         Debug.Log("Enablenoclip");
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
+        _goingBackToBody = false;
         _cameraManager.SwitchCamera();
         RenderNoclipMode();
         yield return null;
@@ -123,6 +137,7 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // When pressing
         if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
             if (_playerCanSwitchMode)
@@ -132,33 +147,24 @@ public class NoclipManager : MonoBehaviour
             else if (_noclipEnabled)
                 EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP");
         }
+        
+        // When releasing
+        if (Input.GetKeyUp(_noclipOptions.noclipKey)){
+            _goingBackToBody = true;
+            _noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
+        }
+        
     }
-    
-    // This is code Tizio asked to keep for future implementation
-    // if (Input.GetKeyUp(_noclipOptions.noclipKey) || Input.GetMouseButtonUp(1)){
-    //     //gameobject find AllPlayer
-    //     GameObject allplayer = GameObject.Find("AllPlayer");
-    //     //find NoclipPlayer in children
-    //     GameObject noclipplayer = allplayer.transform.Find("NoclipPlayer").gameObject;
-    //     //find NoclipCamera in children
-    //     _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
-    //     //find RealityPlayer in children of allplayer
-    //     GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
-    //     //find RealityCamera in children of realityplayer
-    //     _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
-    //     //move noclipcamera to realitycamera position
-    //     moving = true;
-    // }
-    // //if moving slowly move noclipcamera to realitycamera position
-    // if (moving){
-    //     _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
-    //     _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
-    // }
-    // if (Input.GetKeyDown(_noclipOptions.noclipKey) || Input.GetMouseButtonDown(1))
-    // {
-    //     moving = false;
-    //     // etc...
-    
+
+    private void FixedUpdate()
+    {
+        //if _goingBackToBody slowly move noclipcamera to realitycamera position
+        if (_goingBackToBody){
+            _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
+            _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
+        }
+    }
+
     private IEnumerator GetNoClipObjControllers()
     {
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");

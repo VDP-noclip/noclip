@@ -6,11 +6,8 @@ namespace Code.ScriptableObjects
     [CreateAssetMenu(menuName = "Noclip/Noclip Options")]
     public class NoclipOptions : ScriptableObject
     {
-        public KeyCode noclipKey = KeyCode.P;
-        
-        [Header("Automatically return to body when you are close to it")]
-        public bool automaticReturnToBody = true;
-        
+        public KeyCode noclipKey = KeyCode.Mouse1;
+
         [Header("Skybox change")] 
         public Material realitySkyboxMaterial;
         public Material noClipSkyboxMaterial;
