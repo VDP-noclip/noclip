@@ -151,7 +151,7 @@ public class NoclipManager : MonoBehaviour
         // When releasing
         if (Input.GetKeyUp(_noclipOptions.noclipKey)){
             _goingBackToBody = true;
-            _noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
+            //_noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
         }
         
     }

@@ -29,6 +29,8 @@ public class MouseLook : MonoBehaviour
     // It's true if the camera is active, false otherwise
     private bool _activeCurrently;
     private Transform _transform;
+    //_prevTransformRotation
+    private Quaternion _prevTransformRotation;
 
     private float _yRotation; // yaw movement variable
     private float _yRotationCheckpoint;
@@ -54,6 +56,7 @@ public class MouseLook : MonoBehaviour
         EventManager.StartListening("SetLastCheckpointRotation", SetLastCheckpointRotation);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        _prevTransformRotation = _transform.rotation;
     }
     
     void Update()
@@ -63,7 +66,7 @@ public class MouseLook : MonoBehaviour
             return;
         }
         
-        if (_activeCurrently)
+        if (_activeCurrently && Untampered())
         {
             // get mouse input and proportionally modify the sensitivity
             float mouseX = 0;
@@ -85,6 +88,11 @@ public class MouseLook : MonoBehaviour
             // I don't know the cost of this statement but it definitely doesn't belong here.
             UpdateInvertY();
         }
+    }
+
+    private bool Untampered()
+    {
+        return _transform.rotation == _prevTransformRotation;
     }
 
     public void ActivateMouseLook(bool active)
@@ -153,10 +161,11 @@ public class MouseLook : MonoBehaviour
         UpdateRotation();
     }
 
-    private void UpdateRotation()
+    private void UpdateRotation() //there is too much mess and redundancy in the rotations
     {
         // IMPORTANT: Don't change the order of the two following lines: if _orientation and _transform are the same gameobject it doesn't work due to value override.
         _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);  // updates the orientation of the gameobject that has the orientation information of the camera on the y axis
         _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);  // updates the camera orientation
+        _prevTransformRotation = _transform.rotation;
     }
 }
