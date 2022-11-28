@@ -115,10 +115,35 @@ public class NoclipManager : MonoBehaviour
     /// <summary>
     /// Allows the player to enable/disable noclip mode.
     /// </summary>
+    //bool variable moving
+    private bool moving = false;
+    //gameobjects noclipcamera realitycamera
+    public GameObject _noclipCamera;
+    public GameObject _realityCamera;
     private void Update()
     {
-        if (Input.GetKeyDown(_noclipOptions.noclipKey))
+        if (Input.GetKeyUp(_noclipOptions.noclipKey) || Input.GetMouseButtonUp(1)){
+            //gameobject find AllPlayer
+            GameObject allplayer = GameObject.Find("AllPlayer");
+            //find NoclipPlayer in children
+            GameObject noclipplayer = allplayer.transform.Find("NoclipPlayer").gameObject;
+            //find NoclipCamera in children
+            _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
+            //find RealityPlayer in children of allplayer
+            GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
+            //find RealityCamera in children of realityplayer
+            _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
+            //move noclipcamera to realitycamera position
+            moving = true;
+        }
+        //if moving slowly move noclipcamera to realitycamera position
+        if (moving){
+            _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
+            _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
+        }
+        if (Input.GetKeyDown(_noclipOptions.noclipKey) || Input.GetMouseButtonDown(1))
         {
+            moving = false;
             if (_playerCanEnableNoclip)
                 StartCoroutine(EnableNoclip());
             else if (_playerCanDisableNoclip)
