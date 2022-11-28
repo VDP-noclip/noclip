@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using POLIMIGameCollective;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
@@ -73,6 +74,13 @@ public class LevelManager : MonoBehaviour
     {
         //find AllPlayer
         GameObject player = GameObject.Find("RealityPlayer").gameObject;
+        NoclipManager noclipManager = player.GetComponentInChildren<NoclipManager>();
+        if (noclipManager.IsNoclipEnabled())
+        {
+            EventManager.TriggerEvent("DisplayHint","RETURN TO YOUR BODY, THEN PRESS K TO SKIP PUZZLE");
+            return;
+        }
+        
         //find EndAnchor of next puzzle
         GameObject endAnchor = transform.Find("Puzzle_" + _currentPuzzleIndex).Find("Save").gameObject;
         //get Save child of endAnchor
