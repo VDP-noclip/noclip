@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+//using exceptions
+using System;
 
 namespace Code.Scripts.Utils
 {
@@ -14,6 +16,12 @@ namespace Code.Scripts.Utils
 
         public ObjectMaterialSwitcher(GameObject obj, Material[] noclipMaterials)
         {
+            if (noclipMaterials == null)
+            {
+                var name = obj.name;
+                throw new Exception(
+                    $"Cannot have a ObjectMaterialSwitcher with a null _noclipMaterials. Problem in {name} object");
+            }
             _noclipMaterials = noclipMaterials;
             _renderer = obj.GetComponent<Renderer>();
             _originalMaterials = _renderer.materials;

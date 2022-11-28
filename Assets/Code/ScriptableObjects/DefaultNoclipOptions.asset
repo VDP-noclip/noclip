@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: DefaultNoclipOptions
   m_EditorClassIdentifier: 
   noclipKey: 112
+  automaticReturnToBody: 1
   realitySkyboxMaterial: {fileID: 2100000, guid: ff628d98ed3254a42ada14b0785449b7,
     type: 2}
   noClipSkyboxMaterial: {fileID: 2100000, guid: d6a9b2e27dec58c41bd10e8440b553d7,
     type: 2}
+  noClipMaterialsForRealityObjects:
+  - {fileID: 2100000, guid: 1699a2e254487664e8056a312b8183b6, type: 2}
+  noClipMaterialsForBackgroundObjects:
+  - {fileID: 2100000, guid: ab7dda56640581d45967b1b3f522247a, type: 2}

@@ -6,6 +6,8 @@ using UnityEngine;
 public class NoclipIntangibleController : BaseNoclipObjectController
 {
     private Renderer _meshRender;
+    [SerializeField] private Material _noclipMaterial;
+    [SerializeField] private Material _intangibleMaterial;
 
     private void Awake()
     {
@@ -13,13 +15,17 @@ public class NoclipIntangibleController : BaseNoclipObjectController
         DisableNoclip();
     }
 
+    private void Start(){
+    }
+
     public override void ActivateNoclip()
     {
-        _meshRender.enabled = false;
+        _meshRender.material = _noclipMaterial;
     }
 
     public override void DisableNoclip()
     {
-        _meshRender.enabled = true;
+        _meshRender.material = _intangibleMaterial;
     }
+
 }

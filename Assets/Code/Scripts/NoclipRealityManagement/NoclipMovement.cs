@@ -97,7 +97,7 @@ public class NoclipMovement : MonoBehaviour
     {
         if (other.CompareTag("RealityPlayer") && _noclipManager.IsNoclipEnabled())
         {
-            _noclipManager.SetPlayerCanDisableNoclip(true);
+            _noclipManager.SetPlayerCanSwitchMode(true);
             if (!_insideRealityPlayer)
             {
                 _noclipManager.NoClipReturnedToBody();

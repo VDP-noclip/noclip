@@ -14,40 +14,41 @@ public class FadeIn2 : MonoBehaviour
     private bool _finished = false;
     private Material _originalMaterial;
     private Material _transparentMaterial;
+    private float _originalAlpha = 1f;
 
     void Start()
     {
         _transparentMaterial = Resources.Load(_fadeMaterialPath, typeof(Material)) as Material;
         //store material texture into variable
-        if (gameObject.tag != "NoclipObject")
-        {
-            _tex = GetComponent<Renderer>().material.mainTexture;
-            Renderer renderer = GetComponent<Renderer>();
-            Material material = renderer.material;
-            //create copy of material
-            _originalMaterial = new Material(material);
-            _col = material.color;
-            GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
-            GetComponent<Renderer>().material.mainTexture = _tex;
-            GetComponent<Renderer>().material.color = _col;
-            GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
-            //zwrite 0
-            GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
-        }
+        _tex = GetComponent<Renderer>().material.mainTexture;
+        Renderer renderer = GetComponent<Renderer>();
+        Material material = renderer.material;
+        //create copy of material
+        _originalMaterial = new Material(material);
+        _originalAlpha = _originalMaterial.color.a;
+        _col = material.color;
+        GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
+        GetComponent<Renderer>().material.mainTexture = _tex;
+        GetComponent<Renderer>().material.color = _col;
+        GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
+        //zwrite 0
+        GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
+    public void Restart(){//not working
+        _finished = false;
+        GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
+        GetComponent<Renderer>().material.mainTexture = _tex;
+        GetComponent<Renderer>().material.color = _col;
+        GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
+        GetComponent<Renderer>().material.SetInt("_ZWrite", 1);
     }
     
     //fixedupdate
     void FixedUpdate()
     {
-        if (gameObject.tag != "NoclipObject")
-        {
-            if (GetComponent<Renderer>().material.color.a < 1)
+        if(!_finished){
+            if (GetComponent<Renderer>().material.color.a < _originalAlpha)
             {
                 //make mesh more opaque
                 GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
