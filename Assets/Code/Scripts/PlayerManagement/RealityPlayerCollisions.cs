@@ -18,7 +18,7 @@ public class RealityPlayerCollisions : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("NoclipEnabler"))
         {
-            _noclipManager.SetPlayerCanEnableNoClip(true);
+            _noclipManager.SetPlayerCanSwitchMode(true);
         }
         else if (other.CompareTag("Checkpoint"))
         {
@@ -44,7 +44,7 @@ public class RealityPlayerCollisions : MonoBehaviour
     {
         if (other.CompareTag("NoclipEnabler"))
         {
-            _noclipManager.SetPlayerCanEnableNoClip(false);
+            _noclipManager.SetPlayerCanSwitchMode(false);
         } else if (other.CompareTag("Checkpoint"))
         {
             EventManager.TriggerEvent("StartTimeConstraintsTimer");

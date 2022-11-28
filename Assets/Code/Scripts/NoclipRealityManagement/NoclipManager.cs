@@ -19,9 +19,8 @@ public class NoclipManager : MonoBehaviour
     private ObjectMaterialSwitcher[] _objectMaterialSwitchers;
     private CameraManager _cameraManager;
 
-    private bool _noclipEnabled;   
-    private bool _playerCanEnableNoclip;
-    private bool _playerCanDisableNoclip;
+    private bool _noclipEnabled;
+    private bool _playerCanSwitchMode;
     
     // Variables needed for Tizio implementation
     private bool moving = false;
@@ -32,6 +31,7 @@ public class NoclipManager : MonoBehaviour
     {
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
+        GetReadyForPuzzle();
     }
 
     /// <summary>
@@ -45,32 +45,27 @@ public class NoclipManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Set this to true when the player is in the noclipEnabler with its body.
+    /// Set this to true if you want the player to be able to switch mode
     /// </summary>
-    public void SetPlayerCanEnableNoClip(bool playerCanEnableNoclip)
+    public void SetPlayerCanSwitchMode(bool playerCanSwitchMode)
     {
-        _playerCanEnableNoclip = playerCanEnableNoclip;
-        if (playerCanEnableNoclip)
-            EventManager.TriggerEvent("DisplayHint", "PRESS P TO NOCLIP");
-        else
+        _playerCanSwitchMode = playerCanSwitchMode;
+        if (!playerCanSwitchMode)
             EventManager.TriggerEvent("ClearHints");
+        else if (_noclipEnabled)
+            EventManager.TriggerEvent("DisplayHint", "PRESS P TO RETURN TO YOUR BODY");
+        else
+            EventManager.TriggerEvent("DisplayHint", "PRESS P TO NOCLIP");
     }
-
-    /// <summary>
-    /// Set this to true when the player moves the noclip camera close enough to the real body.
-    /// </summary>
-    public void SetPlayerCanDisableNoclip(bool playerCanDisableNoclip)
-    {
-        _playerCanDisableNoclip = playerCanDisableNoclip;
-    }
+    
     
     /// <summary>
     /// Allow the player to disable no clip, or disable noclip automatically
     /// </summary>
     public void NoClipReturnedToBody()
     {
-        _playerCanDisableNoclip = true;
-        if (_noclipOptions.automaticReturnToBody)
+        _playerCanSwitchMode = true;
+        if (_noclipOptions.automaticReturnToBody && _noclipEnabled)
             StartCoroutine(DisableNoclip());
     }
     
@@ -79,7 +74,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     public void NoClipExitedToBody()
     {
-        _playerCanDisableNoclip = false;
+        _playerCanSwitchMode = false;
+        EventManager.TriggerEvent("ClearHints");
     }
 
     public bool IsNoclipEnabled()
@@ -87,12 +83,20 @@ public class NoclipManager : MonoBehaviour
         return _noclipEnabled;
     }
 
+    private void SwitchMode()
+    {
+        if (_noclipEnabled)
+            StartCoroutine(DisableNoclip());
+        else
+            StartCoroutine(EnableNoclip());
+    }
+
     /// <summary>
     /// Activate the noclip mode to all the objects and switch camera to the noclip one.
     /// </summary>
     private IEnumerator EnableNoclip()
     {
-        _playerCanEnableNoclip = false;
+        Debug.Log("Enablenoclip");
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _cameraManager.SwitchCamera();
@@ -105,13 +109,10 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
-        _playerCanDisableNoclip = false;
-         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
+        Debug.Log("Disablenoclip");
+        _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _cameraManager.SwitchCamera();
-        // The camera/bodies are still in the correct area, this should be set to false when the player exits
-        // the platform
-        _playerCanEnableNoclip = true;
         RenderRealityMode();
         yield return null;
     }
@@ -124,10 +125,8 @@ public class NoclipManager : MonoBehaviour
     {
         if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
-            if (_playerCanEnableNoclip)
-                StartCoroutine(EnableNoclip());
-            else if (_playerCanDisableNoclip)
-                StartCoroutine(DisableNoclip());
+            if (_playerCanSwitchMode)
+                SwitchMode();
             else if (!_noclipEnabled)
                 EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND. PRESSING P HAS NO EFFECT"); 
             else if (_noclipEnabled)
