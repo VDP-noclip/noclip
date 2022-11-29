@@ -15,7 +15,8 @@ using POLIMIGameCollective;
 public class NoclipManager : MonoBehaviour
 {
     [SerializeField] private NoclipOptions _noclipOptions;
-    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioSource _effectsAudioSource;
+    [SerializeField] private AudioSource _noclipZoneAudioSource;
     [SerializeField] private AudioTracks _audioTracks;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
@@ -24,6 +25,7 @@ public class NoclipManager : MonoBehaviour
 
     private bool _noclipEnabled;
     private bool _playerCanSwitchMode;
+    private bool _insideNoclipAreaZoneIsPlaying;
     
     private bool _goingBackToBody;
     private GameObject _noclipCamera;
@@ -108,7 +110,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator EnableNoclip()
     {
         Debug.Log("Enablenoclip");
-        _audioSource.PlayOneShot(_audioTracks.EnableNoclip);
+        _effectsAudioSource.PlayOneShot(_audioTracks.EnableNoclip);
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _goingBackToBody = false;
@@ -123,7 +125,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         Debug.Log("Disablenoclip");
-        _audioSource.PlayOneShot(_audioTracks.DisableNoclip);
+        _effectsAudioSource.PlayOneShot(_audioTracks.DisableNoclip);
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _goingBackToBody = false;
@@ -138,6 +140,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        StartCoroutine(StartOrStopNoclipZoneSound());
+
         // When pressing
         if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
@@ -154,7 +158,6 @@ public class NoclipManager : MonoBehaviour
             _goingBackToBody = true;
             //_noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
         }
-        
     }
 
     private void FixedUpdate()
@@ -226,5 +229,23 @@ public class NoclipManager : MonoBehaviour
         {
             objectMaterialSwitcher.SetOriginalMaterials();
         }
+    }
+
+    private IEnumerator StartOrStopNoclipZoneSound()
+    {
+        if (_playerCanSwitchMode && !_insideNoclipAreaZoneIsPlaying)
+        {
+            Debug.Log("Start NoclipZoneSound");
+            _noclipZoneAudioSource.PlayOneShot(_audioTracks.NoclipZoneSound);
+            _insideNoclipAreaZoneIsPlaying = true;
+        }
+
+        if (_insideNoclipAreaZoneIsPlaying && (!_playerCanSwitchMode || _noclipEnabled))
+        {
+            _noclipZoneAudioSource.Stop();
+            _insideNoclipAreaZoneIsPlaying = false;
+        }
+
+        yield return null;
     }
 }

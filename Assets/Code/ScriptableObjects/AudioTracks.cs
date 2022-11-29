@@ -7,7 +7,12 @@ namespace Code.ScriptableObjects
     public class AudioTracks : ScriptableObject
     {
         public AudioClip FinishPuzzle;
+        
         public AudioClip EnableNoclip;
         public AudioClip DisableNoclip;
+
+        public AudioClip NoclipZoneSound;
+        
+        public AudioClip DefaultAreaSoundtrack;
     }
 }
