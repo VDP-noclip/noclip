@@ -7,6 +7,9 @@ namespace Code.ScriptableObjects
     public class NoclipOptions : ScriptableObject
     {
         public KeyCode noclipKey = KeyCode.Mouse1;
+        
+        [Header("This is the string displayed in the hints")] 
+        public string noclipKeyAsString = "RIGHT CLICK";
 
         [Header("Skybox change")] 
         public Material realitySkyboxMaterial;
