@@ -8,10 +8,13 @@ namespace Code.ScriptableObjects
     {
         public KeyCode noclipKey = KeyCode.Mouse1;
         
-        [Header("This is the string displayed in the hints")] 
-        public string noclipKeyAsString = "RIGHT CLICK";
+        [Header("Control the hints we give to the player")]
+        public string howToActivateNoclip = "PRESS&HOLD RIGHT CLICK TO NOCLIP";
+        public string howToDeactivateNoclip = "MOVE AROUND, OR RELEASE RIGHT CLICK TO RETURN TO YOUR BODY";
+        public string tryToActivateNoclipOutside = "NOCLIP ZONE NOT FOUND. RIGHT CLICK HAS NO EFFECT";
+        public string tryToDeactivateNoclipOutside = "RETURN TO YOUR BODY TO DISABLE NOCLIP";
 
-        [Header("Skybox change")] 
+        [Header("Skybox change")]
         public Material realitySkyboxMaterial;
         public Material noClipSkyboxMaterial;
         

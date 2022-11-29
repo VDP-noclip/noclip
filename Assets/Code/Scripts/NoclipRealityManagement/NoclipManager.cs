@@ -66,9 +66,9 @@ public class NoclipManager : MonoBehaviour
         if (!playerCanSwitchMode)
             EventManager.TriggerEvent("ClearHints");
         else if (_noclipEnabled)
-            EventManager.TriggerEvent("DisplayHint", $"RELEASE {_noclipOptions.noclipKeyAsString} TO RETURN TO YOUR BODY");
+            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip);
         else
-            EventManager.TriggerEvent("DisplayHint", $"KEEP {_noclipOptions.noclipKeyAsString} PRESSED TO NOCLIP");
+            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
     }
     
     
@@ -144,9 +144,9 @@ public class NoclipManager : MonoBehaviour
             if (_playerCanSwitchMode)
                 SwitchMode();
             else if (!_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", $"NOCLIP ZONE NOT FOUND. PRESSING {_noclipOptions.noclipKeyAsString} HAS NO EFFECT"); 
+                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside); 
             else if (_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP");
+                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
         }
         
         // When releasing
