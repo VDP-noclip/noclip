@@ -78,7 +78,7 @@ public class NoclipManager : MonoBehaviour
     public void NoClipReturnedToBody()
     {
         _playerCanSwitchMode = true;
-        if (_goingBackToBody)
+        if (_goingBackToBody && _noclipEnabled)
             StartCoroutine(DisableNoclip());
     }
     
@@ -126,6 +126,7 @@ public class NoclipManager : MonoBehaviour
         Debug.Log("Disablenoclip");
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
+        _goingBackToBody = false;
         _cameraManager.SwitchCamera();
         RenderRealityMode();
         yield return null;
