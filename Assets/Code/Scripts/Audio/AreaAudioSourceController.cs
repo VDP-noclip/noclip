@@ -16,7 +16,7 @@ namespace Code.Scripts.Audio
         private void Awake()
         {
             if (_customAreaSoundtrack == null)
-                _areaSoundtrack = _audioTracks.DefaultAreaSoundtrack;
+                _areaSoundtrack = _audioTracks.defaultAreaSoundtrack;
             else
                 _areaSoundtrack = _customAreaSoundtrack;
             

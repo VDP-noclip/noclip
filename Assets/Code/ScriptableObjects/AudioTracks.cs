@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Code.ScriptableObjects
 {
@@ -6,13 +7,13 @@ namespace Code.ScriptableObjects
     [CreateAssetMenu(menuName = "Noclip/Audio Tracks")]
     public class AudioTracks : ScriptableObject
     {
-        public AudioClip FinishPuzzle;
+        public AudioClip finishPuzzle;
         
-        public AudioClip EnableNoclip;
-        public AudioClip DisableNoclip;
+        public AudioClip enableNoclip;
+        public AudioClip disableNoclip;
 
-        public AudioClip NoclipZoneSound;
+        public AudioClip noclipZoneSound;
         
-        public AudioClip DefaultAreaSoundtrack;
+        public AudioClip defaultAreaSoundtrack;
     }
 }

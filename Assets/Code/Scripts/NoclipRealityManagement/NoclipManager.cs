@@ -110,7 +110,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator EnableNoclip()
     {
         Debug.Log("Enablenoclip");
-        _effectsAudioSource.PlayOneShot(_audioTracks.EnableNoclip);
+        _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _goingBackToBody = false;
@@ -125,7 +125,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         Debug.Log("Disablenoclip");
-        _effectsAudioSource.PlayOneShot(_audioTracks.DisableNoclip);
+        _effectsAudioSource.PlayOneShot(_audioTracks.disableNoclip);
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _goingBackToBody = false;
@@ -236,7 +236,7 @@ public class NoclipManager : MonoBehaviour
         if (_playerCanSwitchMode && !_insideNoclipAreaZoneIsPlaying)
         {
             Debug.Log("Start NoclipZoneSound");
-            _noclipZoneAudioSource.PlayOneShot(_audioTracks.NoclipZoneSound);
+            _noclipZoneAudioSource.PlayOneShot(_audioTracks.noclipZoneSound);
             _insideNoclipAreaZoneIsPlaying = true;
         }
 

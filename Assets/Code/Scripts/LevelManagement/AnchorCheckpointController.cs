@@ -28,7 +28,7 @@ public class AnchorCheckpointController : MonoBehaviour
         if (_alreadyHitThisCheckpoint)
             return;
         _alreadyHitThisCheckpoint = true;
-        _audioSource.PlayOneShot(_audioTracks.FinishPuzzle);
+        _audioSource.PlayOneShot(_audioTracks.finishPuzzle);
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
         //find save object among children of parent and disable it
         transform.parent.Find("Save").gameObject.SetActive(false);
