@@ -120,8 +120,10 @@ public class SendToGoogle : MonoBehaviour
     
     [Header("Feedback4")]
     [SerializeField] private TMP_InputField _suggestions4_0;
+    [SerializeField] private TMP_InputField _notesOnBugs4;
     [SerializeField] [NotNull] private GameObject _buttonNext4;
     private string _multipleChoice4_0 = "null";
+    private string _noteOnBugs4;
     private string _suggestion4_0 = "null";
 
 
@@ -409,6 +411,7 @@ public class SendToGoogle : MonoBehaviour
         WWWForm form = new WWWForm();
 
         form.AddField("entry.2103217825", _suggestion4_0);
+        form.AddField("entry.885548568", _noteOnBugs4);
         form.AddField("entry.1185853159", "chackpoint");
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
@@ -464,6 +467,7 @@ public class SendToGoogle : MonoBehaviour
     public void SaveSuggestion4()
     {
         _suggestion4_0 = _suggestions4_0.text;
+        _noteOnBugs4 = _notesOnBugs4.text;
     }
 
     private GameObject[] retriveMultipleChoices(Transform trans)
