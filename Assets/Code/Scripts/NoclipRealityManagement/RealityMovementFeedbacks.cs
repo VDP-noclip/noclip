@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Code.ScriptableObjects;
 using UnityEngine;
 
 public class RealityMovementFeedbacks : MonoBehaviour
@@ -15,13 +16,12 @@ public class RealityMovementFeedbacks : MonoBehaviour
     private float _headBobTimer;
 
     [Header("Footstep parameters")]
-    /*[Tooltip("Indicates the time of the reproduction of the sound, high value corresponds to slow speed")]
-    [SerializeField]*/ private float reproductionTime = 1f;
+    private float reproductionTime = 1f;
     [Tooltip("Indicates the minimum speed of the player for activate the sound")]
     [SerializeField] private float _speedAudioActivation = 2f;
     [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private AudioClip[] _footstepClips;
-    [SerializeField] private AudioClip _landSound;
+    [SerializeField] private AudioTracks _audioTracks;
+    [SerializeField] [Range(0, 1)] private float _fartingProbability;
     private float _footstepTimer;
     private float _moveSpeed;
     private Vector3 _cameraPosition;
@@ -88,16 +88,20 @@ public class RealityMovementFeedbacks : MonoBehaviour
             //checks the minimum speed of audio activation, if the audio is still playing and if the camera is at the low position of the headbob sine wave
             if (_moveSpeed > _speedAudioActivation && _footstepTimer < 0 && _camera.transform.localPosition.y < _cameraPosition.y - _headbobVariation*0.9) 
             {
-                _audioSource.PlayOneShot(_footstepClips[Random.Range(0, _footstepClips.Length - 1)]);
                 _audioSource.volume = Random.Range(0.8f, 1);
+                _audioSource.PlayOneShot(_audioTracks.footsteps[Random.Range(0, _audioTracks.footsteps.Length - 1)]);
                 _footstepTimer = reproductionTime;
             }
             
             // if the player go from a state of air to a state of ground. so this is the sound when the player land on the ground
             if (_lastState == MovementState.Air) 
             {
-                _audioSource.PlayOneShot(_landSound); 
                 _audioSource.volume = 1.5f;
+                var u = Random.Range(0, 1);
+                if (u < _fartingProbability)
+                    _audioSource.PlayOneShot(_audioTracks.easterEggFart);
+                else
+                    _audioSource.PlayOneShot(_audioTracks.landSound);
             }
             
         }
