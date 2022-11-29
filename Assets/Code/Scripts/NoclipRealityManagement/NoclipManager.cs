@@ -15,6 +15,8 @@ using POLIMIGameCollective;
 public class NoclipManager : MonoBehaviour
 {
     [SerializeField] private NoclipOptions _noclipOptions;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioTracks _audioTracks;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private ObjectMaterialSwitcher[] _objectMaterialSwitchers;
@@ -106,6 +108,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator EnableNoclip()
     {
         Debug.Log("Enablenoclip");
+        _audioSource.PlayOneShot(_audioTracks.EnableNoclip);
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _goingBackToBody = false;
@@ -120,6 +123,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         Debug.Log("Disablenoclip");
+        _audioSource.PlayOneShot(_audioTracks.DisableNoclip);
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
         _goingBackToBody = false;
