@@ -26,9 +26,7 @@ public class NoclipManager : MonoBehaviour
     private bool _goingBackToBody;
     private GameObject _noclipCamera;
     private GameObject _realityCamera;
-    private MouseLook _realityMouseLook;
-    private MouseLook _noclipMouseLook;
-
+    
     void Awake()
     {
         _cameraManager = FindObjectOfType<CameraManager>();
@@ -43,8 +41,6 @@ public class NoclipManager : MonoBehaviour
         GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
         _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
         _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
-        _realityMouseLook = realityplayer.GetComponentInChildren<MouseLook>();
-        _noclipMouseLook = noclipplayer.GetComponentInChildren<MouseLook>();
     }
 
     /// <summary>
