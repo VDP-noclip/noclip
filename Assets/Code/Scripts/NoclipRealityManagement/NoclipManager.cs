@@ -37,6 +37,7 @@ public class NoclipManager : MonoBehaviour
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
+        _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
     }
 
     private void Start()
