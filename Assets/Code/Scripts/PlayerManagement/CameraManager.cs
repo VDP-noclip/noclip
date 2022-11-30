@@ -58,7 +58,25 @@ public class CameraManager : MonoBehaviour
         else
         {
             _realityMovement.toggleKinematic(isNoclipEnabled);
-            //_realMouseLook.CopyRotationCoordinates(_noclipMouseLook);
+            // when going back to reality the camera should be oriented like the noclip camera
+            // regardless, because now with the animation noclip camera orientation is already ok
+            // right before the switch, and also if you noclip and look around without moving
+            // you should still point in that direction when leaving noclip
+            // 
+            // it is difficult to achieve this result because the animation back to reality
+            // does not use _xRotation and _yRotation, but it still manages to change the orientation
+            // thanks to the untampered method that makes the MouseLook ignore them.
+            // it works just because _realMouseLook in this case is never enforced from outside,
+            // in fact symmetry would suggest to use Untampered() also above, but that way real mouse
+            // will remain tampered forever. 
+
+            //_realMouseLook.transform.rotation = _noclipMouseLook.transform.rotation;
+            //if(_noclipMouseLook.Untampered())
+            //if noclipcamera is close to realcamera
+            
+            //VERY dirty fix
+            if (Vector3.Distance(_realPlayerCamera.transform.position, _noclipCamera.transform.position) < 0.01f)
+                _realMouseLook.CopyRotationCoordinates(_noclipMouseLook);
         }
         
         //Activate/disactivate the noclipPlayer and his camera

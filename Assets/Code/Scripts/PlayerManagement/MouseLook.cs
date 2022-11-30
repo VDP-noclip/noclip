@@ -32,9 +32,9 @@ public class MouseLook : MonoBehaviour
     //_prevTransformRotation
     private Quaternion _prevTransformRotation;
 
-    private float _yRotation; // yaw movement variable
+    private float _yRotation = -90; // yaw movement variable
     private float _yRotationCheckpoint;
-    private float _xRotation; // pitch movement variable
+    private float _xRotation = 0; // pitch movement variable
     private float _xRotationCheckpoint;
     private int _invertY = 1;
     private void Awake()
@@ -56,7 +56,7 @@ public class MouseLook : MonoBehaviour
         EventManager.StartListening("SetLastCheckpointRotation", SetLastCheckpointRotation);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        _prevTransformRotation = _transform.rotation;
+        SyncRotation();
     }
     
     void Update()
@@ -90,7 +90,7 @@ public class MouseLook : MonoBehaviour
         }
     }
 
-    private bool Untampered()
+    public bool Untampered()
     {
         return _transform.rotation == _prevTransformRotation;
     }
@@ -166,6 +166,15 @@ public class MouseLook : MonoBehaviour
         // IMPORTANT: Don't change the order of the two following lines: if _orientation and _transform are the same gameobject it doesn't work due to value override.
         _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);  // updates the orientation of the gameobject that has the orientation information of the camera on the y axis
         _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);  // updates the camera orientation
+        _prevTransformRotation = _transform.rotation;
+    }
+
+    public void SyncRotation() //we need to make this work
+    {
+        _xRotation = (_transform.rotation.eulerAngles.x)*_invertY; 
+        Debug.Log(_xRotation);
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
+        _yRotation = _transform.rotation.eulerAngles.y;
         _prevTransformRotation = _transform.rotation;
     }
 }
