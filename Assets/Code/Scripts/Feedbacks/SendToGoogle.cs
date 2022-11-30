@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ public class SendToGoogle : MonoBehaviour
 {
 
 
-    /*[SerializeField]*/ private bool _sendToProf = false;
+    [SerializeField] private bool _sendToProf = false;
     private string[] _videogamesNames = new string[26]
     {
         "AnotherD",
@@ -123,15 +124,20 @@ public class SendToGoogle : MonoBehaviour
     [SerializeField] private TMP_InputField _notesOnBugs4;
     [SerializeField] [NotNull] private GameObject _buttonNext4;
     private string _multipleChoice4_0 = "null";
-    private string _noteOnBugs4;
+    private string _noteOnBugs4 = "null";
     private string _suggestion4_0 = "null";
 
+
+    private string _checkpointArrived = "null";
+
+
+    #region Unity Functions
 
     private void Awake()
     {
         // Page0
-        _multipleChoicesArray0_0 = retriveMultipleChoices(_multipleChoices0_0);
-        _multipleChoicesArray0_1 = retriveMultipleChoices(_multipleChoices0_1);
+        _multipleChoicesArray0_0 = retrieveMultipleChoices(_multipleChoices0_0);
+        _multipleChoicesArray0_1 = retrieveMultipleChoices(_multipleChoices0_1);
 
         foreach (GameObject var in _multipleChoicesArray0_0)
         {
@@ -146,7 +152,7 @@ public class SendToGoogle : MonoBehaviour
         _buttonNext0.GetComponent<Button>().onClick.AddListener(SendToGoogleFeedback0);
         
         //Page1
-        _multipleChoicesArray1_0 = retriveMultipleChoices(_multipleChoices1_0);
+        _multipleChoicesArray1_0 = retrieveMultipleChoices(_multipleChoices1_0);
         
         foreach (GameObject var in _multipleChoicesArray1_0)
         {
@@ -158,8 +164,8 @@ public class SendToGoogle : MonoBehaviour
        
         
         //Page2
-        _multipleChoicesArray2_0 = retriveMultipleChoices(_multipleChoices2_0);
-        _multipleChoicesArray2_1 = retriveMultipleChoices(_multipleChoices2_1);
+        _multipleChoicesArray2_0 = retrieveMultipleChoices(_multipleChoices2_0);
+        _multipleChoicesArray2_1 = retrieveMultipleChoices(_multipleChoices2_1);
         
         foreach (GameObject var in _multipleChoicesArray2_0)
         {
@@ -175,7 +181,7 @@ public class SendToGoogle : MonoBehaviour
         _buttonNext2.GetComponent<Button>().onClick.AddListener(SendToGoogleFeedback2);
         
         //Page3
-        _multipleChoicesArray3_0 = retriveMultipleChoices(_multipleChoices3_0);
+        _multipleChoicesArray3_0 = retrieveMultipleChoices(_multipleChoices3_0);
         foreach (GameObject var in _multipleChoicesArray3_0)
         {
             var.GetComponent<Button>().onClick.AddListener(delegate {_multipleChoice3_0 = SaveChoice(var.name, _multipleChoicesArray3_0); });
@@ -189,23 +195,120 @@ public class SendToGoogle : MonoBehaviour
         
         _buttonNext4.GetComponent<Button>().onClick.AddListener(SaveSuggestion4);
         _buttonNext4.GetComponent<Button>().onClick.AddListener(SendToGoogleFeedback4);
+        _buttonNext4.GetComponent<Button>().onClick.AddListener(SendFeedback);
+        
+        //Add checkpoint listener
+        EventManager.StartListening("save_checkpoint_feedback", SaveCheckpoint);
     }
 
-    public void SendFeedback()
+
+    #endregion
+    
+    #region Public Functions
+    
+    public void SaveSuggestion1()
     {
-        
+        _suggestion1_0 = _suggestions1_0.text;
+    }
+    
+    public void SaveSuggestion2()
+    {
+        _suggestion2_0 = _suggestions2_0.text;
+    }
+    
+    public void SaveSuggestion3()
+    {
+        _suggestion3_0 = _suggestions3_0.text;
+    }
+    
+    public void SaveSuggestion4()
+    {
+        _suggestion4_0 = _suggestions4_0.text;
+        _noteOnBugs4 = _notesOnBugs4.text;
+    }
+
+    #endregion
+    
+    
+    #region Private Functions
+
+    private void SendToGoogleFeedback0()
+    {
+        StartCoroutine(SendToGoogleFeedback0Coroutine());
+    }
+    
+    private void SendToGoogleFeedback1()
+    {
+        StartCoroutine(SendToGoogleFeedback1Coroutine());
+    }
+    private void SendToGoogleFeedback2()
+    {
+        StartCoroutine(SendToGoogleFeedback2Coroutine());
+    }
+    private void SendToGoogleFeedback3()
+    {
+        StartCoroutine(SendToGoogleFeedback3Coroutine());
+    }
+    private void SendToGoogleFeedback4()
+    {
+        StartCoroutine(SendToGoogleFeedback4Coroutine());
+    }
+    
+    private void SendFeedback()
+    {
         if (_sendToProf)
         {
             string feedback = _suggestion1_0 + _suggestion2_0 + _suggestion3_0 + _suggestion4_0;
             StartCoroutine(PostFeedback(_videogamesNames[(int) VideogameName],feedback));
         }
-        
-        
         StartCoroutine(PostFeedbackToUs(_videogamesNames[(int) VideogameName]));
-        
     }
 
-    IEnumerator PostFeedbackToUs(string videogame_name)
+    private void SaveCheckpoint(string checkpoint)
+    {
+        EventManager.StopListening("save_checkpoint_feedback", SaveCheckpoint);
+        _checkpointArrived = checkpoint;
+        EventManager.StartListening("save_checkpoint_feedback", SaveCheckpoint);
+    }
+    private string SaveChoice(string choice, GameObject[] list)
+    {
+
+        foreach (GameObject button in list)
+        {
+            if (button.name != choice)
+            {
+                button.GetComponent<Button>().image.color = Color.gray;
+            }
+            else
+            {
+                button.GetComponent<Button>().image.color = Color.cyan;
+            }
+        }
+        
+        Debug.Log(choice);
+        return choice;
+    }
+
+    
+    private GameObject[] retrieveMultipleChoices(Transform trans)
+    {
+        List<GameObject> list = new();
+        foreach (Transform child in trans)
+        {
+            if (child.name != "Question")
+            {
+                list.Add(child.gameObject);
+            }
+        }
+        Debug.Log(list.ToArray()[2].name);
+        return list.ToArray();
+    }
+
+    #endregion
+
+    #region Coroutine Functions
+    
+    private IEnumerator PostFeedbackToUs(string videogame_name)
     {
         string URL =
             "https://docs.google.com/forms/u/0/d/e/1FAIpQLScXqp9PAHN-KchAizf4vTC3u5GREqvhrbpjt_ar8Sv7aWlXRQ/formResponse";
@@ -250,7 +353,7 @@ public class SendToGoogle : MonoBehaviour
         }
         
     }
-    IEnumerator PostFeedback(string videogame_name, string feedback) 
+    private IEnumerator PostFeedback(string videogame_name, string feedback) 
     {
         // https://docs.google.com/forms/d/e/1FAIpQLSdyQkpRLzqRzADYlLhlGJHwhbKZvKJILo6vGmMfSePJQqlZxA/viewform?usp=pp_url&entry.631493581=Simple+Game&entry.1313960569=Very%0AGood!
 
@@ -278,28 +381,6 @@ public class SendToGoogle : MonoBehaviour
         }
     }
 
-    public void SendToGoogleFeedback0()
-    {
-        StartCoroutine(SendToGoogleFeedback0Coroutine());
-    }
-    
-    public void SendToGoogleFeedback1()
-    {
-        StartCoroutine(SendToGoogleFeedback1Coroutine());
-    }
-    public void SendToGoogleFeedback2()
-    {
-        StartCoroutine(SendToGoogleFeedback2Coroutine());
-    }
-    public void SendToGoogleFeedback3()
-    {
-        StartCoroutine(SendToGoogleFeedback3Coroutine());
-    }
-    public void SendToGoogleFeedback4()
-    {
-        StartCoroutine(SendToGoogleFeedback4Coroutine());
-    }
-    
     private IEnumerator SendToGoogleFeedback0Coroutine()
     {
         string URL = "https://docs.google.com/forms/d/e/1FAIpQLSef5l-ZUoHC7c_VLqy09NA2VTbu1VCwNw7NZLjB8mOI2iipUA/formResponse";
@@ -308,7 +389,7 @@ public class SendToGoogle : MonoBehaviour
 
         form.AddField("entry.643657764", _multipleChoice0_0);
         form.AddField("entry.1301141610", _multipleChoice0_1);
-        form.AddField("entry.235040056", "chackpoint");
+        form.AddField("entry.235040056", _checkpointArrived);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -334,7 +415,7 @@ public class SendToGoogle : MonoBehaviour
 
         form.AddField("entry.1689264014", _multipleChoice1_0);
         form.AddField("entry.1795851765", _suggestion1_0);
-        form.AddField("entry.2089839631", "chackpoint");
+        form.AddField("entry.2089839631", _checkpointArrived);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -360,7 +441,7 @@ public class SendToGoogle : MonoBehaviour
         form.AddField("entry.2064137350", _multipleChoice2_0);
         form.AddField("entry.608431837", _multipleChoice2_1);
         form.AddField("entry.122820910", _suggestion2_0);
-        form.AddField("entry.969916236", "chackpoint");
+        form.AddField("entry.969916236", _checkpointArrived);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -386,7 +467,7 @@ public class SendToGoogle : MonoBehaviour
 
         form.AddField("entry.2031543232", _multipleChoice3_0);
         form.AddField("entry.1198441079", _suggestion3_0);
-        form.AddField("entry.1958101121", "chackpoint");
+        form.AddField("entry.1958101121", _checkpointArrived);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -412,7 +493,7 @@ public class SendToGoogle : MonoBehaviour
 
         form.AddField("entry.2103217825", _suggestion4_0);
         form.AddField("entry.885548568", _noteOnBugs4);
-        form.AddField("entry.1185853159", "chackpoint");
+        form.AddField("entry.1185853159", _checkpointArrived);
 
         UnityWebRequest www = UnityWebRequest.Post(URL, form);
 
@@ -429,58 +510,8 @@ public class SendToGoogle : MonoBehaviour
             Debug.Log("Form upload complete!");
         }
     }
-
-    public string SaveChoice(string choice, GameObject[] list)
-    {
-
-        foreach (GameObject button in list)
-        {
-            if (button.name != choice)
-            {
-                button.GetComponent<Button>().image.color = Color.gray;
-            }
-            else
-            {
-                button.GetComponent<Button>().image.color = Color.cyan;
-            }
-        }
-        
-        Debug.Log(choice);
-        return choice;
-    }
-
-    public void SaveSuggestion1()
-    {
-        _suggestion1_0 = _suggestions1_0.text;
-    }
     
-    public void SaveSuggestion2()
-    {
-        _suggestion2_0 = _suggestions2_0.text;
-    }
-    
-    public void SaveSuggestion3()
-    {
-        _suggestion3_0 = _suggestions3_0.text;
-    }
-    
-    public void SaveSuggestion4()
-    {
-        _suggestion4_0 = _suggestions4_0.text;
-        _noteOnBugs4 = _notesOnBugs4.text;
-    }
 
-    private GameObject[] retriveMultipleChoices(Transform trans)
-    {
-        List<GameObject> list = new();
-        foreach (Transform child in trans)
-        {
-            if (child.name != "Question")
-            {
-                list.Add(child.gameObject);
-            }
-        }
-        Debug.Log(list.ToArray()[2].name);
-        return list.ToArray();
-    }
+    #endregion
+    
 }

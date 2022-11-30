@@ -57,6 +57,9 @@ public class LevelManager : MonoBehaviour
             Debug.Log("LoadNextPuzzle");
             _currentPuzzleIndex++;
             transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
+            
+            EventManager.TriggerEvent("save_checkpoint_feedback", "Puzzle_" + _currentPuzzleIndex);  //Send to the feedback the checkpoint
+            
             GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().GetReadyForPuzzle();
         }
         else
