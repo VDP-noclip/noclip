@@ -36,8 +36,6 @@ public class SpawnPlayer : MonoBehaviour
                     player.transform.rotation = transform.rotation;
                     //update mouselook
                     player.GetComponentInChildren<MouseLook>().SyncYRotation();
-                    //disable this game component
-                    this.enabled = false;
                     gameObject.SetActive(false);
                 }
                 else{
