@@ -57,6 +57,7 @@ public class MouseLook : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         _prevTransformRotation = _transform.rotation;
+        _yRotation = _orientation.eulerAngles.y;
     }
     
     void Update()
@@ -166,6 +167,12 @@ public class MouseLook : MonoBehaviour
         // IMPORTANT: Don't change the order of the two following lines: if _orientation and _transform are the same gameobject it doesn't work due to value override.
         _orientation.rotation = Quaternion.Euler(0, _yRotation, 0);  // updates the orientation of the gameobject that has the orientation information of the camera on the y axis
         _transform.rotation = Quaternion.Euler(_xRotation*_invertY, _yRotation, 0);  // updates the camera orientation
+        _prevTransformRotation = _transform.rotation;
+    }
+
+    public void SyncYRotation()
+    {
+        _yRotation = _orientation.eulerAngles.y;
         _prevTransformRotation = _transform.rotation;
     }
 }
