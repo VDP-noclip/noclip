@@ -166,12 +166,18 @@ public class NoclipManager : MonoBehaviour
         if (_goingBackToBody){
             _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
             _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
-            //if noclipcamera is close to realitycamera, NoClipReturnedToBody
-            //this is extra but if you don't leave the body with noclip it won't trigger enter
-            if (Vector3.Distance(_noclipCamera.transform.position, _realityCamera.transform.position) < 0.1f){
+            if (IsBackToBody())
                 NoClipReturnedToBody();
-            }
         }
+    }
+    
+    private bool IsBackToBody()
+    {
+        float distThreshold = 0.1f;
+        int degreesThreshold = 1;
+        bool backToBody = Vector3.Distance(_noclipCamera.transform.position, _realityCamera.transform.position) < distThreshold;
+        bool sameRealCameraOrientation = Quaternion.Angle(_noclipCamera.transform.rotation, _realityCamera.transform.rotation) < degreesThreshold;
+        return backToBody && sameRealCameraOrientation;
     }
 
     private IEnumerator GetNoClipObjControllers()
