@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2052428526850357587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2052428526850357598}
+  - component: {fileID: 2052428526850357585}
+  - component: {fileID: 2052428526850357584}
+  m_Layer: 0
+  m_Name: MenuManagers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2052428526850357598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052428526850357587}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 710.28265, y: 488.11472, z: -108.04252}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2052428526850357585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052428526850357587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f7debe6151ba1644a548d433778c567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainMenu: {fileID: 0}
+  FeedbackMenu0: {fileID: 0}
+  FeedbackMenu1: {fileID: 0}
+  FeedbackMenu2: {fileID: 0}
+  FeedbackMenu3: {fileID: 0}
+  FeedbackMenu4: {fileID: 0}
+--- !u!114 &2052428526850357584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052428526850357587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226163dc84b017d41ae0be5e3d702ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VideogameName: 0
+  _multipleChoices0_0: []
+  _multipleChoices0_1: []
+  _multipleChoices1_0: []
+  _suggestions1_0: {fileID: 0}
+  _nextPage1_0: {fileID: 0}
+  _multipleChoices2_0: []
+  _multipleChoices2_1: []
+  _suggestions2_0: {fileID: 0}
+  _nextPage2_0: {fileID: 0}
+  _multipleChoices3_0: []
+  _suggestions3_0: {fileID: 0}
+  _nextPage3_0: {fileID: 0}
+  _suggestions4_0: {fileID: 0}
+  _nextPage4_0: {fileID: 0}
