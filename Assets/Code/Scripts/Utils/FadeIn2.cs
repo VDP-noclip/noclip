@@ -65,7 +65,8 @@ public class FadeIn2 : MonoBehaviour
             }
         }
         if(_finished){
-            if(GetComponent<Renderer>().material.color.a != _originalAlpha){
+            Material currentMaterial = GetComponent<Renderer>().material;
+            if(currentMaterial.name == _originalMaterial.name && currentMaterial.color.a != _originalAlpha){
                 Debug.Log("Fixing fade in");
                 GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
             }
