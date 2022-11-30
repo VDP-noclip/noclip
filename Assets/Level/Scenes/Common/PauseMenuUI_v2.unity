@@ -3891,6 +3891,11 @@ PrefabInstance:
       objectReference: {fileID: 861127530}
     - target: {fileID: 2052428526850357584, guid: 11bffeb22bda11345b4f3b2ec07ba956,
         type: 3}
+      propertyPath: _notesOnBugs4
+      value: 
+      objectReference: {fileID: 1618462976}
+    - target: {fileID: 2052428526850357584, guid: 11bffeb22bda11345b4f3b2ec07ba956,
+        type: 3}
       propertyPath: _suggestions1_0
       value: 
       objectReference: {fileID: 761802441}
@@ -5160,6 +5165,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0.00048447
+      objectReference: {fileID: 0}
+    - target: {fileID: 4966555582968702930, guid: 481f0ccc61fef4c429a96a7b9215f26e,
+        type: 3}
+      propertyPath: m_text
+      value: Note about bugs / technical issues
       objectReference: {fileID: 0}
     - target: {fileID: 5035903360601049185, guid: 481f0ccc61fef4c429a96a7b9215f26e,
         type: 3}
@@ -8552,6 +8562,18 @@ RectTransform:
   m_AnchoredPosition: {x: 102.02998, y: 0}
   m_SizeDelta: {x: -204.124, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1618462976 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1682775619904502474, guid: 481f0ccc61fef4c429a96a7b9215f26e,
+    type: 3}
+  m_PrefabInstance: {fileID: 761802424}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1618832904
 GameObject:
   m_ObjectHideFlags: 0
