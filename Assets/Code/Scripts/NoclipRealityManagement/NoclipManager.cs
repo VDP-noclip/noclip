@@ -6,6 +6,7 @@ using UnityEngine;
 using Code.ScriptableObjects;
 using Code.Scripts.Utils;
 using POLIMIGameCollective;
+using UnityEngine.Audio;
 
 
 /// <summary>
@@ -36,6 +37,7 @@ public class NoclipManager : MonoBehaviour
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
+        _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
     }
 
     private void Start()

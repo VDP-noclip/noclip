@@ -15,7 +15,8 @@ namespace Code.ScriptableObjects
 
         [Header("Soundtrack that the user hears when he is inside noclip enabler. Added to the area soundtrack")]
         public AudioClip noclipZoneSound;
-        
+        public float noClipSoundVolumeMultiplier;
+
         [Header("Default area soundtrack, if we do no specify a custom one in its audio source")]
         public AudioClip defaultAreaSoundtrack;
         
