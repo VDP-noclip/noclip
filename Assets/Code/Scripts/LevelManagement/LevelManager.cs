@@ -44,7 +44,7 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
         //if k is pressed find AllPlayer and move it to EndAnchor child of next puzzle
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetButtonDown("NextPuzzle"))
         {
             CompleteCurrentPuzzle();
         }

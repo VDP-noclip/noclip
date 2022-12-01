@@ -145,7 +145,7 @@ public class NoclipManager : MonoBehaviour
         StartCoroutine(StartOrStopNoclipZoneSound());
 
         // When pressing
-        if (Input.GetKeyDown(_noclipOptions.noclipKey))
+        if (Input.GetButtonDown("Noclip"))
         {
             if (_playerCanSwitchMode)
                 SwitchMode();
@@ -156,7 +156,7 @@ public class NoclipManager : MonoBehaviour
         }
         
         // When releasing
-        if (Input.GetKeyUp(_noclipOptions.noclipKey)){
+        if (Input.GetButtonUp("Noclip")){
             _goingBackToBody = true;
             //_noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
         }

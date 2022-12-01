@@ -32,7 +32,7 @@ public class RespawningManager : MonoBehaviour
         if (Application.isEditor)
         {
             // For debug, it should respawn everything!
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetButtonDown("DebugRespown"))
             {
                 RespawnAllTransforms();
             }

@@ -196,7 +196,7 @@ public class RealityMovementCalibration : MonoBehaviour
         _verticalInput = Input.GetAxisRaw("Vertical");
         
         // when to jump
-        if (Input.GetKeyDown(_jumpKey) && _readyToJump && _grounded)
+        if (Input.GetButtonDown("Jump") && _readyToJump && _grounded)
         {
             _readyToJump = false;
             
@@ -208,14 +208,14 @@ public class RealityMovementCalibration : MonoBehaviour
         }
         
         // start crouch
-        if (_grounded && Input.GetKeyDown(_crouchKey))
+        if (_grounded && Input.GetButtonDown("Crouch"))
         {
             _transform.localScale = new Vector3(_transform.localScale.x, _crouchYScale, _transform.localScale.z);   // reduce scale
             _rigidbody.AddForce(Vector3.down * 5f, ForceMode.Impulse);     // push down
         }
         
         // stop crouch
-        if (Input.GetKeyUp(_crouchKey))
+        if (Input.GetButtonUp("Crouch"))
         { 
             _transform.localScale = new Vector3(_transform.localScale.x, _startYScale, _transform.localScale.z);
         }
@@ -225,14 +225,14 @@ public class RealityMovementCalibration : MonoBehaviour
     private void StateHandler()
     {
         // mode - Crouching
-        if (_grounded && Input.GetKey(_crouchKey))
+        if (_grounded && Input.GetButton("Crouch"))
         {
             _state = MovementState.Crouching;
             _moveSpeed = _crouchSpeed;
         }
         
         // mode - Walking
-        else if (_grounded && Input.GetKey(_sprintKey))
+        else if (_grounded && Input.GetButton("Walk"))
         {
             _state = MovementState.Walking;
             _moveSpeed = _walkForceMultiplier;
@@ -465,7 +465,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
             Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
             //g button toggle
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetButtonDown("DebugCalibartionGUI"))
             {
                 Debug.Log("Toggle cursor");
                 _calibrationMenu = !_calibrationMenu;
