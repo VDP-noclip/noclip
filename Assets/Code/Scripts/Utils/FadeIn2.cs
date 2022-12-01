@@ -15,6 +15,7 @@ public class FadeIn2 : MonoBehaviour
     private Material _originalMaterial;
     private Material _transparentMaterial;
     private float _originalAlpha = 1f;
+    private float _prevAlpha = 1f;
 
     void Start()
     {
@@ -50,15 +51,29 @@ public class FadeIn2 : MonoBehaviour
         if(!_finished){
             if (GetComponent<Renderer>().material.color.a < _originalAlpha)
             {
+                _prevAlpha = GetComponent<Renderer>().material.color.a;
                 //make mesh more opaque
                 GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a + _fadeSpeed);
             }
             //else switch to ProBuilder_yellow
             else if (!_finished)
             {
-                GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
                 _finished = true;
+                if(Untampered()){
+                    GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
+                }
             }
         }
+        if(_finished){
+            Material currentMaterial = GetComponent<Renderer>().material;
+            if(currentMaterial.name == _originalMaterial.name && currentMaterial.color.a != _originalAlpha){
+                Debug.Log("Fixing fade in");
+                GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
+            }
+        }
+    }
+
+    private bool Untampered(){
+        return GetComponent<Renderer>().material.color.a == _prevAlpha;
     }
 }

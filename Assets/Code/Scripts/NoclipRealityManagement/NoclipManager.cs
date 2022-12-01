@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,7 @@ using UnityEngine;
 using Code.ScriptableObjects;
 using Code.Scripts.Utils;
 using POLIMIGameCollective;
+using UnityEngine.Audio;
 
 
 /// <summary>
@@ -14,6 +16,9 @@ using POLIMIGameCollective;
 public class NoclipManager : MonoBehaviour
 {
     [SerializeField] private NoclipOptions _noclipOptions;
+    [SerializeField] private AudioSource _effectsAudioSource;
+    [SerializeField] private AudioSource _noclipZoneAudioSource;
+    [SerializeField] private AudioTracks _audioTracks;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private ObjectMaterialSwitcher[] _objectMaterialSwitchers;
@@ -21,17 +26,27 @@ public class NoclipManager : MonoBehaviour
 
     private bool _noclipEnabled;
     private bool _playerCanSwitchMode;
+    private bool _insideNoclipAreaZoneIsPlaying;
     
-    // Variables needed for Tizio implementation
-    private bool moving = false;
-    public GameObject _noclipCamera;
-    public GameObject _realityCamera;
-
+    private bool _goingBackToBody;
+    private GameObject _noclipCamera;
+    private GameObject _realityCamera;
+    
     void Awake()
     {
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
+        _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
+    }
+
+    private void Start()
+    {
+        GameObject allplayer = GameObject.Find("AllPlayer");
+        GameObject noclipplayer = allplayer.transform.Find("NoclipPlayer").gameObject;
+        GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
+        _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
+        _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
     }
 
     /// <summary>
@@ -53,9 +68,9 @@ public class NoclipManager : MonoBehaviour
         if (!playerCanSwitchMode)
             EventManager.TriggerEvent("ClearHints");
         else if (_noclipEnabled)
-            EventManager.TriggerEvent("DisplayHint", "PRESS P TO RETURN TO YOUR BODY");
+            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip);
         else
-            EventManager.TriggerEvent("DisplayHint", "PRESS P TO NOCLIP");
+            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
     }
     
     
@@ -65,7 +80,7 @@ public class NoclipManager : MonoBehaviour
     public void NoClipReturnedToBody()
     {
         _playerCanSwitchMode = true;
-        if (_noclipOptions.automaticReturnToBody && _noclipEnabled)
+        if (_goingBackToBody && _noclipEnabled)
             StartCoroutine(DisableNoclip());
     }
     
@@ -97,8 +112,10 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator EnableNoclip()
     {
         Debug.Log("Enablenoclip");
+        _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
+        _goingBackToBody = false;
         _cameraManager.SwitchCamera();
         RenderNoclipMode();
         yield return null;
@@ -110,8 +127,10 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         Debug.Log("Disablenoclip");
+        _effectsAudioSource.PlayOneShot(_audioTracks.disableNoclip);
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
+        _goingBackToBody = false;
         _cameraManager.SwitchCamera();
         RenderRealityMode();
         yield return null;
@@ -123,42 +142,46 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        StartCoroutine(StartOrStopNoclipZoneSound());
+
+        // When pressing
         if (Input.GetKeyDown(_noclipOptions.noclipKey))
         {
             if (_playerCanSwitchMode)
                 SwitchMode();
             else if (!_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", "NOCLIP ZONE NOT FOUND. PRESSING P HAS NO EFFECT"); 
+                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside); 
             else if (_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", "RETURN TO YOUR BODY TO DISABLE NOCLIP");
+                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
+        }
+        
+        // When releasing
+        if (Input.GetKeyUp(_noclipOptions.noclipKey) && _noclipEnabled){
+            _goingBackToBody = true;
+            //_noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        //if _goingBackToBody slowly move noclipcamera to realitycamera position
+        if (_goingBackToBody){
+            _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
+            _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
+            if (IsBackToBody())
+                NoClipReturnedToBody();
         }
     }
     
-    // This is code Tizio asked to keep for future implementation
-    // if (Input.GetKeyUp(_noclipOptions.noclipKey) || Input.GetMouseButtonUp(1)){
-    //     //gameobject find AllPlayer
-    //     GameObject allplayer = GameObject.Find("AllPlayer");
-    //     //find NoclipPlayer in children
-    //     GameObject noclipplayer = allplayer.transform.Find("NoclipPlayer").gameObject;
-    //     //find NoclipCamera in children
-    //     _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
-    //     //find RealityPlayer in children of allplayer
-    //     GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
-    //     //find RealityCamera in children of realityplayer
-    //     _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
-    //     //move noclipcamera to realitycamera position
-    //     moving = true;
-    // }
-    // //if moving slowly move noclipcamera to realitycamera position
-    // if (moving){
-    //     _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
-    //     _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
-    // }
-    // if (Input.GetKeyDown(_noclipOptions.noclipKey) || Input.GetMouseButtonDown(1))
-    // {
-    //     moving = false;
-    //     // etc...
-    
+    private bool IsBackToBody()
+    {
+        float distThreshold = 0.1f;
+        int degreesThreshold = 1;
+        bool backToBody = Vector3.Distance(_noclipCamera.transform.position, _realityCamera.transform.position) < distThreshold;
+        bool sameRealCameraOrientation = Quaternion.Angle(_noclipCamera.transform.rotation, _realityCamera.transform.rotation) < degreesThreshold;
+        return backToBody && sameRealCameraOrientation;
+    }
+
     private IEnumerator GetNoClipObjControllers()
     {
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
@@ -214,5 +237,23 @@ public class NoclipManager : MonoBehaviour
         {
             objectMaterialSwitcher.SetOriginalMaterials();
         }
+    }
+
+    private IEnumerator StartOrStopNoclipZoneSound()
+    {
+        if (_playerCanSwitchMode && !_insideNoclipAreaZoneIsPlaying)
+        {
+            Debug.Log("Start NoclipZoneSound");
+            _noclipZoneAudioSource.PlayOneShot(_audioTracks.noclipZoneSound);
+            _insideNoclipAreaZoneIsPlaying = true;
+        }
+
+        if (_insideNoclipAreaZoneIsPlaying && (!_playerCanSwitchMode || _noclipEnabled))
+        {
+            _noclipZoneAudioSource.Stop();
+            _insideNoclipAreaZoneIsPlaying = false;
+        }
+
+        yield return null;
     }
 }
