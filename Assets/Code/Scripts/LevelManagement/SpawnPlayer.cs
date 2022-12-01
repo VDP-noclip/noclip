@@ -31,10 +31,11 @@ public class SpawnPlayer : MonoBehaviour
                 if(_puzzleReached){
                     GameObject player = GameObject.Find("AllPlayer").gameObject;
                     //move the player to the spawn point plus 1 meter
-                    player.transform.position = transform.position + new Vector3(0, 20, 0);
+                    player.transform.position = transform.position + new Vector3(0, 5, 0);
                     //rotate the player to the spawn point
                     player.transform.rotation = transform.rotation;
-                    //disable this game object
+                    //update mouselook
+                    player.GetComponentInChildren<MouseLook>().SyncYRotation();
                     gameObject.SetActive(false);
                 }
                 else{
