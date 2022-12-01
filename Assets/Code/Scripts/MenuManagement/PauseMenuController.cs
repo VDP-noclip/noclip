@@ -16,6 +16,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private GameObject _settingsMenuUI;
     [SerializeField] private GameObject _audioMenuUI;
     [SerializeField] private GameObject _gameplayMenuUI;
+    [SerializeField] private GameObject _feedbackUI;
     
     [Header("Buttons")]
     [SerializeField] private Button _resume;
@@ -98,7 +99,8 @@ public class PauseMenuController : MonoBehaviour
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
+        
+        _feedbackUI.SetActive(true);
         _pauseMenuUI.SetActive(true);
         _isPaused = true;
     }
@@ -124,6 +126,7 @@ public class PauseMenuController : MonoBehaviour
         _audioMenuUI.SetActive(false);
         _settingsMenuUI.SetActive(false);
         _gameplayMenuUI.SetActive(false);
+        _feedbackUI.SetActive(false);
         
         _resume.enabled = true;
         _resumeText.alpha = 1;
