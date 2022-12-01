@@ -78,6 +78,11 @@ public class RealityMovementCalibration : MonoBehaviour
 
     //original gravity
     private Vector3 _originalGravity;
+    
+    /*
+     * UNITY FUNCTIONS
+     */
+    
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -133,6 +138,19 @@ public class RealityMovementCalibration : MonoBehaviour
                 _rigidbody.drag = 0;
         }
     }
+    
+    private void LateUpdate()
+    {
+        if (_commitJump)
+        {
+            _commitJump = false;
+            Jump();
+        }
+    }
+    
+    /*
+     * PUBLIC FUNCTIONS
+     */
 
     public void ResetSpeedOnRespawn()
     {
@@ -167,15 +185,10 @@ public class RealityMovementCalibration : MonoBehaviour
         _rigidbody.isKinematic = toggle;
     }
     
+    /*
+     * PRIVATE FUNCTIONS
+     */
     
-    private void LateUpdate()
-    {
-        if (_commitJump)
-        {
-            _commitJump = false;
-            Jump();
-        }
-    }
 
     private void UserInput()
     {
@@ -183,7 +196,7 @@ public class RealityMovementCalibration : MonoBehaviour
         _verticalInput = Input.GetAxisRaw("Vertical");
         
         // when to jump
-        if (Input.GetKey(_jumpKey) && _readyToJump && _grounded)
+        if (Input.GetKeyDown(_jumpKey) && _readyToJump && _grounded)
         {
             _readyToJump = false;
             
