@@ -27,7 +27,7 @@ public class MouseLook3rdPerson : MonoBehaviour
     void Update()
     {
         //press t to do all this
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetButtonDown("DebugThirdPerson"))
         {
             _thirdPerson = !_thirdPerson;
             //place camera at player + 0.6f on y axis

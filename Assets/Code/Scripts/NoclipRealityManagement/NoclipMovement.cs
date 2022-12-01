@@ -44,6 +44,9 @@ public class NoclipMovement : MonoBehaviour
     // These positions depends o the level 
     private Vector3 _initRotation;
     private Vector3 _initPosition;
+    
+    private float _horizontalInput;
+    private float _verticalInput;
 
     private bool _insideRealityPlayer = true;
     
@@ -66,11 +69,17 @@ public class NoclipMovement : MonoBehaviour
         {
             Vector3 deltaPosition = Vector3.zero;
             float currentSpeed = _movementSpeed;
+            
+            _horizontalInput = Input.GetAxisRaw("Horizontal");
+            _verticalInput = Input.GetAxisRaw("Vertical");
 
-            if (Input.GetKey(_boostSpeed))
+            deltaPosition += _transform.forward * _verticalInput + _transform.right * _horizontalInput;
+
+            
+            if (Input.GetButton("BoostNoclip"))
                 currentSpeed = _boostedSpeed;
-
-            if (Input.GetKey(KeyCode.W))
+               
+            /*if (Input.GetKey(KeyCode.W))
                 deltaPosition += _transform.forward;
 
             if (Input.GetKey(KeyCode.S))
@@ -80,13 +89,14 @@ public class NoclipMovement : MonoBehaviour
                 deltaPosition -= _transform.right;
 
             if (Input.GetKey(KeyCode.D))
-                deltaPosition += _transform.right;
+                deltaPosition += _transform.right;*/
 
-            if (Input.GetKey(_moveUp))
+            if (Input.GetButton("NoclipMoveUp"))
                 deltaPosition += Vector3.up;
 
-            if (Input.GetKey(_moveDown))
+            if (Input.GetButton("NoclipMoveDown"))
                 deltaPosition -= Vector3.up;
+            
             
             _transform.position += deltaPosition * (currentSpeed * Time.deltaTime);
             
