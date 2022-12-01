@@ -268,6 +268,7 @@ public class SendToGoogle : MonoBehaviour
     {
         EventManager.StopListening("save_checkpoint_feedback", SaveCheckpoint);
         _checkpointArrived = checkpoint;
+        PlayerPrefs.SetString("saveCheckpointFeedback", _checkpointArrived);
         EventManager.StartListening("save_checkpoint_feedback", SaveCheckpoint);
     }
     private string SaveChoice(string choice, GameObject[] list)
@@ -383,6 +384,11 @@ public class SendToGoogle : MonoBehaviour
 
     private IEnumerator SendToGoogleFeedback0Coroutine()
     {
+        if (_checkpointArrived == "null")
+        {
+            _checkpointArrived = PlayerPrefs.GetString("saveCheckpointFeedback");
+        }
+        
         string URL = "https://docs.google.com/forms/d/e/1FAIpQLSef5l-ZUoHC7c_VLqy09NA2VTbu1VCwNw7NZLjB8mOI2iipUA/formResponse";
         
         WWWForm form = new WWWForm();
@@ -409,6 +415,11 @@ public class SendToGoogle : MonoBehaviour
     
     private IEnumerator SendToGoogleFeedback1Coroutine()
     {
+        if (_checkpointArrived == "null")
+        {
+            _checkpointArrived = PlayerPrefs.GetString("saveCheckpointFeedback");
+        }
+        
         string URL = "https://docs.google.com/forms/d/e/1FAIpQLSfY6mCvNvumzwpGpiYJAbaeqnomloZ_hs5NXIG9f1EolvsJ4g/formResponse";
         
         WWWForm form = new WWWForm();
@@ -434,6 +445,11 @@ public class SendToGoogle : MonoBehaviour
     }
     private IEnumerator SendToGoogleFeedback2Coroutine()
     {
+        if (_checkpointArrived == "null")
+        {
+            _checkpointArrived = PlayerPrefs.GetString("saveCheckpointFeedback");
+        }
+        
         string URL = "https://docs.google.com/forms/d/e/1FAIpQLSccb7D7IJbgEmdUOC8XBd1oQH3VmwDGbFygk7C4qQETN2eBHA/formResponse";
         
         WWWForm form = new WWWForm();
@@ -461,6 +477,11 @@ public class SendToGoogle : MonoBehaviour
     
     private IEnumerator SendToGoogleFeedback3Coroutine()
     {
+        if (_checkpointArrived == "null")
+        {
+            _checkpointArrived = PlayerPrefs.GetString("saveCheckpointFeedback");
+        }
+        
         string URL = "https://docs.google.com/forms/d/e/1FAIpQLSeTdMlbw04t4Dpq-FFakdZd9FWxaDCraGnGCy-tYT5EDhmXaw/formResponse";
         
         WWWForm form = new WWWForm();
@@ -487,6 +508,11 @@ public class SendToGoogle : MonoBehaviour
     
     private IEnumerator SendToGoogleFeedback4Coroutine()
     {
+        if (_checkpointArrived == "null")
+        {
+            _checkpointArrived = PlayerPrefs.GetString("saveCheckpointFeedback");
+        }
+        
         string URL = "https://docs.google.com/forms/d/e/1FAIpQLSfL8axq46a4vJCcQ3L6dCv8VasmyL26Xd9wkJ963MYld-7COw/formResponse";
         
         WWWForm form = new WWWForm();
