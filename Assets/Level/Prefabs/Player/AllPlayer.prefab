@@ -120,8 +120,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.2
-  far clip plane: 2000
+  near clip plane: 0.3
+  far clip plane: 5000
   field of view: 90
   orthographic: 0
   orthographic size: 5
@@ -163,7 +163,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -960,7 +960,7 @@ PrefabInstance:
     - target: {fileID: 4137557435513412471, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
       propertyPath: far clip plane
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 4588941864700968468, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
@@ -986,6 +986,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _movementSpeed
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8024130788791888381, guid: 8030186c43e35384595d120598ea99b5,
+        type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9054193092741203383, guid: 8030186c43e35384595d120598ea99b5,
         type: 3}
