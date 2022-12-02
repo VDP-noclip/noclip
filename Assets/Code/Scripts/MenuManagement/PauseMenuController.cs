@@ -17,6 +17,7 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private GameObject _audioMenuUI;
     [SerializeField] private GameObject _gameplayMenuUI;
     [SerializeField] private GameObject _feedbackUI;
+    [SerializeField] private GameObject _controlsUI;
     
     [Header("Buttons")]
     [SerializeField] private Button _resume;
@@ -43,7 +44,8 @@ public class PauseMenuController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource _menuPress;
     [SerializeField] private AudioMixer _audioMixer;
-    
+    [SerializeField] private float _mufflingQuantity;
+
     private float _currentGlobalVolume;
     private float _currentEffectsVolume;
     private float _currentSoundVolume;
@@ -90,9 +92,10 @@ public class PauseMenuController : MonoBehaviour
         SetVolumeEffects(PlayerPrefs.GetFloat("effectsVolume"));
         SetVolumeGlobal(PlayerPrefs.GetFloat("globalVolume"));
         SetVolumeSoundtrack(PlayerPrefs.GetFloat("soundtrackVolume"));
+        
 
         Time.timeScale = 0;
-        AudioListener.pause = true;
+        AudioListener.pause = false;
         
         _menuPress.ignoreListenerPause=true;
         _menuPress.Play();
@@ -101,15 +104,17 @@ public class PauseMenuController : MonoBehaviour
         Cursor.visible = true;
         
         _feedbackUI.SetActive(true);
+        _controlsUI.SetActive(true);
         _pauseMenuUI.SetActive(true);
         _isPaused = true;
     }
 
     public void DeactivateMenu()
     {
+        SetVolumeGlobal(PlayerPrefs.GetFloat("soundtrackVolume"));
         Time.timeScale = 1;
         AudioListener.pause = false;
-        
+
         _menuPress.Play();
         
         Cursor.lockState = CursorLockMode.Locked;
@@ -127,6 +132,7 @@ public class PauseMenuController : MonoBehaviour
         _settingsMenuUI.SetActive(false);
         _gameplayMenuUI.SetActive(false);
         _feedbackUI.SetActive(false);
+        _controlsUI.SetActive(false);
         
         _resume.enabled = true;
         _resumeText.alpha = 1;
