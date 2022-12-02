@@ -78,20 +78,29 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private Vector3 NextCheckpointOrientation()
+    public Vector3 NextCheckpointOrientation()
     {
         try{
+            GameObject nextSave = transform.Find("Puzzle_" + (_currentPuzzleIndex)).gameObject;
             //find Save in next puzzle
-            GameObject save = transform.Find("Puzzle_" + (_currentPuzzleIndex + 1)).Find("Save").gameObject;
-            //find save in current puzzle
-            GameObject currentSave = transform.Find("Puzzle_" + _currentPuzzleIndex).Find("Save").gameObject;
+            GameObject save = nextSave.transform.Find("Save").gameObject;
+            //find absolute position of save
+            Vector3 savePosition = save.transform.position;
+            //prev save position
+            Vector3 prevSavePosition = transform.Find("Puzzle_" + (_currentPuzzleIndex - 1)).gameObject.transform.Find("Save").gameObject.transform.position;
             //get the direction from current save to next save
-            Vector3 direction = save.transform.position - currentSave.transform.position;
+            Vector3 direction = savePosition - prevSavePosition;
             //convert direction to euler angles
             Vector3 euler = Quaternion.LookRotation(direction).eulerAngles;
-            //spawn a cube in position of player + 1 in direction euler
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.transform.position = GameObject.Find("RealityPlayer").transform.position + direction.normalized*10;
+            euler.z = 0;
+            //log
+            Debug.Log("Next checkpoint orientation: " + euler);
+            //spawn a cube in position of prevsave + 10 in direction euler + 2 up
+            //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //move cube to prevsave + 2 up
+            //cube.transform.position = prevSavePosition + new Vector3(0, 2, 0);
+            //move cube in direction 5 from player in direction euler
+            //cube.transform.position += Quaternion.Euler(euler) * Vector3.forward * 5;
             return euler;
         }
         catch{
