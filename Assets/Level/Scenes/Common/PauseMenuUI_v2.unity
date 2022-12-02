@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731715, g: 0.13414735, b: 0.121078536, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4261,10 +4261,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 226163dc84b017d41ae0be5e3d702ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _sendToProf: 0
   VideogameName: 15
   _multipleChoices0_0: {fileID: 861127538}
   _multipleChoices0_1: {fileID: 761802429}
-  _buttonNext0: {fileID: 0}
+  _buttonNext0: {fileID: 1482881876}
   _multipleChoices1_0: {fileID: 861127537}
   _suggestions1_0: {fileID: 761802441}
   _buttonNext1: {fileID: 861127536}
@@ -10473,6 +10474,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437821222}
   m_CullTransparentMesh: 1
+--- !u!1 &1482881876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2109257700263598036, guid: 481f0ccc61fef4c429a96a7b9215f26e,
+    type: 3}
+  m_PrefabInstance: {fileID: 761802424}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1496981199
 GameObject:
   m_ObjectHideFlags: 0
