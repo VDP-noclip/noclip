@@ -9,7 +9,7 @@ public class NoclipMovement : MonoBehaviour
     [SerializeField]
     [Tooltip("The script is currently active")]
     private bool _active = true;
-
+    
     [Space]
 
     [SerializeField]
@@ -50,7 +50,6 @@ public class NoclipMovement : MonoBehaviour
 
     private bool _insideRealityPlayer = true;
     
-    
     private void Awake()
     {
         _transform = GetComponent<Transform>();
@@ -64,7 +63,7 @@ public class NoclipMovement : MonoBehaviour
     {
         if (!_active)
             return;
-        
+
         if (_enableMovement && _noclipManager.IsNoclipEnabled())
         {
             Vector3 deltaPosition = Vector3.zero;
@@ -131,4 +130,8 @@ public class NoclipMovement : MonoBehaviour
         _noclipCamera.transform.rotation = cameraOrientation;
     }
 
+    public void SetEnableMovement(bool value)
+    {
+        _enableMovement = value;
+    }
 }

@@ -32,12 +32,18 @@ public class NoclipManager : MonoBehaviour
     private GameObject _noclipCamera;
     private GameObject _realityCamera;
     
+    private NoclipMovement _noclipMovement;
+
     void Awake()
     {
         _cameraManager = FindObjectOfType<CameraManager>();
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
         _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
+        //find NoclipCamera
+        _noclipCamera = GameObject.Find("NoclipCamera");
+        //NoclipMovement
+        _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
     }
 
     private void Start()
@@ -127,6 +133,7 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         Debug.Log("Disablenoclip");
+        _noclipMovement.SetEnableMovement(true);
         _effectsAudioSource.PlayOneShot(_audioTracks.disableNoclip);
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
         _noclipEnabled = false;
@@ -158,6 +165,7 @@ public class NoclipManager : MonoBehaviour
         // When releasing
         if (Input.GetButtonUp("Noclip") && _noclipEnabled){
             _goingBackToBody = true;
+            _noclipMovement.SetEnableMovement(false);
             //_noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
         }
     }
