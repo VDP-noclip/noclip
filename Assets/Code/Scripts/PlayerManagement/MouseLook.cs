@@ -159,8 +159,14 @@ public class MouseLook : MonoBehaviour
 
     private void SetLastCheckpointRotation()
     {
-        _xRotation = _xRotationCheckpoint;
-        _yRotation = _yRotationCheckpoint;
+        //log
+        Debug.Log("SetLastCheckpointRotation");
+        //find level manager of puzzles
+        GameObject puzzles = GameObject.Find("Puzzles");
+        //component
+        LevelManager levelManager = puzzles.GetComponent<LevelManager>();
+        _yRotation = levelManager.NextCheckpointOrientation().y;
+        _xRotation = 0;//levelManager.NextCheckpointOrientation().x; //this works but gives problems with some checkpoints
         UpdateRotation();
     }
 
