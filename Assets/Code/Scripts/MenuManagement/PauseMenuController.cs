@@ -75,7 +75,7 @@ public class PauseMenuController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetButtonDown("Pause"))
+        if (Input.GetKeyDown("1"))
         {
             if (!_isPaused)
             {
