@@ -44,7 +44,8 @@ public class PauseMenuController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource _menuPress;
     [SerializeField] private AudioMixer _audioMixer;
-    
+    [SerializeField] private float _mufflingQuantity;
+
     private float _currentGlobalVolume;
     private float _currentEffectsVolume;
     private float _currentSoundVolume;
@@ -91,9 +92,10 @@ public class PauseMenuController : MonoBehaviour
         SetVolumeEffects(PlayerPrefs.GetFloat("effectsVolume"));
         SetVolumeGlobal(PlayerPrefs.GetFloat("globalVolume"));
         SetVolumeSoundtrack(PlayerPrefs.GetFloat("soundtrackVolume"));
+        
 
         Time.timeScale = 0;
-        AudioListener.pause = true;
+        AudioListener.pause = false;
         
         _menuPress.ignoreListenerPause=true;
         _menuPress.Play();
@@ -109,9 +111,10 @@ public class PauseMenuController : MonoBehaviour
 
     public void DeactivateMenu()
     {
+        SetVolumeGlobal(PlayerPrefs.GetFloat("soundtrackVolume"));
         Time.timeScale = 1;
         AudioListener.pause = false;
-        
+
         _menuPress.Play();
         
         Cursor.lockState = CursorLockMode.Locked;
