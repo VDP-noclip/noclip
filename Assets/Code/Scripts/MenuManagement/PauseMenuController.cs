@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
+using Cinemachine;
 using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
@@ -74,7 +75,7 @@ public class PauseMenuController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetButtonDown("Pause"))
+        if (Input.GetKeyDown("1"))
         {
             if (!_isPaused)
             {
@@ -193,6 +194,7 @@ public class PauseMenuController : MonoBehaviour
         if (invertYToggle.isOn)
         {
             PlayerPrefs.SetInt("masterInvertY", 1);
+            
         }
         else
         {
