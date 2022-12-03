@@ -194,13 +194,11 @@ public class PauseMenuController : MonoBehaviour
         if (invertYToggle.isOn)
         {
             PlayerPrefs.SetInt("masterInvertY", 1);
-            EventManager.TriggerEvent("setSensitivity");
             
         }
         else
         {
             PlayerPrefs.SetInt("masterInvertY", 0);
-            EventManager.TriggerEvent("setSensitivity");
         }
 
         Debug.Log("Setting sensitivity in LoadPrefs: " + mainControllerSensitivity);

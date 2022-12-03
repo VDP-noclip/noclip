@@ -55,8 +55,7 @@ public class MouseLook : MonoBehaviour
         EventManager.StartListening("StoreCheckpointRotation", StoreCheckpointRotation);
         EventManager.StartListening("SetLastCheckpointRotation", SetLastCheckpointRotation);
         
-        // Checks whether there's local information about vertical axis preference and changes it.
-        EventManager.StartListening("setInvertY", UpdateInvertY);
+        
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -89,6 +88,8 @@ public class MouseLook : MonoBehaviour
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
             UpdateRotation();
             
+            // Checks whether there's local information about vertical axis preference and changes it.
+            UpdateInvertY();
            
         }
     }
