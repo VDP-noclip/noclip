@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -30,7 +31,12 @@ public class GameManager : MonoBehaviour
         //SceneManager.LoadScene(_gameAreas[_currentGameAreaIndex], LoadSceneMode.Additive);
         //_finalGameAreaIndex = _gameAreas.Count - 1;
     }
-    
+
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+    }
+
     private void Update()
     {
         //if not mainstarted check if 0_Main is the only scene loaded
