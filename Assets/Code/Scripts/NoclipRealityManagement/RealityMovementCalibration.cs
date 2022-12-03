@@ -111,7 +111,7 @@ public class RealityMovementCalibration : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        CalibrationMenu();
+        //CalibrationMenu();
 
         if (!_noclipManager.IsNoclipEnabled())
         {
@@ -465,7 +465,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
             Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
             //g button toggle
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetButtonDown("DebugCalibartionGUI"))
             {
                 Debug.Log("Toggle cursor");
                 _calibrationMenu = !_calibrationMenu;
@@ -488,7 +488,7 @@ public class RealityMovementCalibration : MonoBehaviour
                 sliders.SetActive(!sliders.activeSelf);
             }
 
-            
+            /*
             if (Input.GetKeyDown(KeyCode.H))
             {
                 _hPressed = true;
@@ -505,7 +505,7 @@ public class RealityMovementCalibration : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.T))
             {
                 _showForces = !_showForces;
-            }
+            }*/
         //}
     }
 
