@@ -7,6 +7,8 @@ public class LevelManager : MonoBehaviour
 {
     private int _currentPuzzleIndex = 0;
     private int _puzzleAmount = 0;
+    private Vector3 _checkpointOrientation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,6 +59,12 @@ public class LevelManager : MonoBehaviour
             Debug.Log("LoadNextPuzzle");
             _currentPuzzleIndex++;
             transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
+            
+            EventManager.TriggerEvent("save_checkpoint_feedback", "Puzzle_" + _currentPuzzleIndex);  //Send to the feedback the checkpoint
+            
+            //EventManager.TriggerEvent("checkpoint_orientation", NextCheckpointOrientation());
+            NextCheckpointOrientation();
+
             GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().GetReadyForPuzzle();
         }
         else
@@ -67,6 +75,36 @@ public class LevelManager : MonoBehaviour
             }catch{
                 
             }
+        }
+    }
+
+    public Vector3 NextCheckpointOrientation()
+    {
+        try{
+            GameObject nextSave = transform.Find("Puzzle_" + (_currentPuzzleIndex)).gameObject;
+            //find Save in next puzzle
+            GameObject save = nextSave.transform.Find("Save").gameObject;
+            //find absolute position of save
+            Vector3 savePosition = save.transform.position;
+            //prev save position
+            Vector3 prevSavePosition = transform.Find("Puzzle_" + (_currentPuzzleIndex - 1)).gameObject.transform.Find("Save").gameObject.transform.position;
+            //get the direction from current save to next save
+            Vector3 direction = savePosition - prevSavePosition;
+            //convert direction to euler angles
+            Vector3 euler = Quaternion.LookRotation(direction).eulerAngles;
+            euler.z = 0;
+            //log
+            Debug.Log("Next checkpoint orientation: " + euler);
+            //spawn a cube in position of prevsave + 10 in direction euler + 2 up
+            //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //move cube to prevsave + 2 up
+            //cube.transform.position = prevSavePosition + new Vector3(0, 2, 0);
+            //move cube in direction 5 from player in direction euler
+            //cube.transform.position += Quaternion.Euler(euler) * Vector3.forward * 5;
+            return euler;
+        }
+        catch{
+            return Vector3.zero;
         }
     }
 
