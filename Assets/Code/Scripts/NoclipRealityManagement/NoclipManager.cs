@@ -31,6 +31,8 @@ public class NoclipManager : MonoBehaviour
     private bool _goingBackToBody;
     private GameObject _noclipCamera;
     private GameObject _realityCamera;
+    private GameObject _postprocessReality;
+    private GameObject _postprocessNoclip;
     
     private NoclipMovement _noclipMovement;
 
@@ -51,6 +53,11 @@ public class NoclipManager : MonoBehaviour
         GameObject allplayer = GameObject.Find("AllPlayer");
         GameObject noclipplayer = allplayer.transform.Find("NoclipPlayer").gameObject;
         GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
+
+        GameObject environment = GameObject.Find("Environment");
+        _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
+        _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
+        
         _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
         _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
     }
@@ -118,6 +125,11 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator EnableNoclip()
     {
         Debug.Log("Enablenoclip");
+        
+       
+        _postprocessReality.SetActive(false);
+        _postprocessNoclip.SetActive(true);
+        
         _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
@@ -133,6 +145,10 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator DisableNoclip()
     {
         Debug.Log("Disablenoclip");
+        
+        _postprocessNoclip.SetActive(false);
+        _postprocessReality.SetActive(true);
+        
         _noclipMovement.SetEnableMovement(true);
         _effectsAudioSource.PlayOneShot(_audioTracks.disableNoclip);
         _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
