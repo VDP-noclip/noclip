@@ -81,7 +81,8 @@ public class NoclipManager : MonoBehaviour
         if (!playerCanSwitchMode)
             EventManager.TriggerEvent("ClearHints");
         else if (_noclipEnabled)
-            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip);
+            Debug.Log("Ciaooo");
+        //    EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip); // disabled because useless
         else
             EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
     }
