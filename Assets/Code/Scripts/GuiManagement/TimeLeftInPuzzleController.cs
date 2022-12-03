@@ -12,7 +12,7 @@ namespace Code.Scripts.GuiManagement
 {
     public class TimeLeftInPuzzleController : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _timerText;
+        //[SerializeField] private TMP_Text _timerText;
         [SerializeField] private Image _timerImage;
         
         private bool _isActive;
@@ -22,7 +22,7 @@ namespace Code.Scripts.GuiManagement
 
         private void Awake()
         {
-            _timerText.text = "";
+            //_timerText.text = "";
             _timerImage.fillAmount = 0;
             
             EventManager.StartListening("GuiResetTimer", ResetTimer);
@@ -57,7 +57,7 @@ namespace Code.Scripts.GuiManagement
             if (totalTimeForPuzzle == 0)
             {
                 Debug.Log("Reset timer: no time limit for this puzzle!");
-                _timerText.text = "NO TIME ZONE";
+                //_timerText.text = "NO TIME ZONE";
                 _timerImage.fillAmount = 0;
                 _isActive = false;
             }
@@ -90,7 +90,7 @@ namespace Code.Scripts.GuiManagement
 
         private void UpdateRenderValues()
         {
-            _timerText.text = Mathf.RoundToInt(_timeLeftInPuzzle).ToString();
+            //_timerText.text = Mathf.RoundToInt(_timeLeftInPuzzle).ToString();
             _timerImage.fillAmount = _timeLeftInPuzzle / _totalTimeForPuzzle;
         }
     }

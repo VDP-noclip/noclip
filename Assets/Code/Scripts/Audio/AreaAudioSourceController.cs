@@ -25,7 +25,9 @@ namespace Code.Scripts.Audio
 
         private void OnEnable()
         {
-            _audioSource.PlayOneShot(_areaSoundtrack);
+            _audioSource.clip = _areaSoundtrack;
+            _audioSource.loop = true;
+            _audioSource.Play();
         }
 
         private void ApplyNoclipEffects()
