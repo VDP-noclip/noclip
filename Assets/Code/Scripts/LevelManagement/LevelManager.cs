@@ -8,7 +8,11 @@ public class LevelManager : MonoBehaviour
     private int _currentPuzzleIndex = 0;
     private int _puzzleAmount = 0;
     private Vector3 _checkpointOrientation;
+    private Vector3 _spawnPlatformPosition;
 
+    void Awake(){
+        _spawnPlatformPosition = GameObject.Find("SpawnPlatform").transform.position;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -104,7 +108,24 @@ public class LevelManager : MonoBehaviour
             return euler;
         }
         catch{
-            return Vector3.zero;
+            GameObject nextSave = transform.Find("Puzzle_" + (_currentPuzzleIndex)).gameObject;
+            //find Save in next puzzle
+            GameObject save = nextSave.transform.Find("Save").gameObject;
+            //find absolute position of save
+            Vector3 savePosition = save.transform.position;
+            //spawn platform position
+            Vector3 spawnPlatformPosition = _spawnPlatformPosition;
+            //direction save spawn
+            Vector3 direction = savePosition - spawnPlatformPosition;
+            Vector3 euler = Quaternion.LookRotation(direction).eulerAngles;
+            euler.z = 0;
+            Debug.Log("Next checkpoint orientation: " + euler);
+            return euler;
+
+
+            //SPAWN PLAYER ROTATION
+            //vector 180 degrees front
+            //return new Vector3(0, 180, 0);
         }
     }
 
