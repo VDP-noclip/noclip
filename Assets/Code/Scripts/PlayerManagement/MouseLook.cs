@@ -142,7 +142,7 @@ public class MouseLook : MonoBehaviour
     {
         EventManager.StopListening("setSensitivity", SetSensitivityFromPause);
         Debug.Log("SetSensitivityFromPause");
-        StartCoroutine(SetSensitivityFromPauseCoroutine(sensitivityPlaceholder));
+        _sensitivity = float.Parse(sensitivityPlaceholder);
         EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
     }
 
