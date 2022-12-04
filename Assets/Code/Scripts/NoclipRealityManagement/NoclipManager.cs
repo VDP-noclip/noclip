@@ -81,7 +81,8 @@ public class NoclipManager : MonoBehaviour
         if (!playerCanSwitchMode)
             EventManager.TriggerEvent("ClearHints");
         else if (_noclipEnabled)
-            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip);
+            Debug.Log("Ciaooo");
+        //    EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip); // disabled because useless
         else
             EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
     }
@@ -175,7 +176,8 @@ public class NoclipManager : MonoBehaviour
             else if (!_noclipEnabled)
                 EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside); 
             else if (_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
+                Debug.Log("There was an event here");
+                // EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
         }
         
         // When releasing
@@ -268,7 +270,8 @@ public class NoclipManager : MonoBehaviour
         if (_playerCanSwitchMode && !_insideNoclipAreaZoneIsPlaying)
         {
             Debug.Log("Start NoclipZoneSound");
-            _noclipZoneAudioSource.PlayOneShot(_audioTracks.noclipZoneSound);
+            // Disabled clip since we're not using it.
+            // _noclipZoneAudioSource.PlayOneShot(_audioTracks.noclipZoneSound); 
             _insideNoclipAreaZoneIsPlaying = true;
         }
 
