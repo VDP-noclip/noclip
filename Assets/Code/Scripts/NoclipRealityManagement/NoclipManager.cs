@@ -176,7 +176,8 @@ public class NoclipManager : MonoBehaviour
             else if (!_noclipEnabled)
                 EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside); 
             else if (_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
+                Debug.Log("There was an event here");
+                // EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
         }
         
         // When releasing

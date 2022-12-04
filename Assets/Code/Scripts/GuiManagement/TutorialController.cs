@@ -17,6 +17,7 @@ namespace Code.Scripts.TutorialManagement
             EventManager.StartListening ("ClearHints", ClearHints);
             EventManager.StartListening ("DisplayHint", DisplayHint);
             _tutorialText.text = "";
+            _controlsContainer.SetActive(false);
         }
 
 
@@ -24,6 +25,7 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("ClearHints", ClearHints);
             _tutorialText.text = "";
+            _controlsContainer.SetActive(false);
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
@@ -31,6 +33,7 @@ namespace Code.Scripts.TutorialManagement
         {
         
             EventManager.StopListening("DisplayHint", DisplayHint);
+            _controlsContainer.SetActive(true);
             StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         
@@ -47,7 +50,7 @@ namespace Code.Scripts.TutorialManagement
             {
                 yield return new WaitForSecondsRealtime(0.5f);
             }
-
+            
             _controlsContainer.SetActive(false);
 
             yield return null;
