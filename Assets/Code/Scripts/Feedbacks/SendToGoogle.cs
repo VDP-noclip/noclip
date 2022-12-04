@@ -278,11 +278,39 @@ public class SendToGoogle : MonoBehaviour
         {
             if (button.name != choice)
             {
-                button.GetComponent<Button>().image.color = Color.gray;
+                button.GetComponent<Button>().image.color = Color.black;
+                //log fix color
+                Debug.Log("Fixing color");
+                //set color of button
+                ColorBlock colors = button.GetComponent<Button>().colors;
+                button.GetComponent<Button>().colors = new ColorBlock()
+                {
+                    normalColor = Color.black,
+                    highlightedColor = colors.highlightedColor,
+                    pressedColor = colors.pressedColor,
+                    selectedColor = colors.selectedColor,
+                    disabledColor = colors.disabledColor,
+                    colorMultiplier = colors.colorMultiplier,
+                    fadeDuration = colors.fadeDuration
+                };
             }
             else
             {
                 button.GetComponent<Button>().image.color = Color.cyan;
+                //log fix color
+                Debug.Log("Fixing color");
+                //set color of button
+                ColorBlock colors = button.GetComponent<Button>().colors;
+                button.GetComponent<Button>().colors = new ColorBlock()
+                {
+                    normalColor = Color.cyan,
+                    highlightedColor = colors.highlightedColor,
+                    pressedColor = colors.pressedColor,
+                    selectedColor = colors.selectedColor,
+                    disabledColor = colors.disabledColor,
+                    colorMultiplier = colors.colorMultiplier,
+                    fadeDuration = colors.fadeDuration
+                };
             }
         }
         
