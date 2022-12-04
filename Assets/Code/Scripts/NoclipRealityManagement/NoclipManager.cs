@@ -269,7 +269,8 @@ public class NoclipManager : MonoBehaviour
         if (_playerCanSwitchMode && !_insideNoclipAreaZoneIsPlaying)
         {
             Debug.Log("Start NoclipZoneSound");
-            _noclipZoneAudioSource.PlayOneShot(_audioTracks.noclipZoneSound);
+            // Disabled clip since we're not using it.
+            // _noclipZoneAudioSource.PlayOneShot(_audioTracks.noclipZoneSound); 
             _insideNoclipAreaZoneIsPlaying = true;
         }
 
