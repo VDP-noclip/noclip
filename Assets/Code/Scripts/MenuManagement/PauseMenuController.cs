@@ -60,12 +60,12 @@ public class PauseMenuController : MonoBehaviour
     
     [Header("Volume Settings")]
     [SerializeField] private Slider _volumeSoundtrackSlider;
-
     [SerializeField] private Slider _volumeEffectsSlider;
-    
     [SerializeField] private Slider _volumeGlobalSlider;
-    
     [SerializeField] private float _defaultVolume = 1.0f;
+    
+    [Header("Confirmation")] 
+    [SerializeField] private GameObject confirmationPrompt = null;
 
     private void Start()
     {
@@ -104,7 +104,6 @@ public class PauseMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         
-        _feedbackUI.SetActive(true);
         _controlsUI.SetActive(true);
         _pauseMenuUI.SetActive(true);
         _isPaused = true;
@@ -203,16 +202,18 @@ public class PauseMenuController : MonoBehaviour
 
         Debug.Log("Setting sensitivity in LoadPrefs: " + mainControllerSensitivity);
         PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+        
+        StartCoroutine(ConfirmationBox());
     }
     
     public void VolumeApply()
     {
 
-            PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
+        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
+        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
+        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
             
-            PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-
-            PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
+        StartCoroutine(ConfirmationBox());
     }
     
     
@@ -239,5 +240,12 @@ public class PauseMenuController : MonoBehaviour
             
             GameplayApply();
         }
+    }
+    
+    public IEnumerator ConfirmationBox()
+    {
+        confirmationPrompt.SetActive(true);
+        yield return new WaitForSeconds(2);
+        confirmationPrompt.SetActive(false);
     }
 }
