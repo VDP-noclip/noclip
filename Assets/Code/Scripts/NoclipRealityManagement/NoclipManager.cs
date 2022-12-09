@@ -31,8 +31,8 @@ public class NoclipManager : MonoBehaviour
     private bool _goingBackToBody;
     private GameObject _noclipCamera;
     private GameObject _realityCamera;
-    private GameObject _postprocessReality;
-    private GameObject _postprocessNoclip;
+    //private GameObject _postprocessReality;
+    //private GameObject _postprocessNoclip;
     
     private NoclipMovement _noclipMovement;
 
@@ -55,8 +55,8 @@ public class NoclipManager : MonoBehaviour
         GameObject realityplayer = allplayer.transform.Find("RealityPlayer").gameObject;
 
         GameObject environment = GameObject.Find("Environment");
-        _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
-        _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
+        //_postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
+        //_postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
         
         _noclipCamera = noclipplayer.transform.Find("NoclipCamera").gameObject;
         _realityCamera = realityplayer.transform.Find("RealityCamera").gameObject;
@@ -128,8 +128,8 @@ public class NoclipManager : MonoBehaviour
         Debug.Log("Enablenoclip");
         
        
-        _postprocessReality.SetActive(false);
-        _postprocessNoclip.SetActive(true);
+        //_postprocessReality.SetActive(false);
+        //_postprocessNoclip.SetActive(true);
         
         _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
         _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
@@ -147,8 +147,8 @@ public class NoclipManager : MonoBehaviour
     {
         Debug.Log("Disablenoclip");
         
-        _postprocessNoclip.SetActive(false);
-        _postprocessReality.SetActive(true);
+        //_postprocessNoclip.SetActive(false);
+        //_postprocessReality.SetActive(true);
         
         _noclipMovement.SetEnableMovement(true);
         _effectsAudioSource.PlayOneShot(_audioTracks.disableNoclip);
