@@ -111,7 +111,7 @@ public class RealityMovementCalibration : MonoBehaviour
             Physics.gravity *= 2;
         }
     }
-
+    
     // Update is called once per frame
     private void FixedUpdate()
     {
@@ -130,7 +130,7 @@ public class RealityMovementCalibration : MonoBehaviour
             _OnSlope = OnSlope(); // used to debug // TODO remove
             Grounded = _grounded; // used to debug // TODO remove
         
-            UserInput();
+            
             StateHandler();
             MovePlayer();
             SpeedControl();
@@ -173,6 +173,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
     private void Update()
     {
+        UserInput();
         if (_commitJump)
         {
             _rigidbody.drag = 0;
