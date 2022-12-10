@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
+        // Application.targetFrameRate = 60; // we don't need this animore
         QualitySettings.vSyncCount = 1;
     }
 
