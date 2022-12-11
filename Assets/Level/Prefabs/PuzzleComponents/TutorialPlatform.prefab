@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7896048504967888882}
   m_LocalRotation: {x: 0.00000008711223, y: 1.8910593e-21, z: 2.1708311e-14, w: 1}
-  m_LocalPosition: {x: 6.764015, y: -37.364258, z: 23.614689}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -59,7 +59,7 @@ MonoBehaviour:
       m_SwapUV: 0
       m_Fill: 1
       m_Scale: {x: 0.09090909, y: 0.09090909}
-      m_Offset: {x: 0.10510534, y: 0.12103608}
+      m_Offset: {x: 0.10510534, y: -0.75385094}
       m_Rotation: 0
       m_Anchor: 9
     m_Material: {fileID: 0}
@@ -76,7 +76,7 @@ MonoBehaviour:
       m_SwapUV: 0
       m_Fill: 1
       m_Scale: {x: 0.09090909, y: 0.0909091}
-      m_Offset: {x: -1.1399782, y: 0.12103609}
+      m_Offset: {x: -1.1399782, y: -0.7538509}
       m_Rotation: 0
       m_Anchor: 9
     m_Material: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
       m_SwapUV: 0
       m_Fill: 1
       m_Scale: {x: 0.09090909, y: 0.09090909}
-      m_Offset: {x: -1.1051054, y: 0.12103608}
+      m_Offset: {x: -1.1051054, y: -0.75385094}
       m_Rotation: 0
       m_Anchor: 9
     m_Material: {fileID: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
       m_SwapUV: 0
       m_Fill: 1
       m_Scale: {x: 0.09090909, y: 0.090909116}
-      m_Offset: {x: 0.13997823, y: 0.12103611}
+      m_Offset: {x: 0.13997823, y: -0.7538509}
       m_Rotation: 0
       m_Anchor: 9
     m_Material: {fileID: 0}
@@ -188,22 +188,22 @@ MonoBehaviour:
   - {x: -12.156158, y: 1.3313968, z: -1.5397611}
   - {x: -1.1561584, y: 1.3313968, z: -1.5397611}
   m_Textures0:
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
-  - {x: 1, y: 0.125}
-  - {x: 0, y: 0.125}
-  - {x: 0.9999999, y: -0.000000007450581}
-  - {x: 0, y: -0.000000007450581}
-  - {x: 0.9999999, y: 0.125}
-  - {x: 0, y: 0.125}
-  - {x: 1, y: 0}
-  - {x: 0, y: 0}
-  - {x: 1, y: 0.125}
-  - {x: 0, y: 0.125}
-  - {x: 0.99999994, y: 0}
-  - {x: 0.000000029802322, y: 0}
-  - {x: 0.99999994, y: 0.12500003}
-  - {x: 0.000000029802322, y: 0.12500003}
+  - {x: 1, y: 0.874887}
+  - {x: 0, y: 0.874887}
+  - {x: 1, y: 0.999887}
+  - {x: 0, y: 0.999887}
+  - {x: 0.9999999, y: 0.874887}
+  - {x: 0, y: 0.874887}
+  - {x: 0.9999999, y: 0.999887}
+  - {x: 0, y: 0.999887}
+  - {x: 1, y: 0.874887}
+  - {x: 0, y: 0.874887}
+  - {x: 1, y: 0.999887}
+  - {x: 0, y: 0.999887}
+  - {x: 0.99999994, y: 0.874887}
+  - {x: 0.000000029802322, y: 0.874887}
+  - {x: 0.99999994, y: 0.999887}
+  - {x: 0.000000029802322, y: 0.999887}
   - {x: 0, y: 0.9999999}
   - {x: 1, y: 0.9999999}
   - {x: 0, y: 0}
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3280
+  m_VersionIndex: 3298
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
