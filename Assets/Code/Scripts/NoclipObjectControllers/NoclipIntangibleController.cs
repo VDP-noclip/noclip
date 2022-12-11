@@ -27,5 +27,10 @@ public class NoclipIntangibleController : BaseNoclipObjectController
     {
         _meshRender.material = _intangibleMaterial;
     }
-
+    
+    //Getnoclipmaterial function
+    public Material[] GetNoclipMaterials()
+    {
+        return new[] {_noclipMaterial};
+    }
 }

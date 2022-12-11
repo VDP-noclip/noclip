@@ -219,10 +219,12 @@ public class NoclipManager : MonoBehaviour
     private IEnumerator GetObjectMaterialSwitchers()
     {
         GameObject[] realityObjects = GameObject.FindGameObjectsWithTag("RealityObject");
+        GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
         GameObject[] backgroundObjects = GameObject.FindGameObjectsWithTag("Background");
         List<GameObject> gameObjectsToChange = new();
         gameObjectsToChange.AddRange(realityObjects);
         gameObjectsToChange.AddRange(backgroundObjects);
+        gameObjectsToChange.AddRange(noclipObjects);
 
         ObjectMaterialSwitcher[] objectMaterialSwitchers = new ObjectMaterialSwitcher[gameObjectsToChange.Count];
         
@@ -236,8 +238,10 @@ public class NoclipManager : MonoBehaviour
                 noclipMaterials = noclipMaterialHolder.GetNoclipMaterials();
             else if (obj.CompareTag("Background"))
                 noclipMaterials = _noclipOptions.noClipMaterialsForBackgroundObjects;
-            else
+            else if (obj.CompareTag("RealityObject"))
                 noclipMaterials = _noclipOptions.noClipMaterialsForRealityObjects;
+            else
+                continue;
 
             ObjectMaterialSwitcher objectMaterialSwitcher = new ObjectMaterialSwitcher(obj, noclipMaterials);
             objectMaterialSwitchers[i] = objectMaterialSwitcher;

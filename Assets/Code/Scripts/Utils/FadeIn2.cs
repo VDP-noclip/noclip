@@ -62,6 +62,10 @@ public class FadeIn2 : MonoBehaviour
                 if(Untampered()){
                     GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
                 }
+                //if father of object is named IntangibleNoclipObjectsHolder set alpha to NoclipIntangibleController GetNoclipMaterials
+                if(transform.parent != null && transform.parent.name == "IntangibleNoclipObjectsHolder"){
+                    GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<NoclipIntangibleController>().GetNoclipMaterials()[0].color.a);
+                }
             }
         }
         if(_finished){

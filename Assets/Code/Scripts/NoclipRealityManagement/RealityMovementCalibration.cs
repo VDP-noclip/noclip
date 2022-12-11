@@ -172,7 +172,10 @@ public class RealityMovementCalibration : MonoBehaviour
 
     private void Update()
     {
-        UserInput();
+        if (!_noclipManager.IsNoclipEnabled())
+        {
+            UserInput();
+        }
         if (_commitJump)
         {
             _rigidbody.drag = 0;
@@ -240,7 +243,7 @@ public class RealityMovementCalibration : MonoBehaviour
         _verticalInput = Input.GetAxisRaw("Vertical");
         
         // when to jump
-        if (Input.GetButtonDown("Jump") && _readyToJump && _grounded)
+        if (Input.GetButtonDown("Jump") && _readyToJump && _grounded )
         {
             _readyToJump = false;
             
