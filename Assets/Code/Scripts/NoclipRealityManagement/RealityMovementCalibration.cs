@@ -56,7 +56,7 @@ public class RealityMovementCalibration : MonoBehaviour
     [SerializeField] private float _gravityMultiplier = 2f; // this is not working, am I right?
     [SerializeField] private Transform _orientation;
 
-    private float _gravity = 19.62f;  // This is used for the movement force 
+    private float _gravity = 9.81f;  // This is used for the movement force 
     private float _horizontalInput;
     private float _verticalInput;
 
