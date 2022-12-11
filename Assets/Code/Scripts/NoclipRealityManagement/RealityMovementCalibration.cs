@@ -53,7 +53,7 @@ public class RealityMovementCalibration : MonoBehaviour
     [SerializeField] private LayerMask _ground;
     private bool _grounded;
 
-    [SerializeField] private float _gravityMultiplier = 1f;
+    [SerializeField] private float _gravityMultiplier = 2f; // this is not working, am I right?
     [SerializeField] private Transform _orientation;
 
     private float _gravity = 9.81f;  // This is used for the movement force 
@@ -88,6 +88,9 @@ public class RealityMovementCalibration : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();
+        //set gravity to gravity magnitude
+        Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
+        Physics.gravity *= 2;
     }
 
     // Start is called before the first frame update
@@ -105,11 +108,12 @@ public class RealityMovementCalibration : MonoBehaviour
         {
             //set gravity to gravity magnitude
             Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
+            Physics.gravity *= 2;
         }
     }
 
     // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
         //CalibrationMenu();
 
@@ -126,7 +130,6 @@ public class RealityMovementCalibration : MonoBehaviour
             _OnSlope = OnSlope(); // used to debug // TODO remove
             Grounded = _grounded; // used to debug // TODO remove
         
-            UserInput();
             StateHandler();
             MovePlayer();
             SpeedControl();
@@ -137,14 +140,55 @@ public class RealityMovementCalibration : MonoBehaviour
             else
                 _rigidbody.drag = 0;
         }
+        if (_commitJump)
+        {
+            _rigidbody.drag = 0;
+        }
+    }
+    
+    private float _previousTime = 0f;
+    private float _previousDeltaTime = 0f;
+
+    /*private void FixedUpdate()
+    {
+        //get current time clock
+        float _time = Time.time;
+        //print every 5 seconds
+        if (_time - _previousTime >= 5f)
+        {
+            _previousTime = _time;
+            Debug.Log("5 seconds have passed");
+
+        }
+        //sum delta time until 5 seconds have passed
+        _previousDeltaTime += Time.deltaTime;
+        //print every 5 seconds
+        if (_previousDeltaTime >= 5f)
+        {
+            _previousDeltaTime = 0f;
+            Debug.Log("5 seconds have passed");
+        }
+    }*/
+
+    private void Update()
+    {
+        UserInput();
+        if (_commitJump)
+        {
+            _rigidbody.drag = 0;
+        }
     }
     
     private void LateUpdate()
     {
         if (_commitJump)
         {
-            _commitJump = false;
+            _rigidbody.drag = 0;
             Jump();
+        }
+        if (_commitJump && !_grounded)
+        {
+            _commitJump = false;
         }
     }
     
@@ -292,10 +336,10 @@ public class RealityMovementCalibration : MonoBehaviour
 
         _rigidbody.useGravity = !OnSlope();
         //if gravity is used add it to the forces
-        if (_rigidbody.useGravity)
+        /*if (_rigidbody.useGravity)
         {
             ApplyForce(Physics.gravity);
-        }
+        }*/
     }
 
     private void SpeedControl()
