@@ -166,9 +166,13 @@ public class MouseLook : MonoBehaviour
         GameObject puzzles = GameObject.Find("Puzzles");
         //component
         LevelManager levelManager = puzzles.GetComponent<LevelManager>();
-        _yRotation = levelManager.NextCheckpointOrientation().y;
-        _xRotation = 0;//levelManager.NextCheckpointOrientation().x; //this works but gives problems with some checkpoints
-        UpdateRotation();
+        //if name of this gameobject is not NoclipCamera
+        if (gameObject.name != "NoclipCamera")
+        {
+            _yRotation = levelManager.NextCheckpointOrientation().y;
+            _xRotation = 0;//levelManager.NextCheckpointOrientation().x; //this works but gives problems with some checkpoints
+            UpdateRotation();
+        }
     }
 
     private void UpdateRotation() //there is too much mess and redundancy in the rotations

@@ -42,11 +42,28 @@ public class RespawningManager : MonoBehaviour
 
     public void RespawnAllTransforms()
     {
+        //find RealityPlayer and get component NoclipManager, call NoclipRespawnSequence
+        GameObject realityPlayer = GameObject.Find("RealityPlayer");
+        if (realityPlayer != null)
+        {
+            //Debug.LogError("Found RealityPlayer");
+            NoclipManager noclipManager = realityPlayer.GetComponent<NoclipManager>();
+            if (noclipManager != null)
+            {
+                //Debug.LogError("Found NoclipManager");
+                noclipManager.NoclipRespawnSequence();
+            }
+        }
         _transform.position = _lastCheckPointPosition;
         _transform.rotation = _lastCheckPointRotation;
 
         for (int i = 0; i < _childrenTransforms.Count; i++)
         {
+            //if _childrenTransforms[i] name is NoclipCamera skip
+            if (_childrenTransforms[i].name == "NoclipCamera" || _childrenTransforms[i].name == "NoclipPlayer" || _childrenTransforms[i].name == "RealityCamera"){
+                //Debug.LogError("Skipping NoclipCamera and player");
+                continue;
+            }
             _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
             _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
         }

@@ -139,6 +139,22 @@ public class NoclipManager : MonoBehaviour
         RenderNoclipMode();
         yield return null;
     }
+    
+    private void EnableNoclipNow()
+    {
+        Debug.Log("Enablenoclip");
+        
+       
+        _postprocessReality.SetActive(false);
+        _postprocessNoclip.SetActive(true);
+        
+        _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
+        _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
+        _noclipEnabled = true;
+        _goingBackToBody = false;
+        _cameraManager.SwitchCamera();
+        RenderNoclipMode();
+    }
 
     /// <summary>
     /// Deactivate the noclip mode to all the objects and switch camera to the normal one.
@@ -188,6 +204,13 @@ public class NoclipManager : MonoBehaviour
         }
     }
 
+    public void NoclipRespawnSequence(){
+        Debug.Log("NoclipRespawnSequence");
+        EnableNoclipNow();
+        _goingBackToBody = true;
+        _noclipMovement.SetEnableMovement(false);
+    }
+
     private void FixedUpdate()
     {
         //if _goingBackToBody slowly move noclipcamera to realitycamera position
@@ -196,6 +219,11 @@ public class NoclipManager : MonoBehaviour
             _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
             if (IsBackToBody())
                 NoClipReturnedToBody();
+        }
+        //copy noclipcamera rotation to realitycamera rotation
+        else{
+            if(!_noclipEnabled)
+                _noclipCamera.transform.rotation = _realityCamera.transform.rotation;
         }
     }
     
