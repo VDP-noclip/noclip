@@ -25,7 +25,6 @@ public class RealityMovementCalibration : MonoBehaviour
     
     [Header("Jump")]
     [SerializeField] private float _jumpForce = 12f;     // set jump upward force
-    [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [SerializeField] private float _airMultiplier = 0.3f;     // set air movement limitation
     [SerializeField] private float _jumpBuffer = 0.2f;
     [SerializeField] private float _coyoteTime = 0.2f;
@@ -257,7 +256,7 @@ public class RealityMovementCalibration : MonoBehaviour
             _rigidbody.drag = 0;
             _commitJump = true;
             
-            Invoke(nameof(ResetJump), _coyoteTime+0.1f); // needed to avoid coyote time working after actual jump
+            Invoke(nameof(ResetJump), _coyoteTime); // needed to avoid coyote time working after actual jump
         }
         
         // start crouch
@@ -302,7 +301,7 @@ public class RealityMovementCalibration : MonoBehaviour
         else
         {
             _prevGroundedTime += Time.deltaTime;
-            if (_prevGroundedTime >= _coyoteTime)
+            if (_prevGroundedTime > _coyoteTime)
             {
                 _prevGroundedTime = 0;
                 _coyote = false;
