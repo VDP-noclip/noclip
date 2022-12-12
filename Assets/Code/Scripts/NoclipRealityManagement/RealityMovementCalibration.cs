@@ -27,6 +27,8 @@ public class RealityMovementCalibration : MonoBehaviour
     [SerializeField] private float _jumpForce = 12f;     // set jump upward force
     [SerializeField] private float _jumpCooldown = 0.25f;      // set jump cooldown
     [SerializeField] private float _airMultiplier = 0.3f;     // set air movement limitation
+    [SerializeField] private float _jumpBuffer = 0.2f;
+    [SerializeField] private float _coyoteTime = 0.2f;
     private bool _readyToJump;      //
 
     [Header("Crouch")]
@@ -146,8 +148,6 @@ public class RealityMovementCalibration : MonoBehaviour
         }
     }
     
-    private float _previousTime = 0f;
-    private float _previousDeltaTime = 0f;
 
     /*private void FixedUpdate()
     {
@@ -172,7 +172,10 @@ public class RealityMovementCalibration : MonoBehaviour
 
     private void Update()
     {
-        UserInput();
+        if (!_noclipManager.IsNoclipEnabled())
+        {
+            UserInput();
+        }
         if (_commitJump)
         {
             _rigidbody.drag = 0;
@@ -233,14 +236,20 @@ public class RealityMovementCalibration : MonoBehaviour
      * PRIVATE FUNCTIONS
      */
     
+    private float _jumpBufferTime = 0f;
+    private bool _jumpBuffered = false;
+    private bool _coyote = false; // basically prolongs grounded state
 
     private void UserInput()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
         _verticalInput = Input.GetAxisRaw("Vertical");
         
+        JumpBuffer();
+        Coyote();
+
         // when to jump
-        if (Input.GetButtonDown("Jump") && _readyToJump && _grounded)
+        if (_jumpBuffered && _readyToJump && (_grounded || _coyote))
         {
             _readyToJump = false;
             
@@ -248,7 +257,7 @@ public class RealityMovementCalibration : MonoBehaviour
             _rigidbody.drag = 0;
             _commitJump = true;
             
-            Invoke(nameof(ResetJump), _jumpCooldown); // continues to jump if space remains pressed
+            Invoke(nameof(ResetJump), _coyoteTime+0.1f); // needed to avoid coyote time working after actual jump
         }
         
         // start crouch
@@ -265,6 +274,41 @@ public class RealityMovementCalibration : MonoBehaviour
         }
     }
 
+    private float _prevGroundedTime = 0f;
+
+    private void JumpBuffer(){
+        if (Input.GetButtonDown("Jump")){
+            _jumpBuffered = true;
+            _jumpBufferTime = 0;
+        }
+        
+        if(_jumpBuffered){
+            _jumpBufferTime += Time.deltaTime;
+            if (_jumpBufferTime >= _jumpBuffer)
+            {
+                _jumpBufferTime = 0;
+                _jumpBuffered = false;
+            }
+        }
+    }
+
+    private void Coyote() // allows to jump for a short time after leaving the ground without jumping
+    {
+        if (_grounded)
+        {
+            _prevGroundedTime = 0;
+            _coyote = true;
+        }
+        else
+        {
+            _prevGroundedTime += Time.deltaTime;
+            if (_prevGroundedTime >= _coyoteTime)
+            {
+                _prevGroundedTime = 0;
+                _coyote = false;
+            }
+        }
+    }
 
     private void StateHandler()
     {
