@@ -256,7 +256,10 @@ public class NoclipManager : MonoBehaviour
         RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
         foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
-            objectMaterialSwitcher.SetNoclipMaterials();
+            if(objectMaterialSwitcher != null)
+            {
+                objectMaterialSwitcher.SetNoclipMaterials();
+            }
         }
     }
     
@@ -265,7 +268,10 @@ public class NoclipManager : MonoBehaviour
         RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
-            objectMaterialSwitcher.SetOriginalMaterials();
+            if(objectMaterialSwitcher != null)
+            {
+                objectMaterialSwitcher.SetOriginalMaterials();
+            }
         }
     }
 
