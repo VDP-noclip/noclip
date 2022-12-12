@@ -75,7 +75,7 @@ public class NoclipMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         if (!_active)
             return;
@@ -115,7 +115,7 @@ public class NoclipMovement : MonoBehaviour
                 _speed += (_transform.right * _horizontalInput).normalized * _acceleration * Time.deltaTime;
                 _speed += (_transform.up * _upDownInput).normalized * _acceleration * Time.deltaTime;
                 //limit speed
-                _speed = Vector3.ClampMagnitude(_speed, _maxSpeed);
+                _speed = _speed.normalized * Mathf.Min(_speed.magnitude, _maxSpeed);
             }
             else
             {
@@ -132,17 +132,6 @@ public class NoclipMovement : MonoBehaviour
             }
             //move in direction of speed
             transform.position += _speed * Time.deltaTime;
-            /*
-            if (_horizontalInput != 0 || _verticalInput != 0){
-                //speed lerp
-                _speed = Vector3.Lerp(_speed, (_transform.forward * _verticalInput + _transform.right * _horizontalInput).normalized * _maxSpeed, _acceleration * Time.deltaTime);
-            }
-            else
-            {
-                _speed = Vector3.Lerp(_speed, Vector3.zero, _acceleration * Time.deltaTime);
-            }
-            transform.position += _speed * Time.deltaTime;
-            */
         }
         else
         {
@@ -156,7 +145,76 @@ public class NoclipMovement : MonoBehaviour
         if(_smoothBrake){
             _speed *= _smoothBrakeFactor;
         }
+    }*/
+
+void FixedUpdate()
+    {
+        if (!_active)
+            return;
+
+        if (_enableMovement && _noclipManager.IsNoclipEnabled())
+        {
+            _horizontalInput = Input.GetAxisRaw("Horizontal");
+            _verticalInput = Input.GetAxisRaw("Vertical");
+            bool moveUp = Input.GetButton("NoclipMoveUp");
+            bool moveDown = Input.GetButton("NoclipMoveDown");
+            bool boost = Input.GetButton("BoostNoclip");
+            _upDownInput = 0;
+            if(moveUp){
+                _upDownInput += 1;
+            }
+            if(moveDown){
+                _upDownInput += -1;
+            }
+
+            if (boost)
+            {
+                _maxSpeed = _boostedSpeed;
+                _acceleration = _boostAcceleration;
+            }
+            else
+            {
+                _maxSpeed = _baseSpeed;
+                _acceleration = _baseAcceleration;
+            }
+
+            
+            //_horizontalInput and _verticalInput move with linear acceleration in the direction of the camera
+            if (_horizontalInput != 0 || _verticalInput != 0 || _upDownInput != 0)
+            {
+                //increase speed in direction of camera with acceleration
+                _speed += (_transform.forward * _verticalInput).normalized * _acceleration;
+                _speed += (_transform.right * _horizontalInput).normalized * _acceleration;
+                _speed += (_transform.up * _upDownInput).normalized * _acceleration;
+                //limit speed
+                _speed = _speed.normalized * Mathf.Min(_speed.magnitude, _maxSpeed);
+            }
+            else
+            {
+                Vector3 deltaSpeed = _speed.normalized * _acceleration;
+                if(_speed.magnitude > deltaSpeed.magnitude && _speed.magnitude > _maxSpeed * _smoothBrakeRange)
+                {
+                    _speed -= deltaSpeed;
+                    _smoothBrake = false;
+                }
+                else
+                {
+                    _smoothBrake = true;
+                    if(_smoothBrake){
+                        _speed *= _smoothBrakeFactor;
+                    }
+                }
+            }
+            //move in direction of speed
+            transform.position += _speed;
+        }
+        else
+        {
+            _speed = Vector3.zero;
+        }
     }
+
+    private bool _smoothBrake = false;
 
     private void OnTriggerEnter(Collider other)
     {
