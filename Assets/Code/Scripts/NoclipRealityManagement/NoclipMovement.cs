@@ -147,8 +147,10 @@ public class NoclipMovement : MonoBehaviour
         }
     }*/
 
-void FixedUpdate()
+void Update()
     {
+        //max between fixeddeltatime and (Time.deltaTime / Time.fixedDeltaTime)
+        float timeCorrection = Mathf.Min(1f, Time.deltaTime / Time.fixedDeltaTime);
         if (!_active)
             return;
 
@@ -183,30 +185,30 @@ void FixedUpdate()
             if (_horizontalInput != 0 || _verticalInput != 0 || _upDownInput != 0)
             {
                 //increase speed in direction of camera with acceleration
-                _speed += (_transform.forward * _verticalInput).normalized * _acceleration;
-                _speed += (_transform.right * _horizontalInput).normalized * _acceleration;
-                _speed += (_transform.up * _upDownInput).normalized * _acceleration;
+                _speed += (_transform.forward * _verticalInput).normalized * _acceleration * timeCorrection;
+                _speed += (_transform.right * _horizontalInput).normalized * _acceleration * timeCorrection;
+                _speed += (_transform.up * _upDownInput).normalized * _acceleration * timeCorrection;
                 //limit speed
-                _speed = _speed.normalized * Mathf.Min(_speed.magnitude, _maxSpeed);
+                _speed = _speed.normalized * Mathf.Min(_speed.magnitude, _maxSpeed) * timeCorrection;
             }
             else
             {
                 Vector3 deltaSpeed = _speed.normalized * _acceleration;
                 if(_speed.magnitude > deltaSpeed.magnitude && _speed.magnitude > _maxSpeed * _smoothBrakeRange)
                 {
-                    _speed -= deltaSpeed;
+                    _speed -= deltaSpeed * timeCorrection;
                     _smoothBrake = false;
                 }
                 else
                 {
                     _smoothBrake = true;
                     if(_smoothBrake){
-                        _speed *= _smoothBrakeFactor;
+                        _speed *= _smoothBrakeFactor / timeCorrection;
                     }
                 }
             }
             //move in direction of speed
-            transform.position += _speed;
+            transform.position += _speed * timeCorrection;
         }
         else
         {
