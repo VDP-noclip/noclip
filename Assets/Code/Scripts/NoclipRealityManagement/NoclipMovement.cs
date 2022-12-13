@@ -151,6 +151,8 @@ void Update()
     {
         //max between fixeddeltatime and (Time.deltaTime / Time.fixedDeltaTime)
         float timeCorrection = Mathf.Min(1f, Time.deltaTime / Time.fixedDeltaTime);
+        //log timeCorrection
+        Debug.Log(timeCorrection);
         if (!_active)
             return;
 
@@ -188,8 +190,23 @@ void Update()
                 _speed += (_transform.forward * _verticalInput).normalized * _acceleration * timeCorrection;
                 _speed += (_transform.right * _horizontalInput).normalized * _acceleration * timeCorrection;
                 _speed += (_transform.up * _upDownInput).normalized * _acceleration * timeCorrection;
+                /* //extra drift while moving not working
+                Vector3 deltaSpeed = _speed.normalized * _acceleration;
+                if(_verticalInput == 0){
+                    if(_speed.magnitude > deltaSpeed.magnitude)
+                        _speed -= Mathf.Sign(Vector3.Dot(_speed, _transform.forward)) * (_transform.forward) * _acceleration * timeCorrection;
+                }
+                if(_horizontalInput == 0){
+                    if(_speed.magnitude > deltaSpeed.magnitude)
+                        _speed -= Mathf.Sign(Vector3.Dot(_speed, _transform.right)) * (_transform.right) * _acceleration * timeCorrection;
+                }
+                if(_upDownInput == 0){
+                    if(_speed.magnitude > deltaSpeed.magnitude)
+                        _speed -= Mathf.Sign(Vector3.Dot(_speed, _transform.up)) * (_transform.up) * _acceleration * timeCorrection;
+                }
+                */
                 //limit speed
-                _speed = _speed.normalized * Mathf.Min(_speed.magnitude, _maxSpeed) * timeCorrection;
+                _speed = _speed.normalized * Mathf.Min(_speed.magnitude, _maxSpeed);
             }
             else
             {
@@ -203,8 +220,10 @@ void Update()
                 {
                     _smoothBrake = true;
                     if(_smoothBrake){
-                        _speed *= _smoothBrakeFactor / timeCorrection;
+                        //speed *= power 1/timecorrection of smoothbrake
+                        _speed *= Mathf.Pow(_smoothBrakeFactor, 1/timeCorrection);
                     }
+                    //_speed = Vector3.zero;
                 }
             }
             //move in direction of speed
