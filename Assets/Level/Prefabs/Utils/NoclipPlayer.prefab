@@ -143,11 +143,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _active: 1
   _enableMovement: 1
-  _movementSpeed: 10
-  _boostedSpeed: 50
-  _boostSpeed: 304
-  _moveUp: 101
-  _moveDown: 113
+  _baseSpeed: 1
+  _baseAcceleration: 0.05
+  _boostedSpeed: 2
+  _boostAcceleration: 0.1
+  _smoothBrakeRange: 0.1
+  _smoothBrakeFactor: 0.93
 --- !u!135 &8048476808055116341
 SphereCollider:
   m_ObjectHideFlags: 0

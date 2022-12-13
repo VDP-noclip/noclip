@@ -18,23 +18,23 @@ public class NoclipMovement : MonoBehaviour
 
     [Header("Base")]
     [Tooltip("Camera movement speed")]
-    [SerializeField] private float _baseSpeed = 50f;
-    [SerializeField] private float _baseAcceleration = 100f;
+    [SerializeField] private float _baseSpeed = 1f;
+    [SerializeField] private float _baseAcceleration = 0.05f;
     
-    private float _maxSpeed = 50f;
-    private float _acceleration = 50f;
+    private float _maxSpeed = 1f;
+    private float _acceleration = 0.05f;
 
     [Header("Boost")]
     [SerializeField]
     [Tooltip("Speed of the quick camera movement when holding the 'Left Shift' key")]
-    private float _boostedSpeed = 100f;
-    [SerializeField] private float _boostAcceleration = 200f;
+    private float _boostedSpeed = 2f;
+    [SerializeField] private float _boostAcceleration = 0.1f;
 
     [Header("Smooth brake")]
     [Tooltip("MaxSpeed percentage where braking deceleration becomes nonlinear (smoother braking close to zero)")]
     [SerializeField] private float _smoothBrakeRange = 0.1f;
     [Tooltip("Higher is smoother")]
-    [SerializeField] private float _smoothBrakeFactor = 0.9f;
+    [SerializeField] private float _smoothBrakeFactor = 0.93f;
     
     /*
     [Header("Controls")]
