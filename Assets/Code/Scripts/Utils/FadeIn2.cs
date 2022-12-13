@@ -19,6 +19,12 @@ public class FadeIn2 : MonoBehaviour
 
     void Start()
     {
+        //if object tag is Background set finished to true
+        if (gameObject.tag == "Background")
+        {
+            _finished = true;
+            return;
+        }
         _transparentMaterial = Resources.Load(_fadeMaterialPath, typeof(Material)) as Material;
         //store material texture into variable
         _tex = GetComponent<Renderer>().material.mainTexture;
