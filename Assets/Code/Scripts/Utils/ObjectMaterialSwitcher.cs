@@ -13,12 +13,14 @@ namespace Code.Scripts.Utils
         private readonly Material[] _originalMaterials;
         private readonly Material[] _noclipMaterials;
         private readonly Renderer _renderer;
+        private string _name;
 
         public ObjectMaterialSwitcher(GameObject obj, Material[] noclipMaterials)
         {
             if (noclipMaterials == null)
             {
                 var name = obj.name;
+                _name = name;
                 throw new Exception(
                     $"Cannot have a ObjectMaterialSwitcher with a null _noclipMaterials. Problem in {name} object");
             }
@@ -35,6 +37,12 @@ namespace Code.Scripts.Utils
         public void SetOriginalMaterials()
         {
             _renderer.materials = _originalMaterials;
+        }
+
+        //get object name
+        public string GetObjectName()
+        {
+            return _name;
         }
     }
 }

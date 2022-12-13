@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
     private int _puzzleAmount = 0;
     private Vector3 _checkpointOrientation;
     private Vector3 _spawnPlatformPosition;
+    [SerializeField] private Material _previousNoclipMaterial;
 
     void Awake(){
         _spawnPlatformPosition = GameObject.Find("SpawnPlatform").transform.position;
@@ -68,7 +69,7 @@ public class LevelManager : MonoBehaviour
             
             //EventManager.TriggerEvent("checkpoint_orientation", NextCheckpointOrientation());
             NextCheckpointOrientation();
-
+            UpdatePreviousNoclipMaterials();
             GameObject.Find("RealityPlayer").GetComponent<NoclipManager>().GetReadyForPuzzle();
         }
         else
@@ -149,5 +150,49 @@ public class LevelManager : MonoBehaviour
         //move the player to the geometric center of save plus 1 meter
         player.transform.position = checkpointPosition + new Vector3(0, 1, 0);
         Debug.Log("Moving you to the end of the puzzle, shame on you!");
+    }
+
+    private void UpdatePreviousNoclipMaterials(){
+        GameObject previousPuzzle = transform.Find("Puzzle_" + (_currentPuzzleIndex - 1)).gameObject;
+        //for each children of RealityObjectsHolder add component NoclipMaterialHolder
+        try{
+            foreach (Transform child in previousPuzzle.transform.Find("RealityObjectsHolder"))
+            {
+                child.gameObject.AddComponent<NoclipMaterialHolder>();
+                //list of one material containing _previousNoclipMaterial
+                Material[] materials = new Material[1];
+                materials[0] = _previousNoclipMaterial;
+                //add material to NoclipMaterialHolder
+                child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(materials);
+            }
+        }catch{
+        }
+        try{
+            foreach (Transform child in previousPuzzle.transform.Find("IntangibleNoclipObjectsHolder"))
+            {
+                child.gameObject.AddComponent<NoclipMaterialHolder>();
+                //list of one material containing _previousNoclipMaterial
+                Material[] materials = new Material[1];
+                //add a copy of previousNoclipMaterial to materials
+                materials[0] = new Material(_previousNoclipMaterial);
+                //set alpha of material to child's material alpha
+                materials[0].color = new Color(materials[0].color.r, materials[0].color.g, materials[0].color.b, 0.2f);
+                //add material to NoclipMaterialHolder
+                child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(materials);
+            }
+        }catch{
+        }
+        try{
+            foreach (Transform child in previousPuzzle.transform.Find("InvisibleNoclipObjectsHolder"))
+            {
+                child.gameObject.AddComponent<NoclipMaterialHolder>();
+                //list of one material containing _previousNoclipMaterial
+                Material[] materials = new Material[1];
+                materials[0] = _previousNoclipMaterial;
+                //add material to NoclipMaterialHolder
+                child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(materials);
+            }
+        }catch{
+        }
     }
 }
