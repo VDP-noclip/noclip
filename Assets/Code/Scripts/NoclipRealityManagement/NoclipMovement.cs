@@ -221,7 +221,7 @@ void Update()
                     _smoothBrake = true;
                     if(_smoothBrake){
                         //speed *= power 1/timecorrection of smoothbrake
-                        _speed *= Mathf.Pow(_smoothBrakeFactor, 1/timeCorrection);
+                        _speed *= Mathf.Pow(_smoothBrakeFactor, timeCorrection);
                     }
                     //_speed = Vector3.zero;
                 }
