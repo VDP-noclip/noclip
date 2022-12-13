@@ -152,7 +152,7 @@ void Update()
         //max between fixeddeltatime and (Time.deltaTime / Time.fixedDeltaTime)
         float timeCorrection = Mathf.Min(1f, Time.deltaTime / Time.fixedDeltaTime);
         //log timeCorrection
-        Debug.Log(timeCorrection);
+        //Debug.Log(timeCorrection);
         if (!_active)
             return;
 
