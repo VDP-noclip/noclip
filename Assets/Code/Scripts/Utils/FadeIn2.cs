@@ -19,12 +19,6 @@ public class FadeIn2 : MonoBehaviour
 
     void Start()
     {
-        //if object tag is Background set finished to true
-        if (gameObject.tag == "Background")
-        {
-            _finished = true;
-            return;
-        }
         _transparentMaterial = Resources.Load(_fadeMaterialPath, typeof(Material)) as Material;
         //store material texture into variable
         _tex = GetComponent<Renderer>().material.mainTexture;
@@ -34,6 +28,12 @@ public class FadeIn2 : MonoBehaviour
         _originalMaterial = new Material(material);
         _originalAlpha = _originalMaterial.color.a;
         _col = material.color;
+        //if object tag is Background set finished to true
+        if (gameObject.tag == "Background")
+        {
+            _finished = true;
+            return;
+        }
         GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
         //set this material's emission to originalmaterial emission
         GetComponent<Renderer>().material.SetColor("_EmissionColor", _originalMaterial.GetColor("_EmissionColor"));
