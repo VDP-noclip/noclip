@@ -53,18 +53,14 @@ public class CameraManager : MonoBehaviour
             
             _noclipMovement.SetPositionAndRotation(_realPlayerCamera.transform.position, _realPlayerCamera.transform.rotation); //Set the noclip position in the realBody position
             _noclipMouseLook.CopyRotationCoordinates(_realMouseLook);
-            _realityMovement.toggleKinematic(isNoclipEnabled);
         }
-        else
-        {
-            _realityMovement.toggleKinematic(isNoclipEnabled);
-            //_realMouseLook.CopyRotationCoordinates(_noclipMouseLook);
-        }
+        _realityMovement.toggleKinematic(isNoclipEnabled);
+
         
         //Activate/disactivate the noclipPlayer and his camera
         _noclipCamera.SetActive(isNoclipEnabled);
         _noclipMouseLook.ActivateMouseLook(isNoclipEnabled);
-
         
     }
+    
 }

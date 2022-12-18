@@ -195,6 +195,12 @@ public class NoclipManager : MonoBehaviour
                 Debug.Log("There was an event here");
                 // EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
         }
+
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Time.timeScale = 0.35f;
+        }
         
         // When releasing
         if (Input.GetButtonUp("Noclip") && _noclipEnabled){
