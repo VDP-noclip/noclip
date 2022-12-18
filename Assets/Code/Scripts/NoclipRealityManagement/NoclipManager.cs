@@ -140,20 +140,20 @@ public class NoclipManager : MonoBehaviour
         yield return null;
     }
     
-    private void EnableNoclipNow()
+    private void Respawn()
     {
-        Debug.Log("Enablenoclip");
+        Debug.Log("Respawn");
         
        
-        _postprocessReality.SetActive(false);
-        _postprocessNoclip.SetActive(true);
+        //_postprocessReality.SetActive(false);
+        //_postprocessNoclip.SetActive(true);
         
-        _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
-        _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
+        //_effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
+        //_noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
         _noclipEnabled = true;
         _goingBackToBody = false;
         _cameraManager.SwitchCamera();
-        RenderNoclipMode();
+        //RenderNoclipMode();
     }
 
     /// <summary>
@@ -206,7 +206,7 @@ public class NoclipManager : MonoBehaviour
 
     public void NoclipRespawnSequence(){
         Debug.Log("NoclipRespawnSequence");
-        EnableNoclipNow();
+        Respawn();
         _goingBackToBody = true;
         _noclipMovement.SetEnableMovement(false);
     }
