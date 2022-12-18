@@ -53,7 +53,7 @@ public class LoadPrefs : MonoBehaviour
                 audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
             }
             
-            
+
             if (PlayerPrefs.HasKey("effectsVolume"))
             {
                 
