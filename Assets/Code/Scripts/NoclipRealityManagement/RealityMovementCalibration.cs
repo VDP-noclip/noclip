@@ -28,7 +28,6 @@ public class RealityMovementCalibration : MonoBehaviour
     [SerializeField] private float _airMultiplier = 0.3f;     // set air movement limitation
     [SerializeField] private float _jumpBuffer = 0.2f;
     [SerializeField] private float _coyoteTime = 0.2f;
-    private bool _readyToJump;      //
 
     [Header("Crouch")]
     [SerializeField] private float _crouchSpeed = 2f;
@@ -75,7 +74,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
     [SerializeField] private bool _OnSlope; //This seriazlized field is only use to debug from unity // TODO remove
     [SerializeField] private bool Grounded; //This seriazlized field is only use to debug from unity // TODO remove
-    
+    [SerializeField] private bool _readyToJump;      //
 
     //original gravity
     private Vector3 _originalGravity;
@@ -161,7 +160,7 @@ public class RealityMovementCalibration : MonoBehaviour
         }
         //sum delta time until 5 seconds have passed
         _previousDeltaTime += Time.deltaTime;
-        //print every 5 seconds
+        //print every 5 seconds_commitJump
         if (_previousDeltaTime >= 5f)
         {
             _previousDeltaTime = 0f;
@@ -236,8 +235,8 @@ public class RealityMovementCalibration : MonoBehaviour
      */
     
     private float _jumpBufferTime = 0f;
-    private bool _jumpBuffered = false;
-    private bool _coyote = false; // basically prolongs grounded state
+    [SerializeField] private bool _jumpBuffered = false;
+    [SerializeField] private bool _coyote = false; // basically prolongs grounded state
 
     private void UserInput()
     {
@@ -248,10 +247,10 @@ public class RealityMovementCalibration : MonoBehaviour
         Coyote();
 
         // when to jump
-        if (_jumpBuffered && _readyToJump && (_grounded || _coyote))
+        if (_jumpBuffered && _readyToJump && (_coyote))
         {
             _readyToJump = false;
-            
+            _coyote = false;
             //set ground drag to zero
             _rigidbody.drag = 0;
             _commitJump = true;
@@ -293,7 +292,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
     private void Coyote() // allows to jump for a short time after leaving the ground without jumping
     {
-        if (_grounded)
+        if (_grounded && _readyToJump)
         {
             _prevGroundedTime = 0;
             _coyote = true;
