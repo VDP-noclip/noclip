@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,9 @@ namespace POLIMIGameCollective
 	class IntUnityEvent : UnityEvent<int> { }
 	class FloatUnityEvent : UnityEvent<float> { }
 	class StringUnityEvent : UnityEvent<string> { }
+	class ComplexObjectUnityEvent : UnityEvent<TutorialDialogObject> { }
+
+	
 	
 	public class EventManager : MonoBehaviour {
 
@@ -15,8 +19,8 @@ namespace POLIMIGameCollective
 		private Dictionary <string, UnityEvent<int>> _intEventDictionary;
 		private Dictionary <string, UnityEvent<float>> _floatEventDictionary;
 		private Dictionary <string, UnityEvent<string>> _stringEventDictionary;
-		
-		
+
+		private Dictionary<string, UnityEvent<TutorialDialogObject>> _complexObjectEventDictionary;
 		
 
 		private static EventManager eventManager;
@@ -63,6 +67,11 @@ namespace POLIMIGameCollective
 			if (_stringEventDictionary == null)
 			{
 				_stringEventDictionary = new Dictionary<string, UnityEvent<string>>();
+			}
+			
+			if (_complexObjectEventDictionary == null)
+			{
+				_complexObjectEventDictionary = new Dictionary<string, UnityEvent<TutorialDialogObject>>();
 			}
 			
 		}
@@ -129,6 +138,22 @@ namespace POLIMIGameCollective
 				instance._stringEventDictionary.Add (eventName, thisEvent);
 			}
 		}
+		
+		public static void StartListening(string eventName, UnityAction<TutorialDialogObject> listener)
+		{
+			UnityEvent<TutorialDialogObject> thisEvent = null;
+			
+			if (instance._complexObjectEventDictionary.TryGetValue (eventName, out thisEvent))
+			{
+				thisEvent.AddListener (listener);
+			} 
+			else
+			{
+				thisEvent = new ComplexObjectUnityEvent();
+				thisEvent.AddListener (listener);
+				instance._complexObjectEventDictionary.Add (eventName, thisEvent);
+			}
+		}
 		#endregion
 		
 		#region StopListening
@@ -167,6 +192,15 @@ namespace POLIMIGameCollective
 			if (eventManager == null) return;
 			UnityEvent<string> thisEvent = null;
 			if (instance._stringEventDictionary.TryGetValue (eventName, out thisEvent))
+			{
+				thisEvent.RemoveListener (listener);
+			}
+		}
+		public static void StopListening (string eventName, UnityAction<TutorialDialogObject> listener)
+		{
+			if (eventManager == null) return;
+			UnityEvent<TutorialDialogObject> thisEvent = null;
+			if (instance._complexObjectEventDictionary.TryGetValue (eventName, out thisEvent))
 			{
 				thisEvent.RemoveListener (listener);
 			}
@@ -210,8 +244,49 @@ namespace POLIMIGameCollective
 			}
 		}
 		
+		public static void TriggerEvent (string eventName, TutorialDialogObject value)
+		{
+			UnityEvent<TutorialDialogObject> thisEvent = null;
+			if (instance._complexObjectEventDictionary.TryGetValue (eventName, out thisEvent))
+			{
+				thisEvent.Invoke (value);
+			}
+		}
 		#endregion
 
 	}
+
+	#region EventObjects
+
+	public class TutorialDialogObject
+	{
+		private string _dialog;
+		private float _time;
+		private bool _slowDown;
+
+		public TutorialDialogObject(string dialog, float time, bool slowDown)
+		{
+			_dialog = dialog;
+			_time = time;
+			_slowDown = slowDown;
+		}
+
+		public string GetDialog()
+		{
+			return _dialog;
+		}
+
+		public float GetTime()
+		{
+			return _time;
+		}
+
+		public bool IsSlowDown()
+		{
+			return _slowDown;
+		}
+	}
+
+	#endregion
 	
 }

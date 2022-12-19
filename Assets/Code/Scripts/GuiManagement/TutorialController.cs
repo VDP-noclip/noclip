@@ -12,7 +12,7 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
         [SerializeField] private float _hintDuration = 4f;
-        [SerializeField] private float _dialogueDuration = 3f;
+        [SerializeField] private float _dialogueDuration = 3f;   // NOT NEEDED
         private float _endDialogueTime;
         private float _endHintTime;
 
@@ -67,32 +67,44 @@ namespace Code.Scripts.TutorialManagement
             yield return null;
         }
         
-        private void DisplayDialogue(string dialogue) //We need to pass also the timer
+        private void DisplayDialogue(TutorialDialogObject dialogueObject) //We need to pass also the timer
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
             _dialogueContainer.SetActive(true);
-            StartCoroutine(DisplayDialogueCoroutine(dialogue));
+            StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
-        private IEnumerator DisplayDialogueCoroutine(string dialogue)
+        private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
+            
             _dialogueContainer.SetActive(true);
-            _realityMovement.SetSlowMode(true);
-            for (int i = 0; i < dialogue.Length; i++)
+            if (dialogueObject.IsSlowDown())
             {
-                _dialogueText.text += dialogue[i];
+                _realityMovement.SetSlowMode(true);
+            }
+            
+            for (int i = 0; i < dialogueObject.GetDialog().Length; i++)  // Write like a typer
+            {
+                _dialogueText.text += dialogueObject.GetDialog()[i];
                 yield return new WaitForSecondsRealtime(0.05f);
             }
+            //Debug.Log("Finish write");
 
-            _endDialogueTime = Time.time + _dialogueDuration;
+            _endDialogueTime = Time.time + dialogueObject.GetTime();
 
+            
             while (Time.time < _endDialogueTime)
             {
                 yield return new WaitForSecondsRealtime(0.05f);
             }
             
             _dialogueContainer.SetActive(false);
-            _realityMovement.SetSlowMode(false);
+            if (dialogueObject.IsSlowDown())
+            {
+                _realityMovement.SetSlowMode(false);
+            }
+            
+            _dialogueText.text = "";  //Reset the text
 
             yield return null;
         }
