@@ -18,7 +18,7 @@ public class DialogueBoxController : MonoBehaviour
     {
         if (other.CompareTag("RealityPlayer"))
         {
-            EventManager.TriggerEvent("DisplayDialogue", boxDialogue);
+            EventManager.TriggerEvent("DisplayDialogue", boxDialogue);  // We need to pass also the time
             collider.enabled = false;
         }
     }

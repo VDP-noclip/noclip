@@ -67,7 +67,7 @@ namespace Code.Scripts.TutorialManagement
             yield return null;
         }
         
-        private void DisplayDialogue(string dialogue)
+        private void DisplayDialogue(string dialogue) //We need to pass also the timer
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
             _dialogueContainer.SetActive(true);
