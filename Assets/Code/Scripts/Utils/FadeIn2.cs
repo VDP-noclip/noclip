@@ -8,7 +8,7 @@ public class FadeIn2 : MonoBehaviour
 {
     [SerializeField] private float _fadeSpeed = 0.02f; //透明化の速さ
     //show a tooltip saying material is in Resources folder
-    [SerializeField, Tooltip("Material is in Resources folder")] private string _fadeMaterialPath = "Materials/ProBuilder_yellow_transparent";
+    [SerializeField, Tooltip("Material is in Resources folder")] private string _fadeMaterialPath = "Materials/RealityPlatform";
     private Texture _tex;
     private Color _col;
     private bool _finished = false;
@@ -28,7 +28,15 @@ public class FadeIn2 : MonoBehaviour
         _originalMaterial = new Material(material);
         _originalAlpha = _originalMaterial.color.a;
         _col = material.color;
+        //if object tag is Background set finished to true
+        if (gameObject.tag == "Background")
+        {
+            _finished = true;
+            return;
+        }
         GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_transparentMaterial);
+        //set this material's emission to originalmaterial emission
+        GetComponent<Renderer>().material.SetColor("_EmissionColor", _originalMaterial.GetColor("_EmissionColor"));
         GetComponent<Renderer>().material.mainTexture = _tex;
         GetComponent<Renderer>().material.color = _col;
         GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, 0f);
@@ -61,6 +69,10 @@ public class FadeIn2 : MonoBehaviour
                 _finished = true;
                 if(Untampered()){
                     GetComponent<Renderer>().material.CopyPropertiesFromMaterial(_originalMaterial);
+                }
+                //if father of object is named IntangibleNoclipObjectsHolder set alpha to NoclipIntangibleController GetNoclipMaterials
+                if(transform.parent != null && transform.parent.name == "IntangibleNoclipObjectsHolder"){
+                    GetComponent<Renderer>().material.color = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<NoclipIntangibleController>().GetNoclipMaterials()[0].color.a);
                 }
             }
         }

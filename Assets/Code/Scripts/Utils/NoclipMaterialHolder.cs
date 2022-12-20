@@ -20,4 +20,9 @@ public class NoclipMaterialHolder : MonoBehaviour
     {
         return _noclipMaterials;
     }
+
+    public void SetMaterial(Material[] materials)
+    {
+        _noclipMaterials = materials;
+    }
 }
