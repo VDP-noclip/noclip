@@ -45,7 +45,7 @@ namespace Code.Scripts.TutorialManagement
         {
         
             EventManager.StopListening("DisplayHint", DisplayHint);
-            _controlsContainer.SetActive(true);
+            StartCoroutine(fadeInAndOut(_controlsContainer, true, 1f));
             StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         
@@ -131,19 +131,19 @@ namespace Code.Scripts.TutorialManagement
                     switch (mode)
                     {
                         case 0:
-                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                         case 1:
-                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                         case 2:
-                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                         case 3:
-                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                         case 4:
-                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                     }
                     yield return null;
@@ -170,7 +170,7 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
-            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 1f));
+            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 0.5f));
             StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
