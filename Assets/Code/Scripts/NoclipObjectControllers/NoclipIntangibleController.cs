@@ -34,10 +34,4 @@ public class NoclipIntangibleController : BaseNoclipObjectController
     {
         return _noclipMaterials;
     }
-    
-    //Getnoclipmaterial function
-    public Material[] GetNoclipMaterials()
-    {
-        return new[] {_noclipMaterial};
-    }
 }
