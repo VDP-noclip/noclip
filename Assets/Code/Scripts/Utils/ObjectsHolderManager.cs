@@ -28,16 +28,6 @@ public class ObjectsHolderManager : MonoBehaviour
         //disable mesh renderer of all children
         foreach (Transform child in _childrenTransforms)
         {
-            //if tag is RealityObject
-            if (child.tag == "RealityObject")
-            {
-                //if child doesn't have NoclipMaterialHolder add it
-                if (!child.gameObject.GetComponent<NoclipMaterialHolder>())
-                {
-                    child.gameObject.AddComponent<NoclipMaterialHolder>();
-                }
-                child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(child.gameObject.GetComponent<MeshRenderer>().materials);
-            }
             //add FadeIn script to all children
             child.gameObject.AddComponent<FadeIn2>();
         }

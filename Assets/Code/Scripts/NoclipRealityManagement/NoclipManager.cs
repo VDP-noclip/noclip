@@ -287,8 +287,10 @@ public class NoclipManager : MonoBehaviour
                 noclipMaterials = noclipMaterialHolder.GetNoclipMaterials();
             else if (obj.CompareTag("Background"))
                 noclipMaterials = _noclipOptions.noClipMaterialsForBackgroundObjects;
+            /*
             else if (obj.CompareTag("RealityObject"))
                 noclipMaterials = _noclipOptions.noClipMaterialsForRealityObjects;
+            */
             else
                 continue;
 
