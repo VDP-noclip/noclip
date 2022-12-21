@@ -13,7 +13,7 @@ namespace Code.Scripts.Audio
 
         private AudioClip _areaSoundtrack;
 
-        private void Awake()
+        private void Start()
         {
             if (_customAreaSoundtrack == null)
                 _areaSoundtrack = _audioTracks.defaultAreaSoundtrack;

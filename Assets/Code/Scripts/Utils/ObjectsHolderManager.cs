@@ -28,6 +28,11 @@ public class ObjectsHolderManager : MonoBehaviour
         //disable mesh renderer of all children
         foreach (Transform child in _childrenTransforms)
         {
+            //if this is a InvisibleNoclipObjectsHolder and child doesn't have NoclipInvisibleObjController add it
+            if (gameObject.name == "InvisibleNoclipObjectsHolder" && child.GetComponent<NoclipInvisibleObjController>() == null)
+            {
+                child.gameObject.AddComponent<NoclipInvisibleObjController>();
+            }
             //add FadeIn script to all children
             child.gameObject.AddComponent<FadeIn2>();
         }
