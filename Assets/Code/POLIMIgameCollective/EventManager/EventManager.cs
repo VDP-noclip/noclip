@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using Code.POLIMIgameCollective.EventManager;
 
 namespace POLIMIGameCollective
 {
@@ -256,44 +257,4 @@ namespace POLIMIGameCollective
 
 	}
 
-	#region EventObjects
-
-	public class TutorialDialogObject
-	{
-		private string _dialog;
-		private float _time;
-		private bool _slowDown;
-		private bool _highlightTimer;
-
-		public TutorialDialogObject(string dialog, float time, bool slowDown, bool highlightTimer)
-		{
-			_dialog = dialog;
-			_time = time;
-			_slowDown = slowDown;
-			_highlightTimer = highlightTimer;
-		}
-
-		public string GetDialog()
-		{
-			return _dialog;
-		}
-
-		public float GetTime()
-		{
-			return _time;
-		}
-
-		public bool IsSlowDown()
-		{
-			return _slowDown;
-		}
-
-		public bool IsTimerHighlighted()
-		{
-			return _highlightTimer;
-		}
-	}
-
-	#endregion
-	
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
@@ -13,11 +15,18 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _tutorialCrosshair;
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
+        [SerializeField] private KeyCode _skipDialogueKey; 
         [SerializeField] private float _hintDuration = 4f;
+        [SerializeField] private float _bufferTimeAfterTutorialText = 4f;
         private float _endDialogueTime;
         private float _endHintTime;
+        private Coroutine _displayDialogueCoroutine;
+        private bool _displayDialogueCoroutineIsRunning;
 
         private RealityMovementCalibration _realityMovement;
+
+
+        #region Unity Methods
 
         private void Awake()
         {
@@ -32,6 +41,18 @@ namespace Code.Scripts.TutorialManagement
             _controlsContainer.SetActive(false);
         }
 
+        private void Update()
+        {
+            if (_displayDialogueCoroutineIsRunning && Input.GetKeyDown(_skipDialogueKey))
+            {
+                StopCurrentDialogue();
+            }
+                
+        }
+
+        #endregion
+
+        #region Private Methods
 
         private void ClearHints()
         {
@@ -43,19 +64,51 @@ namespace Code.Scripts.TutorialManagement
 
         private void DisplayHint(string hint)
         {
-        
             EventManager.StopListening("DisplayHint", DisplayHint);
-            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, 0.5f));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, 1f));
             StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
-        
         }
         
-        IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
+        private void FinalDialogueOperations()
+        {
+            _dialogueContainer.SetActive(false);
+            _dialogueText.text = "";  //Reset the text
+            _realityMovement.SetSlowMode(false);
+            _tutorialCrosshair.SetActive(false);
+            _displayDialogueCoroutineIsRunning = false;
+            
+        }
+
+        private void StopCurrentDialogue()
+        {
+            if (_displayDialogueCoroutineIsRunning)
+            {
+                StopCoroutine(_displayDialogueCoroutine);
+                FinalDialogueOperations();
+            }
+        }
+        
+        private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
+        {
+            EventManager.StopListening("DisplayDialogue", DisplayDialogue);
+            StopCurrentDialogue();
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 1f));
+            _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            
+            
+            EventManager.StartListening("DisplayDialogue", DisplayDialogue);
+        }
+
+        #endregion
+
+        #region Coroutines
+
+        private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
             {
                 float counter = 0f;
 
-                //  Set Values depending on if fadeIn or fadeOut
+                //Set Values depending on if fadeIn or fadeOut
                 float a, b;
                 if (fadeIn)
                 {
@@ -75,34 +128,34 @@ namespace Code.Scripts.TutorialManagement
                 Image tempImage = objectToFade.GetComponent<Image>();
                 RawImage tempRawImage = objectToFade.GetComponent<RawImage>();
                 MeshRenderer tempRenderer = objectToFade.GetComponent<MeshRenderer>();
-                TMP_Text tempText = objectToFade.GetComponent<TMP_Text>();
+                Text tempText = objectToFade.GetComponent<Text>();
 
-                //  Check if this is a Sprite
+                //Check if this is a Sprite
                 if (tempSPRenderer != null)
                 {
                     currentColor = tempSPRenderer.color;
                     mode = 0;
                 }
-                //  Check if Image
+                //Check if Image
                 else if (tempImage != null)
                 {
                     currentColor = tempImage.color;
                     mode = 1;
                 }
-                //  Check if RawImage
+                //Check if RawImage
                 else if (tempRawImage != null)
                 {
                     currentColor = tempRawImage.color;
                     mode = 2;
                 }
-                //  Check if Text 
+                //Check if Text 
                 else if (tempText != null)
                 {
                     currentColor = tempText.color;
                     mode = 3;
                 }
 
-                //  Check if 3D Object
+                //Check if 3D Object
                 else if (tempRenderer != null)
                 {
                     currentColor = tempRenderer.material.color;
@@ -146,7 +199,14 @@ namespace Code.Scripts.TutorialManagement
                             tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                     }
+                    
+                    
                     yield return null;
+                }
+
+                if (!fadeIn)
+                {
+                    FinalDialogueOperations();
                 }
             }
         
@@ -167,53 +227,42 @@ namespace Code.Scripts.TutorialManagement
             yield return null;
         }
         
-        private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
-        {
-            EventManager.StopListening("DisplayDialogue", DisplayDialogue);
-            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 0.5f));
-            StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
-            EventManager.StartListening("DisplayDialogue", DisplayDialogue);
-            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, 0.5f));
-        }
+        
+
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
+            _displayDialogueCoroutineIsRunning = true;
             
             _dialogueContainer.SetActive(true);
-            if (dialogueObject.IsSlowDown())
-            {
-                _realityMovement.SetSlowMode(true);
-            }
+            _realityMovement.SetSlowMode(dialogueObject.IsSlowDown());
 
-            if (dialogueObject.IsTimerHighlighted())
+            if (dialogueObject.IsCrossHairHighlighted())
             {
                 _tutorialCrosshair.SetActive(true);
             }
-            
+
+            _dialogueText.text = "";
+            _endDialogueTime = Time.realtimeSinceStartup + dialogueObject.GetTotalTime() + _bufferTimeAfterTutorialText;
+
             for (int i = 0; i < dialogueObject.GetDialog().Length; i++)  // Write like a typer
             {
                 _dialogueText.text += dialogueObject.GetDialog()[i];
-                yield return new WaitForSecondsRealtime(0.05f);
+                yield return new WaitForSecondsRealtime(dialogueObject.GetTimePerLetter());
             }
-
-            _endDialogueTime = Time.time + dialogueObject.GetTime();
-
             
-            while (Time.time < _endDialogueTime)
+            while (Time.realtimeSinceStartup < _endDialogueTime)
             {
                 yield return new WaitForSecondsRealtime(0.05f);
             }
-            
-            _dialogueContainer.SetActive(false);
-            if (dialogueObject.IsSlowDown())
-            {
-                _realityMovement.SetSlowMode(false);
-            }
-            
-            _dialogueText.text = "";  //Reset the text
-            _tutorialCrosshair.SetActive(false);
-            
-            yield return null;
+            //FinalDialogueCoroutineOperations();
+            yield return FadeInAndOutCoroutine(_dialogueContainer, false, 1f);
+            FinalDialogueOperations();
+
+
         }
+
+        #endregion
+        
     }
     
     
