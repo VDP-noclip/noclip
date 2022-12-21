@@ -132,7 +132,14 @@ public class NoclipManager : MonoBehaviour
         _postprocessNoclip.SetActive(true);
         
         _effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
-        _noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
+        _noclipObjControllers.ForEach(obj => {
+            try {
+                obj.ActivateNoclip();
+            } catch{
+                //log error problem with a noclip object controller
+                Debug.LogError("Error with a noclip object controller");
+            }
+        });
         _noclipEnabled = true;
         _goingBackToBody = false;
         _cameraManager.SwitchCamera();
@@ -168,7 +175,14 @@ public class NoclipManager : MonoBehaviour
         
         _noclipMovement.SetEnableMovement(true);
         _effectsAudioSource.PlayOneShot(_audioTracks.disableNoclip);
-        _noclipObjControllers.ForEach(obj => obj.DisableNoclip());
+        _noclipObjControllers.ForEach(obj => {
+            try {
+                obj.DisableNoclip();
+            } catch{
+                //log error problem with a noclip object controller
+                Debug.LogError("Error with a noclip object controller");
+            }
+        });
         _noclipEnabled = false;
         _goingBackToBody = false;
         _cameraManager.SwitchCamera();
@@ -240,7 +254,14 @@ public class NoclipManager : MonoBehaviour
     {
         GameObject[] noclipObjects = GameObject.FindGameObjectsWithTag("NoclipObject");
         _noclipObjControllers = noclipObjects.Select(
-            obj => obj.GetComponent<BaseNoclipObjectController>()).ToList();
+            obj => {
+            BaseNoclipObjectController objCtrl = obj.GetComponent<BaseNoclipObjectController>();
+            //if null log error name of the object
+            if (objCtrl == null){
+                Debug.LogError(obj.name + " has no BaseNoclipObjectController " + obj);
+            }
+            return objCtrl;
+        }).ToList();
         yield return null;
     }
     
