@@ -1,4 +1,5 @@
 using System.Collections;
+using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
         [SerializeField] private float _hintDuration = 4f;
+        [SerializeField] private float _bufferTimeAfterTutorialText = 3f;
         private float _endDialogueTime;
         private float _endHintTime;
 
@@ -183,22 +185,21 @@ namespace Code.Scripts.TutorialManagement
                 _realityMovement.SetSlowMode(true);
             }
 
-            if (dialogueObject.IsTimerHighlighted())
+            if (dialogueObject.IsCrossHairHighlighted())
             {
                 _tutorialCrosshair.SetActive(true);
             }
-            
+
+            _dialogueText.text = "";
+
             for (int i = 0; i < dialogueObject.GetDialog().Length; i++)  // Write like a typer
             {
                 _dialogueText.text += dialogueObject.GetDialog()[i];
-                yield return new WaitForSecondsRealtime(0.05f);
+                yield return new WaitForSecondsRealtime(dialogueObject.GetTimePerLetter());
             }
-            //Debug.Log("Finish write");
-
-            _endDialogueTime = Time.time + dialogueObject.GetTime();
-
             
-            while (Time.time < _endDialogueTime)
+            _endDialogueTime = Time.realtimeSinceStartup + _bufferTimeAfterTutorialText;
+            while (Time.realtimeSinceStartup < _endDialogueTime)
             {
                 yield return new WaitForSecondsRealtime(0.05f);
             }

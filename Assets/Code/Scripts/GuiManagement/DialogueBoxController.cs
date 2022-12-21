@@ -1,28 +1,37 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
 using UnityEngine;
 
 public class DialogueBoxController : MonoBehaviour
 {
     [SerializeField] private string _dialog = "Dialog placeholder";
-    [SerializeField] private float _timeDialog = 1f;
+    [SerializeField] private float _timePerLetter = 0.05f;
     [SerializeField] private bool _slowDown = false;
     [SerializeField] private bool _crosshairTutorial = false;
+    [SerializeField] private bool _persistent;
     private BoxCollider collider;
 
     private void Start()
     {
         collider = gameObject.GetComponent<BoxCollider>();
+        if (_slowDown)
+        {
+            Debug.Log("Slow down still work in progress...");
+            _slowDown = false;     
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("RealityPlayer"))
         {
-            EventManager.TriggerEvent("DisplayDialogue", new TutorialDialogObject(_dialog, _timeDialog, _slowDown, _crosshairTutorial));  // We need to pass also the time
-            collider.enabled = false;
+            var tutorialDialogObject = new TutorialDialogObject(_dialog, _timePerLetter, _slowDown, _crosshairTutorial);
+            EventManager.TriggerEvent("DisplayDialogue", tutorialDialogObject);  // We need to pass also the time
+            if (!_persistent)
+                collider.enabled = false;
         }
     }
     
