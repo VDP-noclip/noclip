@@ -93,7 +93,7 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
             StopCurrentDialogue();
-            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 1f));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 0.7f));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             
             
