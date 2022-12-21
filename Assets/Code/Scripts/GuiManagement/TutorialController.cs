@@ -26,6 +26,7 @@ namespace Code.Scripts.TutorialManagement
         private RealityMovementCalibration _realityMovement;
 
 
+        #region Unity Methods
 
         private void Awake()
         {
@@ -44,10 +45,14 @@ namespace Code.Scripts.TutorialManagement
         {
             if (_displayDialogueCoroutineIsRunning && Input.GetKeyDown(_skipDialogueKey))
             {
-                StopCurrentDialogueCoroutine();
+                StopCurrentDialogue();
             }
                 
         }
+
+        #endregion
+
+        #region Private Methods
 
         private void ClearHints()
         {
@@ -60,12 +65,46 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayHint(string hint)
         {
             EventManager.StopListening("DisplayHint", DisplayHint);
-            StartCoroutine(fadeInAndOut(_controlsContainer, true, 1f));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, 1f));
             StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         }
         
-        IEnumerator fadeInAndOut(GameObject objectToFade, bool fadeIn, float duration)
+        private void FinalDialogueOperations()
+        {
+            _dialogueContainer.SetActive(false);
+            _dialogueText.text = "";  //Reset the text
+            _realityMovement.SetSlowMode(false);
+            _tutorialCrosshair.SetActive(false);
+            _displayDialogueCoroutineIsRunning = false;
+            
+        }
+
+        private void StopCurrentDialogue()
+        {
+            if (_displayDialogueCoroutineIsRunning)
+            {
+                StopCoroutine(_displayDialogueCoroutine);
+                FinalDialogueOperations();
+            }
+        }
+        
+        private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
+        {
+            EventManager.StopListening("DisplayDialogue", DisplayDialogue);
+            StopCurrentDialogue();
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 1f));
+            _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            
+            
+            EventManager.StartListening("DisplayDialogue", DisplayDialogue);
+        }
+
+        #endregion
+
+        #region Coroutines
+
+        private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
             {
                 float counter = 0f;
 
@@ -164,6 +203,11 @@ namespace Code.Scripts.TutorialManagement
                     
                     yield return null;
                 }
+
+                if (!fadeIn)
+                {
+                    FinalDialogueOperations();
+                }
             }
         
         private IEnumerator DisplayHintCoroutine(string hint)
@@ -183,16 +227,7 @@ namespace Code.Scripts.TutorialManagement
             yield return null;
         }
         
-        private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
-        {
-            EventManager.StopListening("DisplayDialogue", DisplayDialogue);
-            StopCurrentDialogueCoroutine();
-            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 1f));
-            _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
-            
-            
-            EventManager.StartListening("DisplayDialogue", DisplayDialogue);
-        }
+        
 
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
@@ -220,30 +255,14 @@ namespace Code.Scripts.TutorialManagement
                 yield return new WaitForSecondsRealtime(0.05f);
             }
             //FinalDialogueCoroutineOperations();
-            yield return fadeInAndOut(_dialogueContainer, false, 1f);
-            FinalDialogueCoroutineOperations();
+            yield return FadeInAndOutCoroutine(_dialogueContainer, false, 1f);
+            FinalDialogueOperations();
 
 
         }
+
+        #endregion
         
-        private void FinalDialogueCoroutineOperations()
-        {
-            _dialogueContainer.SetActive(false);
-            _dialogueText.text = "";  //Reset the text
-            _realityMovement.SetSlowMode(false);
-            _tutorialCrosshair.SetActive(false);
-            _displayDialogueCoroutineIsRunning = false;
-            
-        }
-
-        private void StopCurrentDialogueCoroutine()
-        {
-            if (_displayDialogueCoroutineIsRunning)
-            {
-                StopCoroutine(_displayDialogueCoroutine);
-                FinalDialogueCoroutineOperations();
-            }
-        }
     }
     
     
