@@ -45,17 +45,17 @@ namespace Code.Scripts.TutorialManagement
         {
         
             EventManager.StopListening("DisplayHint", DisplayHint);
-            StartCoroutine(fadeInAndOut(_controlsContainer, true, 1f));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, 0.5f));
             StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         
         }
         
-        IEnumerator fadeInAndOut(GameObject objectToFade, bool fadeIn, float duration)
+        IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
             {
                 float counter = 0f;
 
-                //Set Values depending on if fadeIn or fadeOut
+                //  Set Values depending on if fadeIn or fadeOut
                 float a, b;
                 if (fadeIn)
                 {
@@ -75,34 +75,34 @@ namespace Code.Scripts.TutorialManagement
                 Image tempImage = objectToFade.GetComponent<Image>();
                 RawImage tempRawImage = objectToFade.GetComponent<RawImage>();
                 MeshRenderer tempRenderer = objectToFade.GetComponent<MeshRenderer>();
-                Text tempText = objectToFade.GetComponent<Text>();
+                TMP_Text tempText = objectToFade.GetComponent<TMP_Text>();
 
-                //Check if this is a Sprite
+                //  Check if this is a Sprite
                 if (tempSPRenderer != null)
                 {
                     currentColor = tempSPRenderer.color;
                     mode = 0;
                 }
-                //Check if Image
+                //  Check if Image
                 else if (tempImage != null)
                 {
                     currentColor = tempImage.color;
                     mode = 1;
                 }
-                //Check if RawImage
+                //  Check if RawImage
                 else if (tempRawImage != null)
                 {
                     currentColor = tempRawImage.color;
                     mode = 2;
                 }
-                //Check if Text 
+                //  Check if Text 
                 else if (tempText != null)
                 {
                     currentColor = tempText.color;
                     mode = 3;
                 }
 
-                //Check if 3D Object
+                //  Check if 3D Object
                 else if (tempRenderer != null)
                 {
                     currentColor = tempRenderer.material.color;
@@ -170,9 +170,10 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
-            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 0.5f));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 0.5f));
             StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, 0.5f));
         }
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
@@ -193,7 +194,6 @@ namespace Code.Scripts.TutorialManagement
                 _dialogueText.text += dialogueObject.GetDialog()[i];
                 yield return new WaitForSecondsRealtime(0.05f);
             }
-            //Debug.Log("Finish write");
 
             _endDialogueTime = Time.time + dialogueObject.GetTime();
 
@@ -211,7 +211,7 @@ namespace Code.Scripts.TutorialManagement
             
             _dialogueText.text = "";  //Reset the text
             _tutorialCrosshair.SetActive(false);
-
+            
             yield return null;
         }
     }
