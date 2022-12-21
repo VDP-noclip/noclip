@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
@@ -14,11 +15,13 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _tutorialCrosshair;
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
+        [SerializeField] private KeyCode _skipDialogueKey; 
         [SerializeField] private float _hintDuration = 4f;
         [SerializeField] private float _bufferTimeAfterTutorialText = 4f;
         private float _endDialogueTime;
         private float _endHintTime;
-        private Coroutine _currentDisplayDialogueCoroutine;
+        private Coroutine _displayDialogueCoroutine;
+        private bool _displayDialogueCoroutineIsRunning;
 
         private RealityMovementCalibration _realityMovement;
 
@@ -35,6 +38,14 @@ namespace Code.Scripts.TutorialManagement
             _controlsContainer.SetActive(false);
         }
 
+        private void Update()
+        {
+            if (_displayDialogueCoroutineIsRunning && Input.GetKeyDown(_skipDialogueKey))
+            {
+                StopCurrentDialogueCoroutine();
+            }
+                
+        }
 
         private void ClearHints()
         {
@@ -46,12 +57,10 @@ namespace Code.Scripts.TutorialManagement
 
         private void DisplayHint(string hint)
         {
-        
             EventManager.StopListening("DisplayHint", DisplayHint);
             StartCoroutine(fadeInAndOut(_controlsContainer, true, 1f));
             StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
-        
         }
         
         IEnumerator fadeInAndOut(GameObject objectToFade, bool fadeIn, float duration)
@@ -173,15 +182,14 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
-            if (_currentDisplayDialogueCoroutine != null)
-            {
-                StopCoroutine(_currentDisplayDialogueCoroutine);
-            }
-            _currentDisplayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            StopCurrentDialogueCoroutine();
+            _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
+
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
+            _displayDialogueCoroutineIsRunning = true;
             StartCoroutine(fadeInAndOut(_dialogueContainer, true, 1f));
             _dialogueContainer.SetActive(true);
             _realityMovement.SetSlowMode(dialogueObject.IsSlowDown());
@@ -205,15 +213,28 @@ namespace Code.Scripts.TutorialManagement
                 yield return new WaitForSecondsRealtime(0.05f);
             }
             
-            _dialogueContainer.SetActive(false);
-            _realityMovement.SetSlowMode(false);
-
-            _dialogueText.text = "";  //Reset the text
-            _tutorialCrosshair.SetActive(false);
-            
             StartCoroutine(fadeInAndOut(_dialogueContainer, false, 1f));
-
+            FinalDialogueCoroutineOperations();
             yield return null;
+        }
+        
+        private void FinalDialogueCoroutineOperations()
+        {
+            _dialogueContainer.SetActive(false);
+            
+            _dialogueText.text = "";  //Reset the text
+            _realityMovement.SetSlowMode(false);
+            _tutorialCrosshair.SetActive(false);
+            _displayDialogueCoroutineIsRunning = false;
+        }
+
+        private void StopCurrentDialogueCoroutine()
+        {
+            if (_displayDialogueCoroutineIsRunning)
+            {
+                StopCoroutine(_displayDialogueCoroutine);
+                FinalDialogueCoroutineOperations();
+            }
         }
     }
     
