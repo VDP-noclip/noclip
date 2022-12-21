@@ -14,14 +14,14 @@ public class FadeIn2 : MonoBehaviour
     private Color[] _col;
     //finished array
     private bool[] _finished;
-    private Material[] _originalMaterial;
+    [SerializeField] private Material[] _originalMaterial;
     private float[] _originalAlpha;
     private float[] _prevAlpha;
 
     void Start()
     {
-        //GetComponent<Renderer>().materials variable
-        Material[] materials = GetComponent<Renderer>().materials;
+        //GetComponent<MeshRenderer>().materials variable
+        Material[] materials = GetComponent<MeshRenderer>().materials;
         //_finished array length = materials length
         _tex = new Texture[materials.Length];
         _col = new Color[materials.Length];
@@ -35,7 +35,7 @@ public class FadeIn2 : MonoBehaviour
             _finished[j] = false;
         }
         int i = 0;
-        foreach(Material material in GetComponent<Renderer>().materials){
+        foreach(Material material in GetComponent<MeshRenderer>().materials){
             //store material texture into variable
             _tex[i] = material.mainTexture;
             //create copy of material
@@ -60,8 +60,8 @@ public class FadeIn2 : MonoBehaviour
     void FixedUpdate()
     {
         int i = 0;
-        //foreach material in GetComponent<Renderer>().materials
-        foreach(Material material in GetComponent<Renderer>().materials){
+        //foreach material in GetComponent<MeshRenderer>().materials
+        foreach(Material material in GetComponent<MeshRenderer>().materials){
             if(!_finished[i]){
                 if (material.color.a < _originalAlpha[i])
                 {
@@ -77,9 +77,9 @@ public class FadeIn2 : MonoBehaviour
                         material.CopyPropertiesFromMaterial(_originalMaterial[i]);
                     }
                     //if father of object is named IntangibleNoclipObjectsHolder set alpha to NoclipIntangibleController GetNoclipMaterials
-                    if(transform.parent != null && transform.parent.name == "IntangibleNoclipObjectsHolder"){
-                        material.color = new Color(material.color.r, material.color.g, material.color.b, GetComponent<NoclipIntangibleController>().GetNoclipMaterials()[0].color.a);
-                    }
+                    //if(transform.parent != null && transform.parent.name == "IntangibleNoclipObjectsHolder"){
+                    //    material.color = new Color(material.color.r, material.color.g, material.color.b, GetComponent<NoclipIntangibleController>().GetNoclipMaterials()[0].color.a);
+                    //}
                 }
             }
             if(_finished[i]){

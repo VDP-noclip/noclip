@@ -25,13 +25,21 @@ public class ObjectsHolderManager : MonoBehaviour
         if (_layerToApply != null)
             ApplyLayerToChildren();
 
-        //disable mesh renderer of all children
         foreach (Transform child in _childrenTransforms)
         {
             //if this is a InvisibleNoclipObjectsHolder and child doesn't have NoclipInvisibleObjController add it
             if (gameObject.name == "InvisibleNoclipObjectsHolder" && child.GetComponent<NoclipInvisibleObjController>() == null)
             {
                 child.gameObject.AddComponent<NoclipInvisibleObjController>();
+            }
+            //if this is a InvisibleNoclipObjectsHolder and child doesn't have NoclipInvisibleObjController add it
+            if (gameObject.name == "IntangibleNoclipObjectsHolder" && child.GetComponent<NoclipIntangibleController>() == null)
+            {
+                child.gameObject.AddComponent<NoclipIntangibleController>();
+                Debug.Log("Added NoclipIntangibleController to " + child.name);
+                //disable mesh collider
+                if(child.gameObject.GetComponent<MeshCollider>() != null)
+                    child.gameObject.GetComponent<MeshCollider>().enabled = false;
             }
             //add FadeIn script to all children
             child.gameObject.AddComponent<FadeIn2>();
