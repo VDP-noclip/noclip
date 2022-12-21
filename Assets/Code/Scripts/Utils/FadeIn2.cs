@@ -10,53 +10,71 @@ public class FadeIn2 : MonoBehaviour
     [SerializeField] private float _fadeSpeed = 0.02f; //透明化の速さ
     //show a tooltip saying material is in Resources folder
     [SerializeField, Tooltip("Material is in Resources folder")] private string _fadeMaterialPath = "Materials/RealityPlatform";
-    private Texture _tex;
-    private Color _col;
-    private bool _finished = false;
-    private Material _originalMaterial;
-    private float _originalAlpha = 1f;
-    private float _prevAlpha = 1f;
+    private Texture[] _tex;
+    private Color[] _col;
+    //finished array
+    private bool[] _finished;
+    private Material[] _originalMaterial;
+    private float[] _originalAlpha;
+    private float[] _prevAlpha;
 
     void Start()
     {
-        //foreach material in GetComponent<Renderer>().materials
+        //GetComponent<Renderer>().materials variable
+        Material[] materials = GetComponent<Renderer>().materials;
+        //_finished array length = materials length
+        _tex = new Texture[materials.Length];
+        _col = new Color[materials.Length];
+        _finished = new bool[materials.Length];
+        _originalMaterial = new Material[materials.Length];
+        _originalAlpha = new float[materials.Length];
+        _prevAlpha = new float[materials.Length];
+        for(int j = 0; j < _prevAlpha.Length; j++){
+            _originalAlpha[j] = 1f;
+            _prevAlpha[j] = 1f;
+            _finished[j] = false;
+        }
+        int i = 0;
         foreach(Material material in GetComponent<Renderer>().materials){
             //store material texture into variable
-            _tex = material.mainTexture;
+            _tex[i] = material.mainTexture;
             //create copy of material
-            _originalMaterial = new Material(material);
-            _originalAlpha = _originalMaterial.color.a;
-            _col = material.color;
+            _originalMaterial[i] = new Material(material);
+            _originalAlpha[i] = _originalMaterial[i].color.a;
+            _col[i] = material.color;
             //if object tag is Background set finished to true
             if (gameObject.tag == "Background")
             {
-                _finished = true;
-                return;
+                _finished[i] = true;
             }
-            ChangeMaterialTransparency(true, material);
-            material.color = new Color(material.color.r, material.color.g, material.color.b, 0f);
-            material.SetInt("_ZWrite", 1);
+            else{
+                ChangeMaterialTransparency(true, material);
+                material.color = new Color(material.color.r, material.color.g, material.color.b, 0f);
+                material.SetInt("_ZWrite", 1);
+            }
+            i++;
         }
     }
     
     //fixedupdate
     void FixedUpdate()
     {
+        int i = 0;
         //foreach material in GetComponent<Renderer>().materials
         foreach(Material material in GetComponent<Renderer>().materials){
-            if(!_finished){
-                if (material.color.a < _originalAlpha)
+            if(!_finished[i]){
+                if (material.color.a < _originalAlpha[i])
                 {
-                    _prevAlpha = material.color.a;
+                    _prevAlpha[i] = material.color.a;
                     //make mesh more opaque
                     material.color = new Color(material.color.r, material.color.g, material.color.b, material.color.a + _fadeSpeed);
                 }
                 //else switch to ProBuilder_yellow
-                else if (!_finished)
+                else if (!_finished[i])
                 {
-                    _finished = true;
-                    if(Untampered(material)){
-                        material.CopyPropertiesFromMaterial(_originalMaterial);
+                    _finished[i] = true;
+                    if(Untampered(material, i)){
+                        material.CopyPropertiesFromMaterial(_originalMaterial[i]);
                     }
                     //if father of object is named IntangibleNoclipObjectsHolder set alpha to NoclipIntangibleController GetNoclipMaterials
                     if(transform.parent != null && transform.parent.name == "IntangibleNoclipObjectsHolder"){
@@ -64,18 +82,19 @@ public class FadeIn2 : MonoBehaviour
                     }
                 }
             }
-            if(_finished){
+            if(_finished[i]){
                 Material currentMaterial = material;
-                if(currentMaterial.name == _originalMaterial.name && currentMaterial.color.a != _originalAlpha){
+                if(currentMaterial.name == _originalMaterial[i].name && currentMaterial.color.a != _originalAlpha[i]){
                     Debug.Log("Fixing fade in");
-                    material.CopyPropertiesFromMaterial(_originalMaterial);
+                    material.CopyPropertiesFromMaterial(_originalMaterial[i]);
                 }
             }
+            i++;
         }
     }
 
-    private bool Untampered(Material material){
-        return material.color.a == _prevAlpha;
+    private bool Untampered(Material material, int i){
+        return material.color.a == _prevAlpha[i];
     }
 
     //some black magic to change material transparency at runtime
