@@ -17,11 +17,6 @@ public class DialogueBoxController : MonoBehaviour
     private void Start()
     {
         collider = gameObject.GetComponent<BoxCollider>();
-        if (_slowDown)
-        {
-            Debug.Log("Slow down still work in progress...");
-            _slowDown = false;     
-        }
     }
 
     private void OnTriggerEnter(Collider other)

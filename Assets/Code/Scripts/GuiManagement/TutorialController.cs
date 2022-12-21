@@ -15,9 +15,10 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
         [SerializeField] private float _hintDuration = 4f;
-        [SerializeField] private float _bufferTimeAfterTutorialText = 3f;
+        [SerializeField] private float _bufferTimeAfterTutorialText = 4f;
         private float _endDialogueTime;
         private float _endHintTime;
+        private Coroutine _currentDisplayDialogueCoroutine;
 
         private RealityMovementCalibration _realityMovement;
 
@@ -172,18 +173,18 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayDialogue(TutorialDialogObject dialogueObject) // We need to pass also the timer
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
-            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 0.5f));
-            StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            if (_currentDisplayDialogueCoroutine != null)
+            {
+                StopCoroutine(_currentDisplayDialogueCoroutine);
+            }
+            _currentDisplayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
-            
+            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 1f));
             _dialogueContainer.SetActive(true);
-            if (dialogueObject.IsSlowDown())
-            {
-                _realityMovement.SetSlowMode(true);
-            }
+            _realityMovement.SetSlowMode(dialogueObject.IsSlowDown());
 
             if (dialogueObject.IsCrossHairHighlighted())
             {
@@ -191,6 +192,7 @@ namespace Code.Scripts.TutorialManagement
             }
 
             _dialogueText.text = "";
+            _endDialogueTime = Time.realtimeSinceStartup + dialogueObject.GetTotalTime() + _bufferTimeAfterTutorialText;
 
             for (int i = 0; i < dialogueObject.GetDialog().Length; i++)  // Write like a typer
             {
@@ -198,20 +200,18 @@ namespace Code.Scripts.TutorialManagement
                 yield return new WaitForSecondsRealtime(dialogueObject.GetTimePerLetter());
             }
             
-            _endDialogueTime = Time.realtimeSinceStartup + _bufferTimeAfterTutorialText;
             while (Time.realtimeSinceStartup < _endDialogueTime)
             {
                 yield return new WaitForSecondsRealtime(0.05f);
             }
             
             _dialogueContainer.SetActive(false);
-            if (dialogueObject.IsSlowDown())
-            {
-                _realityMovement.SetSlowMode(false);
-            }
-            
+            _realityMovement.SetSlowMode(false);
+
             _dialogueText.text = "";  //Reset the text
             _tutorialCrosshair.SetActive(false);
+            
+            StartCoroutine(fadeInAndOut(_dialogueContainer, false, 1f));
 
             yield return null;
         }

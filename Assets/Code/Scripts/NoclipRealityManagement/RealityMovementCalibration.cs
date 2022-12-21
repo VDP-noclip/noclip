@@ -236,7 +236,7 @@ public class RealityMovementCalibration : MonoBehaviour
         if (activateSlowMode)
         {
             _readyToJump = false;
-            Time.timeScale = 0.35f;
+            Time.timeScale = 0.25f;
         }
         else
         {
