@@ -25,6 +25,8 @@ namespace Code.Scripts.TutorialManagement
 
         private RealityMovementCalibration _realityMovement;
 
+
+
         private void Awake()
         {
             _realityMovement = FindObjectOfType<RealityMovementCalibration>();
@@ -158,6 +160,8 @@ namespace Code.Scripts.TutorialManagement
                             tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
                             break;
                     }
+                    
+                    
                     yield return null;
                 }
             }
@@ -183,14 +187,17 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
             StopCurrentDialogueCoroutine();
+            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 1f));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            
+            
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
 
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
             _displayDialogueCoroutineIsRunning = true;
-            StartCoroutine(fadeInAndOut(_dialogueContainer, true, 1f));
+            
             _dialogueContainer.SetActive(true);
             _realityMovement.SetSlowMode(dialogueObject.IsSlowDown());
 
@@ -212,20 +219,21 @@ namespace Code.Scripts.TutorialManagement
             {
                 yield return new WaitForSecondsRealtime(0.05f);
             }
-            
-            StartCoroutine(fadeInAndOut(_dialogueContainer, false, 1f));
+            //FinalDialogueCoroutineOperations();
+            yield return fadeInAndOut(_dialogueContainer, false, 1f);
             FinalDialogueCoroutineOperations();
-            yield return null;
+
+
         }
         
         private void FinalDialogueCoroutineOperations()
         {
             _dialogueContainer.SetActive(false);
-            
             _dialogueText.text = "";  //Reset the text
             _realityMovement.SetSlowMode(false);
             _tutorialCrosshair.SetActive(false);
             _displayDialogueCoroutineIsRunning = false;
+            
         }
 
         private void StopCurrentDialogueCoroutine()
