@@ -69,9 +69,9 @@ public class PauseMenuController : MonoBehaviour
 
     private void Start()
     {
-        SetVolumeEffects(PlayerPrefs.GetFloat("effectsVolume"));
-        SetVolumeGlobal(PlayerPrefs.GetFloat("globalVolume"));
-        SetVolumeSoundtrack(PlayerPrefs.GetFloat("soundtrackVolume"));
+        SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
+        SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
+        SetSoundtrackVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
     }
     private void Update()
     {
@@ -90,9 +90,9 @@ public class PauseMenuController : MonoBehaviour
 
     public void ActivateMenu()
     {
-        SetVolumeEffects(PlayerPrefs.GetFloat("effectsVolume"));
-        SetVolumeGlobal(PlayerPrefs.GetFloat("globalVolume"));
-        SetVolumeSoundtrack(PlayerPrefs.GetFloat("soundtrackVolume"));
+        SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
+        SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
+        SetSoundtrackVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
         
 
         Time.timeScale = 0;
@@ -111,7 +111,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void DeactivateMenu()
     {
-        SetVolumeGlobal(PlayerPrefs.GetFloat("soundtrackVolume"));
+        SetGlobalVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
         Time.timeScale = 1;
         AudioListener.pause = false;
 
@@ -170,23 +170,23 @@ public class PauseMenuController : MonoBehaviour
         EventManager.TriggerEvent("setSensitivity", sensitivity.ToString());
         mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
     }
-    public void SetVolumeSoundtrack(float volume)
+    public void SetSoundtrackVolume(float volume)
     {
         _currentSoundVolume = volume;
         _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
-        _volumeSoundtrackSlider.value = volume;
+        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
     }
-    public void SetVolumeEffects(float volume)
+    public void SetEffectsVolume(float volume)
     {
         _currentEffectsVolume = volume;
         _audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
-        _volumeEffectsSlider.value = volume;
+        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
     }
-    public void SetVolumeGlobal(float volume)
+    public void SetGlobalVolume(float volume)
     {
         _currentGlobalVolume = volume;
         _audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
-        _volumeGlobalSlider.value = volume;
+        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
     }
     public void GameplayApply()
     {

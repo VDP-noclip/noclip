@@ -22,7 +22,9 @@ public class LoadPrefs : MonoBehaviour
 
     [Header("Volume Settings")] 
     [SerializeField] private TMP_Text volumeTextValue;
-    [SerializeField] private Slider volumeSlider = null;
+    [SerializeField] private Slider globalVolumeSlider = null;
+    [SerializeField] private Slider effectsVolumeSlider = null;
+    [SerializeField] private Slider soundtrackVolumeSlider = null;
     [SerializeField] private AudioMixer audioMixer;
 
     [Header("Quality Level Settings")]
@@ -49,7 +51,7 @@ public class LoadPrefs : MonoBehaviour
                 float localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
                 Debug.Log("local volume menu " + localSoundVolume);
                 
-                volumeSlider.value = localSoundVolume;
+                soundtrackVolumeSlider.value = localSoundVolume;
                 audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
             }
             
@@ -59,7 +61,7 @@ public class LoadPrefs : MonoBehaviour
                 
                 float localEffectsVolume = PlayerPrefs.GetFloat("effectsVolume");
                 
-                volumeSlider.value = localEffectsVolume;
+                effectsVolumeSlider.value = localEffectsVolume;
                 audioMixer.SetFloat("effectsVolume", Mathf.Log(localEffectsVolume) * 20);
             }
 
@@ -69,7 +71,7 @@ public class LoadPrefs : MonoBehaviour
                 
                 float localGlobalVolume = PlayerPrefs.GetFloat("globalVolume");
 
-                volumeSlider.value = localGlobalVolume;
+                globalVolumeSlider.value = localGlobalVolume;
                 audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume) * 20);
             }
             

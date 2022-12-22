@@ -169,7 +169,7 @@ public class MenuController : MonoBehaviour
     public void SetControllerSensitivity(float sensitivity)
     {
         mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
-        controllerSensitivityTextValue.text = sensitivity.ToString("0");
+        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
     }
     
     // Applies changes. These actually save the information.

@@ -11180,7 +11180,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 544627111}
         m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
-        m_MethodName: SetVolumeEffects
+        m_MethodName: SetEffectsVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11413,7 +11413,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 544627111}
         m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
-        m_MethodName: SetVolumeGlobal
+        m_MethodName: SetGlobalVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12773,7 +12773,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 544627111}
         m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
-        m_MethodName: SetVolumeSoundtrack
+        m_MethodName: SetSoundtrackVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
