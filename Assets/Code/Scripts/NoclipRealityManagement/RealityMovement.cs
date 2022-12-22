@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 //using list
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 //using slider
 using UnityEngine.UI;
 
