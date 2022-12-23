@@ -154,45 +154,34 @@ public class LevelManager : MonoBehaviour
 
     private void UpdatePreviousNoclipMaterials(){
         GameObject previousPuzzle = transform.Find("Puzzle_" + (_currentPuzzleIndex - 1)).gameObject;
-        //for each children of RealityObjectsHolder add component NoclipMaterialHolder
-        try{
-            foreach (Transform child in previousPuzzle.transform.Find("RealityObjectsHolder"))
+        SetCompletedMaterials(previousPuzzle, "RealityObjectsHolder");
+        SetCompletedMaterials(previousPuzzle, "IntangibleNoclipObjectsHolder");
+        SetCompletedMaterials(previousPuzzle, "InvisibleNoclipObjectsHolder");
+    }
+
+    private void SetCompletedMaterials(GameObject previousPuzzle, string tag){
+        Transform holder = previousPuzzle.transform.Find(tag);
+        if(holder)
+        {
+            foreach (Transform child in holder)
             {
-                child.gameObject.AddComponent<NoclipMaterialHolder>();
-                //list of one material containing _previousNoclipMaterial
-                Material[] materials = new Material[1];
-                materials[0] = _previousNoclipMaterial;
+                //if child doesn't have NoclipMaterialHolder add it
+                if (!child.gameObject.GetComponent<NoclipMaterialHolder>())
+                {
+                    child.gameObject.AddComponent<NoclipMaterialHolder>();
+                }
+                //size of child materials
+                int size = child.gameObject.GetComponent<Renderer>().materials.Length;
+                //array of size materials
+                Material[] materials = new Material[size];
+                //fill with _previousNoclipMaterial
+                for (int i = 0; i < size; i++)
+                {
+                    materials[i] = new Material(_previousNoclipMaterial);
+                }
                 //add material to NoclipMaterialHolder
                 child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(materials);
             }
-        }catch{
-        }
-        try{
-            foreach (Transform child in previousPuzzle.transform.Find("IntangibleNoclipObjectsHolder"))
-            {
-                child.gameObject.AddComponent<NoclipMaterialHolder>();
-                //list of one material containing _previousNoclipMaterial
-                Material[] materials = new Material[1];
-                //add a copy of previousNoclipMaterial to materials
-                materials[0] = new Material(_previousNoclipMaterial);
-                //set alpha of material to child's material alpha
-                materials[0].color = new Color(materials[0].color.r, materials[0].color.g, materials[0].color.b, 0.2f);
-                //add material to NoclipMaterialHolder
-                child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(materials);
-            }
-        }catch{
-        }
-        try{
-            foreach (Transform child in previousPuzzle.transform.Find("InvisibleNoclipObjectsHolder"))
-            {
-                child.gameObject.AddComponent<NoclipMaterialHolder>();
-                //list of one material containing _previousNoclipMaterial
-                Material[] materials = new Material[1];
-                materials[0] = _previousNoclipMaterial;
-                //add material to NoclipMaterialHolder
-                child.gameObject.GetComponent<NoclipMaterialHolder>().SetMaterial(materials);
-            }
-        }catch{
         }
     }
 }
