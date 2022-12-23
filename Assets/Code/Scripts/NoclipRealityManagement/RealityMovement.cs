@@ -163,6 +163,20 @@ public class RealityMovement : MonoBehaviour
         return _state;
     }
 
+    public void SetSlowMode(bool activateSlowMode)
+    {
+        if (activateSlowMode)
+        {
+            _readyToJump = false;
+            Time.timeScale = 0.35f;
+        }
+        else
+        {
+            Time.timeScale = 1;
+            _readyToJump = true;
+        }
+    }
+
     /// <summary>
     /// This function manages the input of the user
     /// </summary>
