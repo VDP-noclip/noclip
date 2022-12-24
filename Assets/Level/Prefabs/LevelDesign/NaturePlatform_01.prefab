@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8243793904934479389}
   - component: {fileID: 6161805724423197399}
   - component: {fileID: -1563986509898470582}
+  - component: {fileID: 1926206147275098033}
   m_Layer: 0
   m_Name: NaturePlatform_01
   m_TagString: Untagged
@@ -86,6 +87,20 @@ MeshRenderer:
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &-1563986509898470582
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5657609480273736450}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2040102482148645809, guid: e80e8f3693b2d97479b8f7609c3db7b6, type: 3}
+--- !u!64 &1926206147275098033
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
