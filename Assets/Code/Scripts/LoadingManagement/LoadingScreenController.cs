@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 public class LoadingScreenController : MonoBehaviour
 {
+    [SerializeField] private LoadingSceneOption _loadingSceneOption;
     [SerializeField] private TMP_Text loadingText = null;
     [SerializeField] private TMP_Text loadingDots = null;
     [SerializeField] private GameObject pressButtons;
@@ -18,10 +19,15 @@ public class LoadingScreenController : MonoBehaviour
 
     private bool _isLoaded;
 
+    //private string _currentDialog;
+
     private void Start()
     {
         loadingCircle.fillAmount = 0;
         _multiplier = Random.Range(3f, 5f);
+        string[] dialogs = _loadingSceneOption._dialogs;
+        loadingText.text = dialogs[_loadingSceneOption.GetSceneNumber()];
+
     }
 
     private void Update()
@@ -43,6 +49,7 @@ public class LoadingScreenController : MonoBehaviour
         {
             if (Input.anyKey)
             {
+                _loadingSceneOption.ChangeSceneNumber();
                 GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
             }
         }
