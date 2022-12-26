@@ -147,6 +147,7 @@ public class MenuController : MonoBehaviour
     {
         _currentSoundVolume = volume;
         audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
+        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
 
     }
     
@@ -154,6 +155,7 @@ public class MenuController : MonoBehaviour
     {
         _currentGlobalVolume = volume;
         audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
+        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
 
     }
     
@@ -161,12 +163,13 @@ public class MenuController : MonoBehaviour
     {
         _currentEffectsVolume = volume;
         audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
+        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
 
     }
     public void SetControllerSensitivity(float sensitivity)
     {
         mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
-        controllerSensitivityTextValue.text = sensitivity.ToString("0");
+        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
     }
     
     // Applies changes. These actually save the information.

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.22031568, g: 0.48526186, b: 0.78091514, a: 1}
+  m_IndirectSpecularColor: {r: 0.2203154, g: 0.48526037, b: 0.78091484, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7244,7 +7244,9 @@ MonoBehaviour:
   canUse: 1
   menuController: {fileID: 771194624}
   volumeTextValue: {fileID: 0}
-  volumeSlider: {fileID: 1882909496}
+  globalVolumeSlider: {fileID: 2108244910}
+  effectsVolumeSlider: {fileID: 82562097}
+  soundtrackVolumeSlider: {fileID: 1882909496}
   audioMixer: {fileID: 24100000, guid: 966f75dff49d65b4a9d6827eea13a365, type: 2}
   qualityDropdown: {fileID: 383834417}
   fullScreenToggle: {fileID: 1396441972}
