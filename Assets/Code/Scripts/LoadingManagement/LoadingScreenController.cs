@@ -43,7 +43,7 @@ public class LoadingScreenController : MonoBehaviour
             _firstTime += Time.deltaTime;
             loadingCircle.fillAmount = _firstTime / _multiplier;
             
-            Debug.Log(_firstTime);
+            //Debug.Log(_firstTime);
         }
         else
         {
@@ -85,7 +85,7 @@ public class LoadingScreenController : MonoBehaviour
                 Image tempImage = objectToFade.GetComponent<Image>();
                 RawImage tempRawImage = objectToFade.GetComponent<RawImage>();
                 MeshRenderer tempRenderer = objectToFade.GetComponent<MeshRenderer>();
-                Text tempText = objectToFade.GetComponent<Text>();
+                TMP_Text tempText = objectToFade.GetComponent<TMP_Text>();
 
                 //Check if this is a Sprite
                 if (tempSPRenderer != null)
@@ -96,6 +96,7 @@ public class LoadingScreenController : MonoBehaviour
                 //Check if Image
                 else if (tempImage != null)
                 {
+                    Debug.Log(tempImage.name);
                     currentColor = tempImage.color;
                     mode = 1;
                 }
@@ -108,6 +109,7 @@ public class LoadingScreenController : MonoBehaviour
                 //Check if Text 
                 else if (tempText != null)
                 {
+                    Debug.Log(tempText.name);
                     currentColor = tempText.color;
                     mode = 3;
                 }
