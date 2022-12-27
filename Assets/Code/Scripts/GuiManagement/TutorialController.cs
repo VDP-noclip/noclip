@@ -58,7 +58,7 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("ClearHints", ClearHints);
             _tutorialText.text = "";
-            _controlsContainer.SetActive(false);
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, 1f));
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
@@ -179,7 +179,7 @@ namespace Code.Scripts.TutorialManagement
                 while (counter < duration)
                 {
                     counter += Time.deltaTime;
-                    float alpha = Mathf.Lerp(a, b, counter / duration) - 0.15f;
+                    float alpha = Mathf.Lerp(a, b, counter / duration);
 
                     switch (mode)
                     {
