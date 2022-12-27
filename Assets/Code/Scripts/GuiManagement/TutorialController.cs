@@ -179,24 +179,24 @@ namespace Code.Scripts.TutorialManagement
                 while (counter < duration)
                 {
                     counter += Time.deltaTime;
-                    float alpha = Mathf.Lerp(a, b, counter / duration);
+                    float alpha = Mathf.Lerp(a, b, counter / duration) - 0.15f;
 
                     switch (mode)
                     {
                         case 0:
-                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 1:
-                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 2:
-                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 3:
-                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 4:
-                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                     }
                     
