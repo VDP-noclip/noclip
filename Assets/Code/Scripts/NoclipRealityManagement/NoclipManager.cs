@@ -19,22 +19,31 @@ public class NoclipManager : MonoBehaviour
     [SerializeField] private AudioSource _effectsAudioSource;
     [SerializeField] private AudioSource _noclipZoneAudioSource;
     [SerializeField] private AudioTracks _audioTracks;
+    [SerializeField] private float _coolDownSeconds = 5f;
 
     private List<BaseNoclipObjectController> _noclipObjControllers;
     private ObjectMaterialSwitcher[] _objectMaterialSwitchers;
     private CameraManager _cameraManager;
-
-    private bool _noclipEnabled;
-    private bool _playerCanSwitchMode;
-    private bool _insideNoclipAreaZoneIsPlaying;
     
-    private bool _goingBackToBody;
+    private bool _playerInsideNoclipEnabler;
+    private bool _insideNoclipAreaZoneIsPlaying;
+    private NoclipState _noclipState;
+    
     private GameObject _noclipCamera;
     private GameObject _realityCamera;
     private GameObject _postprocessReality;
     private GameObject _postprocessNoclip;
     
     private NoclipMovement _noclipMovement;
+
+    private enum NoclipState
+    {
+        RealityCannotEnableNoclip,
+        RealityCooldown,
+        RealityCanEnableNoclip,
+        NoclipEnabled,
+        GoingBackToBody
+    }
 
     void Awake()
     {
@@ -46,6 +55,7 @@ public class NoclipManager : MonoBehaviour
         _noclipCamera = GameObject.Find("NoclipCamera");
         //NoclipMovement
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
+        _noclipState = NoclipState.RealityCannotEnableNoclip;
     }
 
     private void Start()
@@ -75,59 +85,45 @@ public class NoclipManager : MonoBehaviour
     /// <summary>
     /// Set this to true if you want the player to be able to switch mode
     /// </summary>
-    public void SetPlayerCanSwitchMode(bool playerCanSwitchMode)
+    public void SetPlayerIsInsideNoclipEnabler(bool playerInsideNoclipEnabler)
     {
-        _playerCanSwitchMode = playerCanSwitchMode;
-        if (!playerCanSwitchMode)
-            EventManager.TriggerEvent("ClearHints");
-        else if (_noclipEnabled)
-            Debug.Log("Ciaooo");
-        //    EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToDeactivateNoclip); // disabled because useless
-        else
+        Debug.Log("SetPlayerIsInsideNoclipEnabler: " + playerInsideNoclipEnabler);
+        _playerInsideNoclipEnabler = playerInsideNoclipEnabler;
+        if (_noclipState == NoclipState.RealityCooldown || _noclipState == NoclipState.GoingBackToBody)
+        {
+            Debug.Log("Transitioning...");
+            return;
+        }
+        
+        if (playerInsideNoclipEnabler && _noclipState == NoclipState.RealityCannotEnableNoclip)
+        {
             EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
-    }
-    
-    
-    /// <summary>
-    /// Allow the player to disable no clip, or disable noclip automatically
-    /// </summary>
-    public void NoClipReturnedToBody()
-    {
-        _playerCanSwitchMode = true;
-        if (_goingBackToBody && _noclipEnabled)
-            StartCoroutine(DisableNoclip());
-    }
-    
-    /// <summary>
-    /// Inform noclip manager that the noclip camera is outside the body and block the option to disable noclip mode
-    /// </summary>
-    public void NoClipExitedToBody()
-    {
-        _playerCanSwitchMode = false;
-        EventManager.TriggerEvent("ClearHints");
-    }
+            _noclipState = NoclipState.RealityCanEnableNoclip;
+            return;
+        }
+        
+        if (!playerInsideNoclipEnabler && _noclipState == NoclipState.RealityCanEnableNoclip)
+        {
+            EventManager.TriggerEvent("ClearHints");
+            _noclipState = NoclipState.RealityCannotEnableNoclip;
+        }
 
+    }
+    
     public bool IsNoclipEnabled()
     {
-        return _noclipEnabled;
+        return _noclipState == NoclipState.NoclipEnabled;
     }
-
-    private void SwitchMode()
-    {
-        if (_noclipEnabled)
-            StartCoroutine(DisableNoclip());
-        else
-            StartCoroutine(EnableNoclip());
-    }
+    
 
     /// <summary>
     /// Activate the noclip mode to all the objects and switch camera to the noclip one.
     /// </summary>
     private IEnumerator EnableNoclip()
     {
+        EventManager.TriggerEvent("ClearHints");
         Debug.Log("Enablenoclip");
-        
-       
+        _noclipState = NoclipState.NoclipEnabled;
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);
         
@@ -140,27 +136,10 @@ public class NoclipManager : MonoBehaviour
                 Debug.LogError("Error with a noclip object controller");
             }
         });
-        _noclipEnabled = true;
-        _goingBackToBody = false;
         _cameraManager.SwitchCamera();
         RenderNoclipMode();
+        Debug.Log("Enablenoclip finished. Current state: " + _noclipState);
         yield return null;
-    }
-    
-    private void Respawn()
-    {
-        Debug.Log("Respawn");
-        
-       
-        //_postprocessReality.SetActive(false);
-        //_postprocessNoclip.SetActive(true);
-        
-        //_effectsAudioSource.PlayOneShot(_audioTracks.enableNoclip);
-        //_noclipObjControllers.ForEach(obj => obj.ActivateNoclip());
-        _noclipEnabled = true;
-        _goingBackToBody = false;
-        _cameraManager.SwitchCamera();
-        //RenderNoclipMode();
     }
 
     /// <summary>
@@ -183,8 +162,6 @@ public class NoclipManager : MonoBehaviour
                 Debug.LogError("Error with a noclip object controller");
             }
         });
-        _noclipEnabled = false;
-        _goingBackToBody = false;
         _cameraManager.SwitchCamera();
         RenderRealityMode();
         yield return null;
@@ -201,52 +178,51 @@ public class NoclipManager : MonoBehaviour
         // When pressing
         if (Input.GetButtonDown("Noclip"))
         {
-            if (_playerCanSwitchMode)
-                SwitchMode();
-            else if (!_noclipEnabled)
-                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside); 
-            else if (_noclipEnabled)
-                Debug.Log("There was an event here");
-                // EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToDeactivateNoclipOutside);
+            if (_noclipState == NoclipState.RealityCanEnableNoclip)
+                StartCoroutine(EnableNoclip());
+            else if (_noclipState == NoclipState.RealityCooldown)
+                EventManager.TriggerEvent("DisplayHint", "Wait for cooldown...");
+            else 
+                EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside);
         }
 
-
-        if (Input.GetKeyDown(KeyCode.L))
+        // When releasing
+        if (Input.GetButtonUp("Noclip") && _noclipState == NoclipState.NoclipEnabled)
         {
-            Time.timeScale = 0.35f;
+            Debug.Log("call GoBackToBodyCoroutine");
+            StartCoroutine(GoBackToBodyCoroutine());
         }
         
-        // When releasing
-        if (Input.GetButtonUp("Noclip") && _noclipEnabled){
-            _goingBackToBody = true;
-            _noclipMovement.SetEnableMovement(false);
-            //_noclipMouseLook.CopyRotationCoordinates(_realityMouseLook);  // Add a method that slowly changes
-        }
     }
 
-    public void NoclipRespawnSequence(){
-        Debug.Log("NoclipRespawnSequence");
-        Respawn();
-        _goingBackToBody = true;
-        _noclipMovement.SetEnableMovement(false);
-    }
-
-    private void FixedUpdate()
+    public void NoclipRespawnSequence()
     {
-        //if _goingBackToBody slowly move noclipcamera to realitycamera position
-        if (_goingBackToBody){
+        Debug.Log("NoclipRespawnSequence TODO, with Tizio!");
+    }
+
+    private IEnumerator GoBackToBodyCoroutine()
+    {
+        _noclipState = NoclipState.GoingBackToBody;
+        _noclipMovement.SetEnableMovement(false);
+        while (!IsBackToBody())
+        {
             _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
             _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
-            if (IsBackToBody())
-                NoClipReturnedToBody();
+            yield return new WaitForSeconds(0.01f);
         }
-        //copy noclipcamera rotation to realitycamera rotation
-        else{
-            if(!_noclipEnabled)
-                _noclipCamera.transform.rotation = _realityCamera.transform.rotation;
-        }
+        yield return DisableNoclip();
+        
+        // Cooldown phase
+        _noclipState = NoclipState.RealityCooldown;
+        yield return new WaitForSecondsRealtime(_coolDownSeconds);
+        
+        EventManager.TriggerEvent("ClearHints");
+        if (_playerInsideNoclipEnabler)
+            _noclipState = NoclipState.RealityCanEnableNoclip;
+        else
+            _noclipState = NoclipState.RealityCannotEnableNoclip;
     }
-    
+
     private bool IsBackToBody()
     {
         float distThreshold = 0.1f;
@@ -334,7 +310,7 @@ public class NoclipManager : MonoBehaviour
 
     private IEnumerator StartOrStopNoclipZoneSound()
     {
-        if (_playerCanSwitchMode && !_insideNoclipAreaZoneIsPlaying)
+        if (_playerInsideNoclipEnabler && !_insideNoclipAreaZoneIsPlaying)
         {
             Debug.Log("Start NoclipZoneSound");
             // Disabled clip since we're not using it.
@@ -342,7 +318,7 @@ public class NoclipManager : MonoBehaviour
             _insideNoclipAreaZoneIsPlaying = true;
         }
 
-        if (_insideNoclipAreaZoneIsPlaying && (!_playerCanSwitchMode || _noclipEnabled))
+        if (_insideNoclipAreaZoneIsPlaying && (!_playerInsideNoclipEnabler || _noclipState != NoclipState.NoclipEnabled))
         {
             _noclipZoneAudioSource.Stop();
             _insideNoclipAreaZoneIsPlaying = false;

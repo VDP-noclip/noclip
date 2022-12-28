@@ -237,28 +237,6 @@ void Update()
 
     private bool _smoothBrake = false;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("RealityPlayer") && _noclipManager.IsNoclipEnabled())
-        {
-            _noclipManager.SetPlayerCanSwitchMode(true);
-            if (!_insideRealityPlayer)
-            {
-                _noclipManager.NoClipReturnedToBody();
-                _insideRealityPlayer = true;          
-            }
-        }
-    }
-    
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("RealityPlayer"))
-        {
-            _insideRealityPlayer = false;
-            _noclipManager.NoClipExitedToBody();
-        }
-    }
-
     public void SetPositionAndRotation(Vector3 position, Quaternion cameraOrientation)
     {
         _transform.position = position;
