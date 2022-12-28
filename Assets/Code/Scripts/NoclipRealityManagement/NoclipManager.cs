@@ -215,10 +215,12 @@ public class NoclipManager : MonoBehaviour
         // Cooldown phase
         _noclipState = NoclipState.RealityCooldown;
         yield return new WaitForSecondsRealtime(_coolDownSeconds);
-        
-        EventManager.TriggerEvent("ClearHints");
+
         if (_playerInsideNoclipEnabler)
+        {
+            EventManager.TriggerEvent("ClearHints");
             _noclipState = NoclipState.RealityCanEnableNoclip;
+        }
         else
             _noclipState = NoclipState.RealityCannotEnableNoclip;
     }
