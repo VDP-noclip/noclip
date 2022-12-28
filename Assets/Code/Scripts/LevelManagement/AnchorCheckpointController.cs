@@ -31,7 +31,7 @@ public class AnchorCheckpointController : MonoBehaviour
         _audioSource.PlayOneShot(_audioTracks.finishPuzzle);
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
         //find save object among children of parent and disable it
-        transform.parent.Find("Save").gameObject.SetActive(false);
+        transform.parent.Find("SaveLight").gameObject.SetActive(false);
 
     }
 }
