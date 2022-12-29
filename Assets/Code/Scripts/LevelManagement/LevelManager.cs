@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
     private int _puzzleAmount = 0;
     private Vector3 _checkpointOrientation;
     private Vector3 _spawnPlatformPosition;
+    private NoclipManager _noclipManager;
     [SerializeField] private Material _previousNoclipMaterial;
 
     void Awake(){
@@ -45,13 +46,14 @@ public class LevelManager : MonoBehaviour
         _puzzleAmount = _currentPuzzleIndex;
         _currentPuzzleIndex = 0;
         transform.Find("Puzzle_" + _currentPuzzleIndex).gameObject.SetActive(true);
+        _noclipManager = FindObjectOfType<NoclipManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //if k is pressed find AllPlayer and move it to EndAnchor child of next puzzle
-        if (Input.GetButtonDown("NextPuzzle"))
+        if (Input.GetButtonDown("NextPuzzle") && _noclipManager.RealityPlayerCanMove())
         {
             CompleteCurrentPuzzle();
         }

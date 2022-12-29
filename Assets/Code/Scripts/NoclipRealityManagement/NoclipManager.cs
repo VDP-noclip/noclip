@@ -102,6 +102,12 @@ public class NoclipManager : MonoBehaviour
         return _noclipState == NoclipState.NoclipEnabled;
     }
 
+    public bool RealityPlayerCanMove()
+    {
+        return _noclipState is NoclipState.RealityCooldown or NoclipState.RealityCanEnableNoclip
+            or NoclipState.RealityCannotEnableNoclip;
+    }
+
     /// <summary>
     /// Activate the noclip mode to all the objects and switch camera to the noclip one.
     /// </summary>
