@@ -2,19 +2,19 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class LoadingScreenController : MonoBehaviour
 {
     [SerializeField] private LoadingSceneOption _loadingSceneOption;
-    [SerializeField] private TMP_Text loadingText = null;
-    [SerializeField] private TMP_Text loadingDots = null;
-    [SerializeField] private GameObject DialogueBox;
-    [SerializeField] private GameObject pressButtons;
-    [SerializeField] private Image loadingCircle;
+    [SerializeField] private TMP_Text _loadingText = null;
+    [SerializeField] private GameObject _dialogueBox;
+    [SerializeField] private GameObject _pressButtons;
+    [SerializeField] private Image _loadingCircle;
     float _firstTime = 0;
-    private float _multiplier;
+    private float _loadingTime;
 
     private bool _isLoaded;
 
@@ -22,29 +22,28 @@ public class LoadingScreenController : MonoBehaviour
 
     private void Start()
     {
-        loadingCircle.fillAmount = 0;
-        _multiplier = Random.Range(3f, 5f);
+        _loadingCircle.fillAmount = 0;
+
+        _loadingText.text = _loadingSceneOption._dialogs[_loadingSceneOption.GetSceneNumber()];
+        _loadingTime = _loadingSceneOption._timeDialogs[_loadingSceneOption.GetSceneNumber()];
         
-        string[] dialogs = _loadingSceneOption._dialogs;
+        StartCoroutine(FadeInAndOutCoroutine(_dialogueBox, true, 3f));
 
-        StartCoroutine(FadeInAndOutCoroutine(DialogueBox, true, 3f));
-
-        loadingText.text = dialogs[_loadingSceneOption.GetSceneNumber()];
-
+        
     }
 
     private void Update()
     {
-        if (_firstTime < _multiplier)
+        if (_firstTime < _loadingTime)
         {
             _firstTime += Time.deltaTime;
-            loadingCircle.fillAmount = _firstTime / _multiplier;
+            _loadingCircle.fillAmount = _firstTime / _loadingTime;
             
             //Debug.Log(_firstTime);
         }
         else
         {
-            pressButtons.SetActive(true);
+            _pressButtons.SetActive(true);
             _isLoaded = true;
         }
 

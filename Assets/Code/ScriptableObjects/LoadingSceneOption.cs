@@ -12,6 +12,11 @@ public class LoadingSceneOption : ScriptableObject
     [SerializeField] public string[] _dialogs;
 
     /// <summary>
+    /// List of time. Each of it is related to the dialog in the _dialogs list
+    /// </summary>
+    [SerializeField] public float[] _timeDialogs;
+
+    /// <summary>
     /// This parameter is used to save the dialog index that will be loaded
     /// </summary>
     private int _currentScene = 0;
