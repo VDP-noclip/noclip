@@ -86,7 +86,7 @@ namespace Code.Scripts.PlayerManagement
         {
             Debug.Log($"Resetting time limit constraints. Time to finish is {_maxTimeToFinishPuzzle}");
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
-            _timerWasActive = _noclipManager.IsNoclipEnabled();
+            _timerWasActive = _noclipManager.RealityPlayerCanMove();
             EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
             _isRunning = false;
         }
@@ -110,7 +110,7 @@ namespace Code.Scripts.PlayerManagement
             if (!_timeLimitForPuzzleEnabled)
                 return;
             
-            if (!_noclipManager.IsNoclipEnabled())
+            if (!_noclipManager.RealityPlayerCanMove())
                 EventManager.TriggerEvent("GuiResumeTimer");
             _isRunning = true;
         }

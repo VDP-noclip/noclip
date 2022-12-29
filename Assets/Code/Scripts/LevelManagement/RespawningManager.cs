@@ -69,9 +69,23 @@ public class RespawningManager : MonoBehaviour
         
         // Switch to noclip camera before starting the respawn
         _cameraManager.SwitchCamera(true);
+
+        // Update all the children apart from the cameras
+        transform.position = _lastCheckPointPosition;
+        transform.rotation = _lastCheckPointRotation;
+
+        for (int i = 0; i < _childrenTransforms.Count; i++)
+        {
+            if (_childrenTransforms[i] == _noclipCameraTransform || _childrenTransforms[i] == _realityCameraTransform)
+                continue;
+
+            _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
+            _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
+        }
         
+        // Get target position for noclip camera
         Vector3 targetPosition = _lastCheckPointChildrenPositions[_realityCameraTransformIndex];
-        // We need an instantaneour change to get the proper targetangle => no rely on an event
+        // We need an instantaneous change to get the proper targetangle => no rely on an event
         _realityCameraMouselook.SetLastCheckpointRotation();
         Quaternion targetAngle = _realityCameraTransform.rotation;
         
@@ -86,19 +100,6 @@ public class RespawningManager : MonoBehaviour
             _noclipCameraTransform.position = Vector3.Lerp(startPosition,  targetPosition, t);
             _noclipCameraTransform.rotation = Quaternion.Lerp(startAngle, targetAngle, t);
             yield return new WaitForEndOfFrame();
-        }
-        
-        // Update all the remaining children
-        transform.position = _lastCheckPointPosition;
-        transform.rotation = _lastCheckPointRotation;
-
-        for (int i = 0; i < _childrenTransforms.Count; i++)
-        {
-            if (_childrenTransforms[i] == _noclipCameraTransform || _childrenTransforms[i] == _realityCameraTransform)
-                continue;
-
-            _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
-            _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
         }
 
         // Switch to reality camera after the animation is complete
