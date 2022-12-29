@@ -43,7 +43,7 @@ namespace Code.Scripts.PlayerManagement
             
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
             if (_realityTimeLeftInThisPuzzle <= 0)
-                StartCoroutine(GameLostCoroutine("GAME LOST! TO MUCH TIME TO FINISH THE PUZZLE"));
+                StartCoroutine(GameLostCoroutine("you ran out of time"));
             
         }
         
