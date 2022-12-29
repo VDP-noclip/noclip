@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
 using TMPro;
@@ -10,18 +11,32 @@ namespace Code.Scripts.TutorialManagement
 {
     public class TutorialController : MonoBehaviour
     {
+        [Header("Gameobjects")]
         [SerializeField] private GameObject _controlsContainer;
         [SerializeField] private GameObject _dialogueContainer;
+        [SerializeField] private GameObject _dialogueTextObject;
         [SerializeField] private GameObject _tutorialCrosshair;
+        [SerializeField] private GameObject _tutorialTextObject;
+        [SerializeField] private GameObject _skipButtonTextObject;
+        
+        [Space]
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
-        [SerializeField] private KeyCode _skipDialogueKey; 
+        [SerializeField] private KeyCode _skipDialogueKey; // TODO put a name and use it in the InputManager
+        
+        [Space]
+        [Header("Timers")]
+        [SerializeField] private float _fadeDuration = 0.5f;
         [SerializeField] private float _hintDuration = 4f;
         [SerializeField] private float _bufferTimeAfterTutorialText = 4f;
+        
         private float _endDialogueTime;
         private float _endHintTime;
+
+        private Coroutine _displayHintCoroutine;
         private Coroutine _displayDialogueCoroutine;
         private bool _displayDialogueCoroutineIsRunning;
+        private bool _displayHintCoroutineIsRunning;
 
         private RealityMovementCalibration _realityMovement;
 
@@ -57,27 +72,20 @@ namespace Code.Scripts.TutorialManagement
         private void ClearHints()
         {
             EventManager.StopListening("ClearHints", ClearHints);
-            _tutorialText.text = "";
-            _controlsContainer.SetActive(false);
+            StopCurrentHintCoroutine();
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
         private void DisplayHint(string hint)
         {
             EventManager.StopListening("DisplayHint", DisplayHint);
-            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, 1f));
-            StartCoroutine(DisplayHintCoroutine(hint));
+            StopCurrentHintCoroutine();
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, true, _fadeDuration));
+            _displayHintCoroutine = StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
-        }
-        
-        private void FinalDialogueOperations()
-        {
-            _dialogueContainer.SetActive(false);
-            _dialogueText.text = "";  //Reset the text
-            _realityMovement.SetSlowMode(false);
-            _tutorialCrosshair.SetActive(false);
-            _displayDialogueCoroutineIsRunning = false;
-            
         }
 
         private void StopCurrentDialogue()
@@ -85,7 +93,19 @@ namespace Code.Scripts.TutorialManagement
             if (_displayDialogueCoroutineIsRunning)
             {
                 StopCoroutine(_displayDialogueCoroutine);
-                FinalDialogueOperations();
+                _dialogueContainer.SetActive(false);
+                _realityMovement.SetSlowMode(false);
+                _tutorialCrosshair.SetActive(false);
+                _displayDialogueCoroutineIsRunning = false;
+            }
+        }
+        
+        private void StopCurrentHintCoroutine()
+        {
+            if (_displayHintCoroutineIsRunning)
+            {
+                StopCoroutine(_displayHintCoroutine);
+                _displayHintCoroutineIsRunning = false;
             }
         }
         
@@ -93,10 +113,10 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("DisplayDialogue", DisplayDialogue);
             StopCurrentDialogue();
-            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, 0.7f));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
-            
-            
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
 
@@ -105,7 +125,8 @@ namespace Code.Scripts.TutorialManagement
         #region Coroutines
 
         private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
-            {
+        {
+                
                 float counter = 0f;
 
                 //Set Values depending on if fadeIn or fadeOut
@@ -123,12 +144,12 @@ namespace Code.Scripts.TutorialManagement
 
                 int mode = 0;
                 Color currentColor = Color.clear;
-
+                
                 SpriteRenderer tempSPRenderer = objectToFade.GetComponent<SpriteRenderer>();
                 Image tempImage = objectToFade.GetComponent<Image>();
                 RawImage tempRawImage = objectToFade.GetComponent<RawImage>();
                 MeshRenderer tempRenderer = objectToFade.GetComponent<MeshRenderer>();
-                Text tempText = objectToFade.GetComponent<Text>();
+                TMP_Text tempText = objectToFade.GetComponent<TMP_Text>();
 
                 //Check if this is a Sprite
                 if (tempSPRenderer != null)
@@ -184,36 +205,34 @@ namespace Code.Scripts.TutorialManagement
                     switch (mode)
                     {
                         case 0:
-                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 1:
-                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 2:
-                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 3:
-                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                         case 4:
-                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha/4);
+                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
                             break;
                     }
                     
                     
                     yield return null;
                 }
-
-                if (!fadeIn)
-                {
-                    FinalDialogueOperations();
-                }
-            }
+        }
         
         private IEnumerator DisplayHintCoroutine(string hint)
         {
-            _controlsContainer.SetActive(true);
             _tutorialText.text = hint;
+            _controlsContainer.SetActive(true);
+            _tutorialTextObject.SetActive(true);
+            
+            _displayHintCoroutineIsRunning = true;
 
             _endHintTime = Time.time + _hintDuration;
 
@@ -222,26 +241,30 @@ namespace Code.Scripts.TutorialManagement
                 yield return new WaitForSecondsRealtime(0.5f);
             }
             
+            StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
+            
+            yield return new WaitForSecondsRealtime(_fadeDuration);
+            
             _controlsContainer.SetActive(false);
-
-            yield return null;
         }
         
         
 
         private IEnumerator DisplayDialogueCoroutine(TutorialDialogObject dialogueObject)
         {
+            _dialogueText.text = "";   //reset the text
             _displayDialogueCoroutineIsRunning = true;
             
             _dialogueContainer.SetActive(true);
             _realityMovement.SetSlowMode(dialogueObject.IsSlowDown());
 
+            // overwrite the crossair
             if (dialogueObject.IsCrossHairHighlighted())
             {
                 _tutorialCrosshair.SetActive(true);
             }
 
-            _dialogueText.text = "";
             _endDialogueTime = Time.realtimeSinceStartup + dialogueObject.GetTotalTime() + _bufferTimeAfterTutorialText;
 
             for (int i = 0; i < dialogueObject.GetDialog().Length; i++)  // Write like a typer
@@ -255,10 +278,15 @@ namespace Code.Scripts.TutorialManagement
                 yield return new WaitForSecondsRealtime(0.05f);
             }
             //FinalDialogueCoroutineOperations();
-            yield return FadeInAndOutCoroutine(_dialogueContainer, false, 1f);
-            FinalDialogueOperations();
-
-
+            
+            // These coroutines are synchronized!!!!
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
+            yield return new WaitForSecondsRealtime(_fadeDuration);
+            _realityMovement.SetSlowMode(false);
+            _tutorialCrosshair.SetActive(false);
+            _displayDialogueCoroutineIsRunning = false;
         }
 
         #endregion

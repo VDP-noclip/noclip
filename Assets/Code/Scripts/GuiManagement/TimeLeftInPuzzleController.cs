@@ -14,27 +14,35 @@ namespace Code.Scripts.GuiManagement
     {
         //[SerializeField] private TMP_Text _timerText;
         [SerializeField] private Image _timerImage;
+        [SerializeField] private AudioSource _timerAudio;
+        [SerializeField] private float _clockTickThreshold = 0.33f;
         
         private bool _isActive;
         private bool _isRunning;
         private float _timeLeftInPuzzle;
         private float _totalTimeForPuzzle;
+        private bool _isClockActive;
 
         private void Awake()
         {
             //_timerText.text = "";
-            _timerImage.fillAmount = 0;
+            _timerImage.fillAmount = 0f;
+            _isClockActive = false;
             
             EventManager.StartListening("GuiResetTimer", ResetTimer);
             EventManager.StartListening("GuiResumeTimer", ResumeTimer);
             EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
-        
+
         private void ResumeTimer()
         {
             EventManager.StopListening("GuiResumeTimer", ResumeTimer);
             _isActive = true;
             _isRunning = true;
+            
+            if (_isClockActive) 
+                _timerAudio.Play();
+            
             Debug.Log("Started timer"+ _timeLeftInPuzzle);
             EventManager.StartListening("GuiResumeTimer", ResumeTimer);
         }
@@ -43,6 +51,7 @@ namespace Code.Scripts.GuiManagement
         {
             EventManager.StopListening("GuiPauseTimer", PauseTimer);
             _isRunning = false;
+            _timerAudio.Pause();
             Debug.Log("Timer paused!" + _timeLeftInPuzzle);
             EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
@@ -53,6 +62,8 @@ namespace Code.Scripts.GuiManagement
             var totalTimeForPuzzle = float.Parse(totalTimeForPuzzleStr);
             
             _isRunning = false;
+            _isClockActive = false;
+            _timerAudio.Stop();
             
             if (totalTimeForPuzzle == 0)
             {
@@ -92,6 +103,12 @@ namespace Code.Scripts.GuiManagement
         {
             //_timerText.text = Mathf.RoundToInt(_timeLeftInPuzzle).ToString();
             _timerImage.fillAmount = _timeLeftInPuzzle / _totalTimeForPuzzle;
+
+            if ((_timeLeftInPuzzle / _totalTimeForPuzzle) <= _clockTickThreshold && !_isClockActive)
+            { 
+                _timerAudio.Play();
+                _isClockActive = true;
+            }
         }
     }
 }
