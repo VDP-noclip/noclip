@@ -36,6 +36,7 @@ namespace Code.Scripts.TutorialManagement
         private Coroutine _displayHintCoroutine;
         private Coroutine _displayDialogueCoroutine;
         private bool _displayDialogueCoroutineIsRunning;
+        private bool _displayHintCoroutineIsRunning;
 
         private RealityMovementCalibration _realityMovement;
 
@@ -72,7 +73,7 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("ClearHints", ClearHints);
             _tutorialText.text = "";
-            StopCoroutine(_displayHintCoroutine);
+            StopCurrentHint();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
@@ -102,11 +103,12 @@ namespace Code.Scripts.TutorialManagement
         
         private void StopCurrentHint()
         {
-            if (_displayDialogueCoroutineIsRunning)
+            if (_displayHintCoroutineIsRunning)
             {
                 StopCoroutine(_displayHintCoroutine);
                 _controlsContainer.SetActive(false);
                 _tutorialTextObject.SetActive(false);
+                _displayHintCoroutineIsRunning = false;
             }
         }
         
@@ -231,6 +233,8 @@ namespace Code.Scripts.TutorialManagement
         {
             _controlsContainer.SetActive(true);
             _tutorialText.text = hint;
+            
+            _displayHintCoroutineIsRunning = true;
 
             _endHintTime = Time.time + _hintDuration;
 
