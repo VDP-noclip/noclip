@@ -25,6 +25,7 @@ public class NoclipManager : MonoBehaviour
     
     private bool _playerInsideNoclipEnabler;
     private bool _insideNoclipAreaZoneIsPlaying;
+    private bool _acceptUserInput = true;
     private NoclipState _noclipState;
     
     private GameObject _postprocessReality;
@@ -84,7 +85,8 @@ public class NoclipManager : MonoBehaviour
         
         if (playerInsideNoclipEnabler && _noclipState == NoclipState.RealityCannotEnableNoclip)
         {
-            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
+            if (_acceptUserInput)
+                EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
             _noclipState = NoclipState.RealityCanEnableNoclip;
             return;
         }
@@ -106,6 +108,11 @@ public class NoclipManager : MonoBehaviour
     {
         return _noclipState is NoclipState.RealityCooldown or NoclipState.RealityCanEnableNoclip
             or NoclipState.RealityCannotEnableNoclip;
+    }
+
+    public void SetAcceptUserInput(bool acceptUserInput)
+    {
+        _acceptUserInput = acceptUserInput;
     }
 
     /// <summary>
@@ -161,7 +168,7 @@ public class NoclipManager : MonoBehaviour
         //StartCoroutine(StartOrStopNoclipZoneSound());
 
         // When pressing
-        if (Input.GetButtonDown("Noclip"))
+        if (Input.GetButtonDown("Noclip") && _acceptUserInput)
         {
             switch (_noclipState)
             {
@@ -179,7 +186,7 @@ public class NoclipManager : MonoBehaviour
         }
 
         // When releasing
-        if (Input.GetButtonUp("Noclip") && _noclipState == NoclipState.NoclipEnabled)
+        if (Input.GetButtonUp("Noclip") && _noclipState == NoclipState.NoclipEnabled && _acceptUserInput)
         {
             StartCoroutine(GoBackToBodyCoroutine());
         }
@@ -195,7 +202,7 @@ public class NoclipManager : MonoBehaviour
         float timeElapsed = 0;
         Vector3 startPosition = _noclipCamera.transform.position;
         Quaternion startAngle = _noclipCamera.transform.rotation;
-        while (timeElapsed < _backToBodyAnimationDuration)
+        while (!IsBackToBody())
         {
             timeElapsed += Time.deltaTime;
             float t = timeElapsed / _backToBodyAnimationDuration;

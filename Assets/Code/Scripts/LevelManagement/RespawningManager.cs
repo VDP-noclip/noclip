@@ -22,6 +22,7 @@ public class RespawningManager : MonoBehaviour
     private CameraManager _cameraManager;
     private MouseLook _realityCameraMouselook;
     private readonly float _respawnAnimationDuration = 1f;
+    private NoclipManager _noclipManager;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class RespawningManager : MonoBehaviour
         _realityCameraMouselook = _realityCamera.GetComponent<MouseLook>();
         _realityCameraTransform = _realityCamera.transform;
         _noclipCameraTransform = _noclipCamera.transform;
+        _noclipManager = FindObjectOfType<NoclipManager>();
         
         // Get _realityCameraTransformIndex
         for (int i = 0; i < _childrenTransforms.Count; i++)
@@ -66,7 +68,7 @@ public class RespawningManager : MonoBehaviour
     private IEnumerator RespawnCoroutine()
     {
         EventManager.TriggerEvent("ResetTimeLimitConstraints");
-        
+        _noclipManager.SetAcceptUserInput(false);
         // Switch to noclip camera before starting the respawn
         _cameraManager.SwitchCamera(true);
 
@@ -106,6 +108,7 @@ public class RespawningManager : MonoBehaviour
         _cameraManager.SwitchCamera(false);
         _realityMovement.ResetSpeedOnRespawn();
         EventManager.TriggerEvent("StartTimeConstraintsTimer");
+        _noclipManager.SetAcceptUserInput(true);
         yield return null;
     }
 
