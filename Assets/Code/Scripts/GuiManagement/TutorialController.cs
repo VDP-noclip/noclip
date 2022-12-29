@@ -72,8 +72,7 @@ namespace Code.Scripts.TutorialManagement
         private void ClearHints()
         {
             EventManager.StopListening("ClearHints", ClearHints);
-            _tutorialText.text = "";
-            StopCurrentHint();
+            StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
@@ -82,7 +81,7 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayHint(string hint)
         {
             EventManager.StopListening("DisplayHint", DisplayHint);
-            StopCurrentHint();
+            StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, true, _fadeDuration));
             _displayHintCoroutine = StartCoroutine(DisplayHintCoroutine(hint));
@@ -101,13 +100,11 @@ namespace Code.Scripts.TutorialManagement
             }
         }
         
-        private void StopCurrentHint()
+        private void StopCurrentHintCoroutine()
         {
             if (_displayHintCoroutineIsRunning)
             {
                 StopCoroutine(_displayHintCoroutine);
-                _controlsContainer.SetActive(false);
-                _tutorialTextObject.SetActive(false);
                 _displayHintCoroutineIsRunning = false;
             }
         }
@@ -231,8 +228,9 @@ namespace Code.Scripts.TutorialManagement
         
         private IEnumerator DisplayHintCoroutine(string hint)
         {
-            _controlsContainer.SetActive(true);
             _tutorialText.text = hint;
+            _controlsContainer.SetActive(true);
+            _tutorialTextObject.SetActive(true);
             
             _displayHintCoroutineIsRunning = true;
 
