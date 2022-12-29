@@ -235,8 +235,8 @@ public class NoclipManager : MonoBehaviour
     {
         //if _goingBackToBody slowly move noclipcamera to realitycamera position
         if (_goingBackToBody){
-            _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
-            _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
+            _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.05f);
+            _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.05f);
             if (IsBackToBody())
                 NoClipReturnedToBody();
         }

@@ -32,7 +32,8 @@ namespace Code.Scripts.TutorialManagement
         
         private float _endDialogueTime;
         private float _endHintTime;
-        
+
+        private Coroutine _displayHintCoroutine;
         private Coroutine _displayDialogueCoroutine;
         private bool _displayDialogueCoroutineIsRunning;
 
@@ -71,6 +72,7 @@ namespace Code.Scripts.TutorialManagement
         {
             EventManager.StopListening("ClearHints", ClearHints);
             _tutorialText.text = "";
+            StopCoroutine(_displayHintCoroutine);
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
@@ -79,9 +81,10 @@ namespace Code.Scripts.TutorialManagement
         private void DisplayHint(string hint)
         {
             EventManager.StopListening("DisplayHint", DisplayHint);
+            StopCurrentHint();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, true, _fadeDuration));
-            StartCoroutine(DisplayHintCoroutine(hint));
+            _displayHintCoroutine = StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         }
 
@@ -94,6 +97,16 @@ namespace Code.Scripts.TutorialManagement
                 _realityMovement.SetSlowMode(false);
                 _tutorialCrosshair.SetActive(false);
                 _displayDialogueCoroutineIsRunning = false;
+            }
+        }
+        
+        private void StopCurrentHint()
+        {
+            if (_displayDialogueCoroutineIsRunning)
+            {
+                StopCoroutine(_displayHintCoroutine);
+                _controlsContainer.SetActive(false);
+                _tutorialTextObject.SetActive(false);
             }
         }
         
@@ -225,6 +238,7 @@ namespace Code.Scripts.TutorialManagement
             {
                 yield return new WaitForSecondsRealtime(0.5f);
             }
+            
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             
@@ -264,9 +278,9 @@ namespace Code.Scripts.TutorialManagement
             //FinalDialogueCoroutineOperations();
             
             // These coroutines are synchronized!!!!
-            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration)) ;
-            StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration)) ;
-            StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration)) ;
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
             yield return new WaitForSecondsRealtime(_fadeDuration);
             _realityMovement.SetSlowMode(false);
             _tutorialCrosshair.SetActive(false);
