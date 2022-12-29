@@ -26,7 +26,7 @@ namespace Code.Scripts.TutorialManagement
         
         [Space]
         [Header("Timers")]
-        [SerializeField] private float _fadeDuration = 1.0f;
+        [SerializeField] private float _fadeDuration = 0.5f;
         [SerializeField] private float _hintDuration = 4f;
         [SerializeField] private float _bufferTimeAfterTutorialText = 4f;
         
@@ -72,6 +72,7 @@ namespace Code.Scripts.TutorialManagement
             EventManager.StopListening("ClearHints", ClearHints);
             _tutorialText.text = "";
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
@@ -224,7 +225,10 @@ namespace Code.Scripts.TutorialManagement
             {
                 yield return new WaitForSecondsRealtime(0.5f);
             }
-            yield return StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
+            
+            yield return new WaitForSecondsRealtime(_fadeDuration);
             
             _controlsContainer.SetActive(false);
         }

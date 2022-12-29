@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731715, g: 0.13414735, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &4753206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4753207}
+  - component: {fileID: 4753209}
+  m_Layer: 5
+  m_Name: TutorialBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4753207
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753206}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 109594221}
+  m_Father: {fileID: 674829781}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0.0013622046, y: -0.49510574}
+  m_SizeDelta: {x: 1586, y: 68.137}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!222 &4753209
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753206}
+  m_CullTransparentMesh: 1
 --- !u!1 &109594220
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,18 +194,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 109594220}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 674829781}
+  m_Father: {fileID: 4753207}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00024414062, y: 0.000061035156}
-  m_SizeDelta: {x: 363.11, y: 67.264}
+  m_AnchoredPosition: {x: 0, y: 0.36370087}
+  m_SizeDelta: {x: 636.0388, y: 67.3914}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &109594222
 MonoBehaviour:
@@ -570,7 +616,8 @@ MonoBehaviour:
   _tutorialText: {fileID: 109594222}
   _dialogueText: {fileID: 1957341072}
   _skipDialogueKey: 8
-  _hintDuration: 4
+  _fadeDuration: 0.5
+  _hintDuration: 3
   _bufferTimeAfterTutorialText: 2
 --- !u!1 &614220721
 GameObject:
@@ -658,14 +705,14 @@ GameObject:
   m_Component:
   - component: {fileID: 674829781}
   - component: {fileID: 674829783}
-  - component: {fileID: 674829782}
+  - component: {fileID: 674829784}
   m_Layer: 5
   m_Name: ControlsCuesContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &674829781
 RectTransform:
   m_ObjectHideFlags: 0
@@ -678,7 +725,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 109594221}
+  - {fileID: 4753207}
   m_Father: {fileID: 677278140}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
@@ -687,7 +734,15 @@ RectTransform:
   m_AnchoredPosition: {x: 0.0826, y: -69}
   m_SizeDelta: {x: 1585.9944, y: 69.0095}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &674829782
+--- !u!222 &674829783
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674829780}
+  m_CullTransparentMesh: 1
+--- !u!114 &674829784
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -717,14 +772,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!222 &674829783
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 674829780}
-  m_CullTransparentMesh: 1
 --- !u!1 &677278136
 GameObject:
   m_ObjectHideFlags: 0
