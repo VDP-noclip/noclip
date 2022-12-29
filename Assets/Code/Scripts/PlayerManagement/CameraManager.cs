@@ -40,9 +40,14 @@ public class CameraManager : MonoBehaviour
         _noclipMouseLook.ActivateMouseLook(isNoclipEnabled);
     }
     
-    public void SwitchCamera()
+    public void SwitchCamera(bool? noclipEnabledOverrideValue=null)
     {
         bool isNoclipEnabled = _noclipManager.IsNoclipEnabled();
+        if (noclipEnabledOverrideValue != null)
+        {
+            isNoclipEnabled = (bool) noclipEnabledOverrideValue;
+        }
+        
         
         //Activate/disactivate the realPlayer and his camera
         _realPlayerCamera.SetActive(!isNoclipEnabled);
