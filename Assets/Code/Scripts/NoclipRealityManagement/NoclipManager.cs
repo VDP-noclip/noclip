@@ -32,6 +32,7 @@ public class NoclipManager : MonoBehaviour
     
     private NoclipMovement _noclipMovement;
     private float _endCooldownAbsoluteTime;
+    private readonly float _backToBodyAnimationDuration = 0.5f;
 
     private enum NoclipState
     {
@@ -185,11 +186,16 @@ public class NoclipManager : MonoBehaviour
         _noclipMovement.SetEnableMovement(false);
         
         // Go back to body animation
-        while (!IsBackToBody())
+        float timeElapsed = 0;
+        Vector3 startPosition = _noclipCamera.transform.position;
+        Quaternion startAngle = _noclipCamera.transform.rotation;
+        while (timeElapsed < _backToBodyAnimationDuration)
         {
-            _noclipCamera.transform.position = Vector3.Lerp(_noclipCamera.transform.position, _realityCamera.transform.position, 0.1f);
-            _noclipCamera.transform.rotation = Quaternion.Lerp(_noclipCamera.transform.rotation, _realityCamera.transform.rotation, 0.1f);
-            yield return new WaitForSeconds(0.01f);
+            timeElapsed += Time.deltaTime;
+            float t = timeElapsed / _backToBodyAnimationDuration;
+            _noclipCamera.transform.position = Vector3.Lerp(startPosition, _realityCamera.transform.position, t);
+            _noclipCamera.transform.rotation = Quaternion.Lerp(startAngle, _realityCamera.transform.rotation, t);
+            yield return new WaitForEndOfFrame();
         }
         
         yield return DisableNoclip();

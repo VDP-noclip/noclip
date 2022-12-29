@@ -7,8 +7,7 @@ public class RespawningManager : MonoBehaviour
 {
     [SerializeField] private GameObject _realityCamera;
     [SerializeField] private GameObject _noclipCamera;
-    [SerializeField] private float _respawnAnimationApproxDuration = 4f;
-    
+
     private Transform _transform;
     private List<Transform> _childrenTransforms;
     private Vector3 _lastCheckPointPosition;
@@ -22,6 +21,7 @@ public class RespawningManager : MonoBehaviour
     private int _realityCameraTransformIndex;
     private CameraManager _cameraManager;
     private MouseLook _realityCameraMouselook;
+    private readonly float _respawnAnimationDuration = 1f;
 
     private void Awake()
     {
@@ -65,6 +65,8 @@ public class RespawningManager : MonoBehaviour
 
     private IEnumerator RespawnCoroutine()
     {
+        EventManager.TriggerEvent("ResetTimeLimitConstraints");
+        
         // Switch to noclip camera before starting the respawn
         _cameraManager.SwitchCamera(true);
         
@@ -75,13 +77,15 @@ public class RespawningManager : MonoBehaviour
         
         // Noclip camera animation to return to the last CP position
         float timeElapsed = 0;
-        while (!TransformReachedTarget(_noclipCameraTransform, targetPosition, targetAngle))
+        Vector3 startPosition = _noclipCameraTransform.position;
+        Quaternion startAngle = _noclipCameraTransform.rotation;
+        while (timeElapsed < _respawnAnimationDuration)
         {
             timeElapsed += Time.deltaTime;
-            float t = timeElapsed / _respawnAnimationApproxDuration;
-            _noclipCameraTransform.position = Vector3.Lerp(_noclipCameraTransform.position,  targetPosition, t);
-            _noclipCameraTransform.rotation = Quaternion.Lerp(_noclipCameraTransform.rotation, targetAngle, t);
-            yield return null;
+            float t = timeElapsed / _respawnAnimationDuration;
+            _noclipCameraTransform.position = Vector3.Lerp(startPosition,  targetPosition, t);
+            _noclipCameraTransform.rotation = Quaternion.Lerp(startAngle, targetAngle, t);
+            yield return new WaitForEndOfFrame();
         }
         
         // Update all the remaining children
@@ -146,14 +150,5 @@ public class RespawningManager : MonoBehaviour
         }
 
         return ts;
-    }
-    
-    private bool TransformReachedTarget(Transform transform, Vector3 targetPosition, Quaternion targetAngle)
-    {
-        if (Vector3.Distance(transform.position, targetPosition) >= 0.1f)
-            return false;
-        if (Quaternion.Angle(transform.rotation, targetAngle) >= 1)
-            return false;
-        return true;
     }
 }
