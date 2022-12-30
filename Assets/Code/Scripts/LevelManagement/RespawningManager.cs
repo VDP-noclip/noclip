@@ -5,25 +5,46 @@ using UnityEngine;
 
 public class RespawningManager : MonoBehaviour
 {
+    [SerializeField] private GameObject _realityCamera;
+    [SerializeField] private GameObject _noclipCamera;
+
     private Transform _transform;
-
     private List<Transform> _childrenTransforms;
-    
-    private RealityMovementCalibration _realityMovement;
-
     private Vector3 _lastCheckPointPosition;
     private Quaternion _lastCheckPointRotation;
     private List<Vector3> _lastCheckPointChildrenPositions = new();
     private List<Quaternion> _lastCheckPointChildrenRotations = new();
+
+    private RealityMovementCalibration _realityMovement;
+    private Transform _noclipCameraTransform;
+    private Transform _realityCameraTransform;
+    private int _realityCameraTransformIndex;
+    private CameraManager _cameraManager;
+    private MouseLook _realityCameraMouselook;
+    private readonly float _respawnAnimationDuration = 1f;
+    private NoclipManager _noclipManager;
 
     private void Awake()
     {
         _transform = GetComponent<Transform>();
         _childrenTransforms = GetAllChildrenTransforms(_transform);
         _realityMovement = _transform.GetComponentInChildren<RealityMovementCalibration>();
+        _cameraManager = GetComponent<CameraManager>();
+        _realityCameraMouselook = _realityCamera.GetComponent<MouseLook>();
+        _realityCameraTransform = _realityCamera.transform;
+        _noclipCameraTransform = _noclipCamera.transform;
+        _noclipManager = FindObjectOfType<NoclipManager>();
+        
+        // Get _realityCameraTransformIndex
+        for (int i = 0; i < _childrenTransforms.Count; i++)
+        {
+            if (_childrenTransforms[i] == _realityCameraTransform)
+                _realityCameraTransformIndex = i;
+        }
+    }
 
-        Debug.Log($"Found {_childrenTransforms.Count} children!");
-
+    private void Start()
+    {
         UpdateCheckpointValues();
     }
 
@@ -32,46 +53,63 @@ public class RespawningManager : MonoBehaviour
         if (Application.isEditor)
         {
             // For debug, it should respawn everything!
-            if (Input.GetButtonDown("DebugRespown"))
+            if (Input.GetKeyDown(KeyCode.Z))
             {
                 RespawnAllTransforms();
             }
         }
     }
 
-
     public void RespawnAllTransforms()
     {
-        //find RealityPlayer and get component NoclipManager, call NoclipRespawnSequence
-        GameObject realityPlayer = GameObject.Find("RealityPlayer");
-        if (realityPlayer != null)
-        {
-            //Debug.LogError("Found RealityPlayer");
-            NoclipManager noclipManager = realityPlayer.GetComponent<NoclipManager>();
-            if (noclipManager != null)
-            {
-                //Debug.LogError("Found NoclipManager");
-                noclipManager.NoclipRespawnSequence();
-            }
-        }
-        _transform.position = _lastCheckPointPosition;
-        _transform.rotation = _lastCheckPointRotation;
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    private IEnumerator RespawnCoroutine()
+    {
+        EventManager.TriggerEvent("ResetTimeLimitConstraints");
+        _noclipManager.SetAcceptUserInput(false);
+        // Switch to noclip camera before starting the respawn
+        _cameraManager.SwitchCamera(true);
+
+        // Update all the children apart from the cameras
+        transform.position = _lastCheckPointPosition;
+        transform.rotation = _lastCheckPointRotation;
 
         for (int i = 0; i < _childrenTransforms.Count; i++)
         {
-            //if _childrenTransforms[i] name is NoclipCamera skip
-            if (_childrenTransforms[i].name == "NoclipCamera" || _childrenTransforms[i].name == "NoclipPlayer" || _childrenTransforms[i].name == "RealityCamera"){
-                //Debug.LogError("Skipping NoclipCamera and player");
+            if (_childrenTransforms[i] == _noclipCameraTransform || _childrenTransforms[i] == _realityCameraTransform)
                 continue;
-            }
+
             _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
             _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
         }
+        
+        // Get target position for noclip camera
+        Vector3 targetPosition = _lastCheckPointChildrenPositions[_realityCameraTransformIndex];
+        // We need an instantaneous change to get the proper targetangle => no rely on an event
+        _realityCameraMouselook.SetLastCheckpointRotation();
+        Quaternion targetAngle = _realityCameraTransform.rotation;
+        
+        // Noclip camera animation to return to the last CP position
+        float timeElapsed = 0;
+        Vector3 startPosition = _noclipCameraTransform.position;
+        Quaternion startAngle = _noclipCameraTransform.rotation;
+        while (timeElapsed < _respawnAnimationDuration)
+        {
+            timeElapsed += Time.deltaTime;
+            float t = timeElapsed / _respawnAnimationDuration;
+            _noclipCameraTransform.position = Vector3.Lerp(startPosition,  targetPosition, t);
+            _noclipCameraTransform.rotation = Quaternion.Lerp(startAngle, targetAngle, t);
+            yield return new WaitForEndOfFrame();
+        }
 
+        // Switch to reality camera after the animation is complete
+        _cameraManager.SwitchCamera(false);
         _realityMovement.ResetSpeedOnRespawn();
-        EventManager.TriggerEvent("SetLastCheckpointRotation");
-        EventManager.TriggerEvent("ResetTimeLimitConstraints");
         EventManager.TriggerEvent("StartTimeConstraintsTimer");
+        _noclipManager.SetAcceptUserInput(true);
+        yield return null;
     }
 
     /// <summary>

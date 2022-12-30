@@ -79,6 +79,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c3665c44e94da5afc2042823294a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _realityCamera: {fileID: 2740796908604963382}
+  _noclipCamera: {fileID: 8905615672618808175}
+  _respawnAnimationApproxDuration: 2
 --- !u!114 &958916330490506102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,6 +524,8 @@ MonoBehaviour:
   _effectsAudioSource: {fileID: 58928047651188944}
   _noclipZoneAudioSource: {fileID: 2057979637123435346}
   _audioTracks: {fileID: 11400000, guid: d8e5c5935073caa46837cc48517045fd, type: 2}
+  _noclipCamera: {fileID: 8905615672618808175}
+  _realityCamera: {fileID: 2740796908604963382}
 --- !u!114 &460104324572155052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,8 +557,9 @@ MonoBehaviour:
   _walkForceMultiplier: 6
   _groundDrag: 20
   _jumpForce: 15
-  _jumpCooldown: 0.25
   _airMultiplier: 0.4
+  _jumpBuffer: 0.2
+  _coyoteTime: 0.2
   _crouchSpeed: 2
   _crouchYScale: 0.5
   _maxSlopeAngle: 61
@@ -570,6 +576,9 @@ MonoBehaviour:
   _state: 0
   _OnSlope: 0
   Grounded: 0
+  _readyToJump: 0
+  _jumpBuffered: 0
+  _coyote: 0
 --- !u!114 &1859858155171913071
 MonoBehaviour:
   m_ObjectHideFlags: 0

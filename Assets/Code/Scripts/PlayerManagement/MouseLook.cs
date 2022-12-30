@@ -158,7 +158,7 @@ public class MouseLook : MonoBehaviour
         _yRotationCheckpoint = _yRotation;
     }
 
-    private void SetLastCheckpointRotation()
+    public void SetLastCheckpointRotation()
     {
         //log
         Debug.Log("SetLastCheckpointRotation");
