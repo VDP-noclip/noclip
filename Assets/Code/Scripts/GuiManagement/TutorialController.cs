@@ -58,7 +58,7 @@ namespace Code.Scripts.TutorialManagement
 
         private void Update()
         {
-            if (_displayDialogueCoroutineIsRunning && Input.GetKeyDown(_skipDialogueKey))
+            if (_displayDialogueCoroutineIsRunning && Input.GetButtonDown("SkipDialogue"))
             {
                 StopCurrentDialogue();
             }
