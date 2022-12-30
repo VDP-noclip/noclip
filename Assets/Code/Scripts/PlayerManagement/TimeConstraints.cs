@@ -24,7 +24,7 @@ namespace Code.Scripts.PlayerManagement
             _noclipManager = GetComponent<NoclipManager>();
             _respawningManager = GetComponentInParent<RespawningManager>();
             ResetTimeLimitConstraints();
-            _timerWasActive = _noclipManager.RealityPlayerCanMove();
+            _timerWasActive = TimerShouldBeActive();
             
             EventManager.StartListening("SetNewTimeLimitConstraint", SetNewTimeLimitConstraint);
             EventManager.StartListening("ResetTimeLimitConstraints", ResetTimeLimitConstraints);
@@ -38,7 +38,7 @@ namespace Code.Scripts.PlayerManagement
 
             ResumeOrPauseGuiTimer();
             
-            if (_noclipManager.IsNoclipEnabled())
+            if (!TimerShouldBeActive())
                 return;
             
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
@@ -52,12 +52,12 @@ namespace Code.Scripts.PlayerManagement
         /// </summary>
         private void ResumeOrPauseGuiTimer()
         {
-            if (!_noclipManager.RealityPlayerCanMove() && !_timerWasActive)
+            if (TimerShouldBeActive() && !_timerWasActive)
                 EventManager.TriggerEvent("GuiPauseTimer");
-            else if (_noclipManager.RealityPlayerCanMove() && _timerWasActive)
+            else if (!TimerShouldBeActive() && _timerWasActive)
                 EventManager.TriggerEvent("GuiResumeTimer");
 
-            _timerWasActive = _noclipManager.RealityPlayerCanMove();
+            _timerWasActive = TimerShouldBeActive();
         }
         
         /// <summary>
@@ -86,7 +86,7 @@ namespace Code.Scripts.PlayerManagement
         {
             Debug.Log($"Resetting time limit constraints. Time to finish is {_maxTimeToFinishPuzzle}");
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
-            _timerWasActive = _noclipManager.RealityPlayerCanMove();
+            _timerWasActive = TimerShouldBeActive();
             EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
             _isRunning = false;
         }
@@ -110,9 +110,14 @@ namespace Code.Scripts.PlayerManagement
             if (!_timeLimitForPuzzleEnabled)
                 return;
             
-            if (!_noclipManager.RealityPlayerCanMove())
+            if (TimerShouldBeActive())
                 EventManager.TriggerEvent("GuiResumeTimer");
             _isRunning = true;
+        }
+
+        private bool TimerShouldBeActive()
+        {
+            return _noclipManager.RealityPlayerCanMove();
         }
     }
 }
