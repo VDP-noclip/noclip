@@ -93,7 +93,7 @@ namespace Code.Scripts.PlayerManagement
 
         private IEnumerator GameLostCoroutine()
         {
-            EventManager.TriggerEvent("DisplayHint", "you ran out of time (press z to skip animation)");
+            EventManager.TriggerEvent("DisplayHint", "you ran out of time (right click to skip animation)");
             _respawningManager.RespawnAllTransforms();
             ResetTimeLimitConstraints();
             yield return null;

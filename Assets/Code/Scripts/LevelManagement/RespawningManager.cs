@@ -55,14 +55,14 @@ public class RespawningManager : MonoBehaviour
 
     private void Update()
     {
-        if (_respawnAnimationIsRunning && Input.GetKeyDown(KeyCode.Z)) // TODO: change 'Z' with an input manager string
+        if (_respawnAnimationIsRunning && Input.GetButtonDown("Noclip"))
             IstantaneousRespawn();
         
         else if (Application.isEditor && !_respawnAnimationIsRunning && Input.GetKeyDown(KeyCode.Z))
         {
             RespawnAllTransforms();
             EventManager.TriggerEvent("DisplayHint", 
-                "Hi developer, are you testing the respawn? (press z to skip animation)");
+                "Hi developer, are you testing the respawn? (right click to skip animation)");
         }
     }
 

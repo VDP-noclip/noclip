@@ -28,7 +28,7 @@ public class RealityPlayerCollisions : MonoBehaviour
         else if (other.CompareTag("OutOfBounds"))
         {
             _respawningManager.RespawnAllTransforms();
-            EventManager.TriggerEvent("DisplayHint", "falling down hurts... (press z to skip animation)");
+            EventManager.TriggerEvent("DisplayHint", "falling down hurts... (right click to skip animation)");
         }
         else if (other.CompareTag("ProgressSaver"))
         {
