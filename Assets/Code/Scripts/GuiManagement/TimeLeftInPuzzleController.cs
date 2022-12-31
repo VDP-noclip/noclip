@@ -13,6 +13,7 @@ namespace Code.Scripts.GuiManagement
         [SerializeField] private AudioSource _timerAudio;
         [SerializeField] private float _clockTickThreshold = 0.33f;
         [SerializeField] private float _blinkingTimeFrequency = 0.5f;
+        [SerializeField] private bool _blinkWhiteBlack = false;
         
         private bool _isActive;
         private bool _isRunning;
@@ -23,6 +24,8 @@ namespace Code.Scripts.GuiManagement
         private Color _crossairOriginalColor;
         private Coroutine _blinkingCrossairCoroutine;
         private bool _blinkingCoroutineIsRunning;
+
+        #region Unity Methods
 
         private void Awake()
         {
@@ -48,6 +51,10 @@ namespace Code.Scripts.GuiManagement
             }
         }
 
+        #endregion
+
+        #region private Methods
+
         private void ResumeTimer()
         {
             EventManager.StopListening("GuiResumeTimer", ResumeTimer);
@@ -58,7 +65,14 @@ namespace Code.Scripts.GuiManagement
             {
                 _timerAudio.Play();
                 if (!_blinkingCoroutineIsRunning)
-                    StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
+                    if (_blinkWhiteBlack)
+                    {
+                        _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairWhiteBlackCoroutine());
+                    }
+                    else
+                    {
+                        _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
+                    }
             }
             
             Debug.Log("Started timer" + _timeLeftInPuzzle);
@@ -113,21 +127,43 @@ namespace Code.Scripts.GuiManagement
             if ((_timeLeftInPuzzle / _totalTimeForPuzzle) <= _clockTickThreshold && !_isClockActive)
             { 
                 _timerAudio.Play();
-                _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
+                if (_blinkWhiteBlack)
+                {
+                    _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairWhiteBlackCoroutine());
+                }
+                else
+                {
+                    _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
+                }
+                
                 _isClockActive = true;
                 
             }
         }
         
+        private void StopBlinkingCoroutine()
+        {
+            if (_blinkingCoroutineIsRunning)
+            {
+                StopCoroutine(_blinkingCrossairCoroutine);
+                _timerImage.color = _crossairOriginalColor;
+            }
+        }
+
+        #endregion
+        
+
+        #region Coroutines
+
         private IEnumerator BlinkingCrossairColorTrasparentCoroutine()
         {
             _blinkingCoroutineIsRunning = true;
-            Debug.Log("startcouroutine blink");
+            //Debug.Log("startcouroutine blink");
             float elapsedTime;
 
             Color crossairColor = _timerImage.color;
             float blinkingTime = _blinkingTimeFrequency;
-            Debug.Log(crossairColor);
+            //Debug.Log(crossairColor);
 
             while (_timeLeftInPuzzle > 0)
             {
@@ -170,67 +206,63 @@ namespace Code.Scripts.GuiManagement
                 }
             }
             
-            Debug.Log("Finish coroutine");
+            //Debug.Log("Finish coroutine");
             _blinkingCoroutineIsRunning = false;
             _timerImage.color = _crossairOriginalColor;
             yield return null;
         }
 
-        private void StopBlinkingCoroutine()
+        private IEnumerator BlinkingCrossairWhiteBlackCoroutine()
         {
-            if (_blinkingCoroutineIsRunning)
+            _blinkingCoroutineIsRunning = true;
+            //Debug.Log("startcouroutine blink");
+            float elapsedTime;
+
+            Color crossairColor = _timerImage.color;
+            float blinkingTime = _blinkingTimeFrequency;
+            Debug.Log(crossairColor);
+
+            while (_timeLeftInPuzzle > 0)
             {
-                StopCoroutine(_blinkingCrossairCoroutine);
-                _timerImage.color = _crossairOriginalColor;
+                elapsedTime = 0f;
+                while (elapsedTime < blinkingTime)
+                {
+                    Debug.Log("blink out");
+                    elapsedTime += Time.deltaTime;
+
+                    float red = Mathf.Lerp(crossairColor.r, 0, elapsedTime / blinkingTime);
+                    float blue = Mathf.Lerp(crossairColor.b, 0, elapsedTime / blinkingTime);
+                    float green = Mathf.Lerp(crossairColor.g, 0, elapsedTime / blinkingTime);
+                    
+                    _timerImage.color = new Color(red, blue, green, crossairColor.a);
+
+                    yield return new WaitForEndOfFrame();
+                }
+            
+                
+                elapsedTime = 0f;
+                while (elapsedTime < blinkingTime)
+                {
+                    Debug.Log("blink in");
+                    elapsedTime += Time.deltaTime;
+                
+                    
+                    float red = Mathf.Lerp(0,crossairColor.r, elapsedTime / blinkingTime);
+                    float blue = Mathf.Lerp(0,crossairColor.b, elapsedTime / blinkingTime);
+                    float green = Mathf.Lerp(0,crossairColor.g,  elapsedTime / blinkingTime);
+
+                    _timerImage.color = new Color(red, blue, green, crossairColor.a);
+                    yield return new WaitForEndOfFrame();
+                }
             }
+            
+            //Debug.Log("Finish coroutine");
+            _blinkingCoroutineIsRunning = false;
+            _timerImage.color = _crossairOriginalColor;
+            yield return null;
         }
+
+        #endregion
         
-        // private IEnumerator BlinkingCrossairWhiteBlackCoroutine(Image crossair ,float blinkingTime)
-        // {
-        //     Debug.Log("startcouroutine blink");
-        //     float counter = 0f;
-        //
-        //     Color crossairColor = crossair.color;
-        //     Debug.Log(crossairColor);
-        //
-        //     /*while (_timeLeftInPuzzle > 0)
-        //     {*/
-        //         while (counter < blinkingTime)
-        //         {
-        //             Debug.Log("blink out");
-        //             counter += Time.deltaTime;
-        //
-        //             
-        //
-        //             float red = Mathf.Lerp(crossairColor.r, 0, counter / blinkingTime);
-        //             float blue = Mathf.Lerp(crossairColor.b, 0, counter / blinkingTime);
-        //             float green = Mathf.Lerp(crossairColor.g, 0, counter / blinkingTime);
-        //
-        //             crossair.color = new Color(red, blue, green, crossairColor.a); 
-        //             
-        //             Debug.Log(crossair.color);
-        //             
-        //         }
-        //     
-        //         counter = 0f;
-        //
-        //         while (counter < blinkingTime)
-        //         {
-        //             Debug.Log("blink in");
-        //             counter += Time.deltaTime;
-        //         
-        //             float red = Mathf.Lerp(0,crossairColor.r, counter / blinkingTime);
-        //             float blue = Mathf.Lerp(0,crossairColor.b, counter / blinkingTime);
-        //             float green = Mathf.Lerp(0,crossairColor.g,  counter / blinkingTime);
-        //
-        //             crossair.color = new Color(red, blue, green, crossairColor.a);
-        //             Debug.Log(crossair.color);
-        //
-        //         }
-        //     /*}*/
-        //     
-        //     Debug.Log("Finish coroutine");
-        //     yield return null;
-        // }
     }
 }
