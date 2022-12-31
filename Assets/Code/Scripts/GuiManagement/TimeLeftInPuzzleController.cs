@@ -16,12 +16,16 @@ namespace Code.Scripts.GuiManagement
         [SerializeField] private Image _timerImage;
         [SerializeField] private AudioSource _timerAudio;
         [SerializeField] private float _clockTickThreshold = 0.33f;
+        [SerializeField] private float _blinkingTimeFrequency = 0.5f;
         
         private bool _isActive;
         private bool _isRunning;
         private float _timeLeftInPuzzle;
         private float _totalTimeForPuzzle;
         private bool _isClockActive;
+        
+        private Color _crossairColor;
+        private Coroutine _blinkingCrossairCoroutine;
 
         private void Awake()
         {
@@ -107,8 +111,107 @@ namespace Code.Scripts.GuiManagement
             if ((_timeLeftInPuzzle / _totalTimeForPuzzle) <= _clockTickThreshold && !_isClockActive)
             { 
                 _timerAudio.Play();
+                //_blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairWhiteBlackCoroutine(_timerImage, _blinkingTimeFrequency));
                 _isClockActive = true;
+                
             }
+        }
+        
+        private IEnumerator BlinkingCrossairColorTrasparentCoroutine(Image crossair ,float blinkingTime)
+        {
+            Debug.Log("startcouroutine blink");
+            float counter = 0f;
+
+            Color crossairColor = crossair.color;
+            Debug.Log(crossairColor);
+
+            /*while (_timeLeftInPuzzle > 0)
+            {*/
+                while (counter < blinkingTime)
+                {
+                    Debug.Log("blink out");
+                    counter += Time.deltaTime;
+
+                    float alpha = Mathf.Lerp(crossairColor.a, 0, counter / (blinkingTime));
+
+                    crossair.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha); 
+                    
+                    Debug.Log(crossair.color);
+                    if (alpha <= 0)
+                    {
+                        Debug.Log("Crossair trasparent: " + crossair.color.a);
+                    }
+                }
+            
+                counter = 0f;
+
+                while (counter < blinkingTime)
+                {
+                    Debug.Log("blink in");
+                    counter += Time.deltaTime;
+                
+                    float alpha = Mathf.Lerp(0, crossairColor.a, counter / (blinkingTime)); 
+
+                    crossair.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha);
+                    Debug.Log(crossair.color);
+
+                    if (alpha >= crossairColor.a)
+                    {
+                        Debug.Log("Crossair complete: " + crossair.color.a);
+                    }
+                }
+            /*}*/
+            
+            Debug.Log("Finish coroutine");
+            yield return null;
+        }
+        
+        private IEnumerator BlinkingCrossairWhiteBlackCoroutine(Image crossair ,float blinkingTime)
+        {
+            Debug.Log("startcouroutine blink");
+            float counter = 0f;
+
+            Color crossairColor = crossair.color;
+            Debug.Log(crossairColor);
+
+            /*while (_timeLeftInPuzzle > 0)
+            {*/
+                while (counter < blinkingTime)
+                {
+                    Debug.Log("blink out");
+                    counter += Time.deltaTime;
+
+                    
+
+                    float red = Mathf.Lerp(crossairColor.r, 0, counter / blinkingTime);
+                    float blue = Mathf.Lerp(crossairColor.b, 0, counter / blinkingTime);
+                    float green = Mathf.Lerp(crossairColor.g, 0, counter / blinkingTime);
+
+                    crossair.color = new Color(red, blue, green, crossairColor.a); 
+                    
+                    Debug.Log(crossair.color);
+                    
+                }
+            
+                counter = 0f;
+
+                while (counter < blinkingTime)
+                {
+                    Debug.Log("blink in");
+                    counter += Time.deltaTime;
+                
+                    float red = Mathf.Lerp(0,crossairColor.r, counter / blinkingTime);
+                    float blue = Mathf.Lerp(0,crossairColor.b, counter / blinkingTime);
+                    float green = Mathf.Lerp(0,crossairColor.g,  counter / blinkingTime);
+
+                    crossair.color = new Color(red, blue, green, crossairColor.a);
+                    Debug.Log(crossair.color);
+
+                }
+            /*}*/
+            
+            Debug.Log("Finish coroutine");
+            yield return null;
         }
     }
 }
