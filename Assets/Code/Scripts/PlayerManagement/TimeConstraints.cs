@@ -43,7 +43,7 @@ namespace Code.Scripts.PlayerManagement
             
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
             if (_realityTimeLeftInThisPuzzle <= 0)
-                StartCoroutine(GameLostCoroutine("you ran out of time"));
+                StartCoroutine(GameLostCoroutine());
             
         }
         
@@ -91,10 +91,9 @@ namespace Code.Scripts.PlayerManagement
             _isRunning = false;
         }
 
-        private IEnumerator GameLostCoroutine(string gameLostMessage)
+        private IEnumerator GameLostCoroutine()
         {
-            Debug.Log(gameLostMessage);
-            EventManager.TriggerEvent("DisplayHint", gameLostMessage);
+            EventManager.TriggerEvent("DisplayHint", "you ran out of time (right click to skip animation)");
             _respawningManager.RespawnAllTransforms();
             ResetTimeLimitConstraints();
             yield return null;
