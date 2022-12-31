@@ -75,7 +75,7 @@ namespace Code.Scripts.GuiManagement
                     }
             }
             
-            Debug.Log("Started timer" + _timeLeftInPuzzle);
+            // Debug.Log("Started timer" + _timeLeftInPuzzle);
             EventManager.StartListening("GuiResumeTimer", ResumeTimer);
         }
 
@@ -85,7 +85,7 @@ namespace Code.Scripts.GuiManagement
             _isRunning = false;
             _timerAudio.Pause();
             StopBlinkingCoroutine();
-            Debug.Log("Timer paused!" + _timeLeftInPuzzle);
+            // Debug.Log("Timer paused!" + _timeLeftInPuzzle);
             EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
         
@@ -101,13 +101,13 @@ namespace Code.Scripts.GuiManagement
             
             if (totalTimeForPuzzle == 0)
             {
-                Debug.Log("Reset timer: no time limit for this puzzle!");
+                // Debug.Log("Reset timer: no time limit for this puzzle!");
                 _timerImage.fillAmount = 0;
                 _isActive = false;
             }
             else if (totalTimeForPuzzle > 0)
             {
-                Debug.Log($"Reset timer: time limit set {totalTimeForPuzzle} for this puzzle!");
+                // Debug.Log($"Reset timer: time limit set {totalTimeForPuzzle} for this puzzle!");
                 _isActive = true;
                 _timeLeftInPuzzle = totalTimeForPuzzle;
                 _totalTimeForPuzzle = totalTimeForPuzzle;
@@ -170,17 +170,17 @@ namespace Code.Scripts.GuiManagement
                 elapsedTime = 0f;
                 while (elapsedTime < blinkingTime)
                 {
-                    Debug.Log("blink out");
+                    // Debug.Log("blink out");
                     elapsedTime += Time.deltaTime;
 
                     float alpha = Mathf.Lerp(crossairColor.a, 0, elapsedTime / (blinkingTime));
 
                     _timerImage.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha); 
                     
-                    Debug.Log(_timerImage.color);
+                    // Debug.Log(_timerImage.color);
                     if (alpha <= 0)
                     {
-                        Debug.Log("Crossair trasparent: " + _timerImage.color.a);
+                        // Debug.Log("Crossair trasparent: " + _timerImage.color.a);
                     }
 
                     yield return new WaitForEndOfFrame();
@@ -190,17 +190,17 @@ namespace Code.Scripts.GuiManagement
                 elapsedTime = 0f;
                 while (elapsedTime < blinkingTime)
                 {
-                    Debug.Log("blink in");
+                    // Debug.Log("blink in");
                     elapsedTime += Time.deltaTime;
                 
                     float alpha = Mathf.Lerp(0, crossairColor.a, elapsedTime / (blinkingTime)); 
 
                     _timerImage.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha);
-                    Debug.Log(_timerImage.color);
+                    // Debug.Log(_timerImage.color);
 
                     if (alpha >= crossairColor.a)
                     {
-                        Debug.Log("Crossair complete: " + _timerImage.color.a);
+                        // Debug.Log("Crossair complete: " + _timerImage.color.a);
                     }
                     yield return new WaitForEndOfFrame();
                 }
@@ -220,14 +220,14 @@ namespace Code.Scripts.GuiManagement
 
             Color crossairColor = _timerImage.color;
             float blinkingTime = _blinkingTimeFrequency;
-            Debug.Log(crossairColor);
+            // Debug.Log(crossairColor);
 
             while (_timeLeftInPuzzle > 0)
             {
                 elapsedTime = 0f;
                 while (elapsedTime < blinkingTime)
                 {
-                    Debug.Log("blink out");
+                    // Debug.Log("blink out");
                     elapsedTime += Time.deltaTime;
 
                     float red = Mathf.Lerp(crossairColor.r, 0, elapsedTime / blinkingTime);
@@ -243,7 +243,7 @@ namespace Code.Scripts.GuiManagement
                 elapsedTime = 0f;
                 while (elapsedTime < blinkingTime)
                 {
-                    Debug.Log("blink in");
+                    // Debug.Log("blink in");
                     elapsedTime += Time.deltaTime;
                 
                     
