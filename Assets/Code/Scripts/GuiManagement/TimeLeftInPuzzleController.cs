@@ -43,9 +43,13 @@ namespace Code.Scripts.GuiManagement
             EventManager.StopListening("GuiResumeTimer", ResumeTimer);
             _isActive = true;
             _isRunning = true;
-            
-            if (_isClockActive) 
+
+            if (_isClockActive)
+            {
                 _timerAudio.Play();
+                //StartCoroutine(BlinkingCrossairWhiteBlackCoroutine(_timerImage, _blinkingTimeFrequency));
+            }
+                
             
             Debug.Log("Started timer"+ _timeLeftInPuzzle);
             EventManager.StartListening("GuiResumeTimer", ResumeTimer);
@@ -56,6 +60,8 @@ namespace Code.Scripts.GuiManagement
             EventManager.StopListening("GuiPauseTimer", PauseTimer);
             _isRunning = false;
             _timerAudio.Pause();
+            /*StopCoroutine(_blinkingCrossairCoroutine);
+            _timerImage.color = _crossairColor;*/
             Debug.Log("Timer paused!" + _timeLeftInPuzzle);
             EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
@@ -68,6 +74,8 @@ namespace Code.Scripts.GuiManagement
             _isRunning = false;
             _isClockActive = false;
             _timerAudio.Stop();
+            /*StopCoroutine(_blinkingCrossairCoroutine);
+            _timerImage.color = _crossairColor;*/
             
             if (totalTimeForPuzzle == 0)
             {
