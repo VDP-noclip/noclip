@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using POLIMIGameCollective;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +16,7 @@ namespace Code.Scripts.GuiManagement
         [SerializeField] private float _clockTickThreshold = 0.33f;
         [SerializeField] private float _blinkingTimeFrequency = 0.5f;
         [SerializeField] private bool _blinkWhiteBlack = false;
+        [SerializeField] private float _maxPitch = 1.5f;
         
         private bool _isActive;
         private bool _isRunning;
@@ -25,6 +28,10 @@ namespace Code.Scripts.GuiManagement
         private Coroutine _blinkingCrossairCoroutine;
         private bool _blinkingCoroutineIsRunning;
 
+        private bool _increasingPitchCoroutineIsRunning;
+        private Coroutine _increasingPitchCoroutine;
+        private float _originalPitch;
+
         #region Unity Methods
 
         private void Awake()
@@ -33,6 +40,7 @@ namespace Code.Scripts.GuiManagement
             _timerImage.fillAmount = 0f;
             _isClockActive = false;
             _crossairOriginalColor = _timerImage.color;
+            _originalPitch = _timerAudio.pitch;
             
             EventManager.StartListening("GuiResetTimer", ResetTimer);
             EventManager.StartListening("GuiResumeTimer", ResumeTimer);
@@ -73,6 +81,11 @@ namespace Code.Scripts.GuiManagement
                     {
                         _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
                     }
+
+                if (!_increasingPitchCoroutineIsRunning)
+                {
+                    _increasingPitchCoroutine = StartCoroutine(IncreasingPitchCoroutine());
+                }
             }
             
             // Debug.Log("Started timer" + _timeLeftInPuzzle);
@@ -85,6 +98,7 @@ namespace Code.Scripts.GuiManagement
             _isRunning = false;
             _timerAudio.Pause();
             StopBlinkingCoroutine();
+            StopIncreasingPitchCoroutine();
             // Debug.Log("Timer paused!" + _timeLeftInPuzzle);
             EventManager.StartListening("GuiPauseTimer", PauseTimer);
         }
@@ -98,6 +112,7 @@ namespace Code.Scripts.GuiManagement
             _isClockActive = false;
             _timerAudio.Stop();
             StopBlinkingCoroutine();
+            StopIncreasingPitchCoroutine();
             
             if (totalTimeForPuzzle == 0)
             {
@@ -135,6 +150,8 @@ namespace Code.Scripts.GuiManagement
                 {
                     _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
                 }
+
+                _increasingPitchCoroutine = StartCoroutine(IncreasingPitchCoroutine());
                 
                 _isClockActive = true;
                 
@@ -147,6 +164,14 @@ namespace Code.Scripts.GuiManagement
             {
                 StopCoroutine(_blinkingCrossairCoroutine);
                 _timerImage.color = _crossairOriginalColor;
+            }
+        }
+
+        private void StopIncreasingPitchCoroutine()
+        {
+            if (_increasingPitchCoroutineIsRunning)
+            {
+                StopCoroutine(_increasingPitchCoroutine);
             }
         }
 
@@ -174,14 +199,7 @@ namespace Code.Scripts.GuiManagement
                     elapsedTime += Time.deltaTime;
 
                     float alpha = Mathf.Lerp(crossairColor.a, 0, elapsedTime / (blinkingTime));
-
-                    _timerImage.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha); 
-                    
-                    // Debug.Log(_timerImage.color);
-                    if (alpha <= 0)
-                    {
-                        // Debug.Log("Crossair trasparent: " + _timerImage.color.a);
-                    }
+                    _timerImage.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha);
 
                     yield return new WaitForEndOfFrame();
                 }
@@ -193,15 +211,9 @@ namespace Code.Scripts.GuiManagement
                     // Debug.Log("blink in");
                     elapsedTime += Time.deltaTime;
                 
-                    float alpha = Mathf.Lerp(0, crossairColor.a, elapsedTime / (blinkingTime)); 
-
+                    float alpha = Mathf.Lerp(0, crossairColor.a, elapsedTime / (blinkingTime));
                     _timerImage.color = new Color(crossairColor.r, crossairColor.g, crossairColor.b, alpha);
-                    // Debug.Log(_timerImage.color);
-
-                    if (alpha >= crossairColor.a)
-                    {
-                        // Debug.Log("Crossair complete: " + _timerImage.color.a);
-                    }
+                    
                     yield return new WaitForEndOfFrame();
                 }
             }
@@ -259,6 +271,31 @@ namespace Code.Scripts.GuiManagement
             //Debug.Log("Finish coroutine");
             _blinkingCoroutineIsRunning = false;
             _timerImage.color = _crossairOriginalColor;
+            yield return null;
+        }
+
+
+        private IEnumerator IncreasingPitchCoroutine()
+        {
+            _increasingPitchCoroutineIsRunning = true;
+            float elapsedTime = 0f;
+            float startingPitch = _timerAudio.pitch;
+
+            float totalTimeLeftInPuzzle = _timeLeftInPuzzle;
+            
+            while (_timeLeftInPuzzle > 0)
+            {
+                elapsedTime += Time.deltaTime;
+                float pitch = Mathf.Lerp(startingPitch,_maxPitch, elapsedTime / totalTimeLeftInPuzzle);
+
+                _timerAudio.pitch = pitch;
+                
+                yield return new WaitForEndOfFrame();
+
+            }
+
+            _increasingPitchCoroutineIsRunning = false;
+            _timerAudio.pitch = _originalPitch;
             yield return null;
         }
 
