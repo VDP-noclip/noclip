@@ -122,6 +122,7 @@ public class NoclipManager : MonoBehaviour
     {
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
+        EventManager.TriggerEvent("StopTimeConstraintsTimer");
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);
         
@@ -159,6 +160,7 @@ public class NoclipManager : MonoBehaviour
         });
         _cameraManager.SwitchCamera();
         RenderRealityMode();
+        EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
         yield return null;
     }
 
