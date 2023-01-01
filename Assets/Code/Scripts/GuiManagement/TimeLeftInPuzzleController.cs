@@ -13,6 +13,7 @@ namespace Code.Scripts.GuiManagement
         //[SerializeField] private TMP_Text _timerText;
         [SerializeField] private Image _timerImage;
         [SerializeField] private AudioSource _timerAudio;
+        [Tooltip(" This number indicates the remaining time for the beginning of the audio and the blinking. It is in percentage")]
         [SerializeField] private float _clockTickThreshold = 0.33f;
         [SerializeField] private float _blinkingTimeFrequency = 0.5f;
         [SerializeField] private bool _blinkWhiteBlack = false;
@@ -24,13 +25,15 @@ namespace Code.Scripts.GuiManagement
         private float _totalTimeForPuzzle;
         private bool _isClockActive;
         
+        // For Blinking Crossair Coroutine
         private Color _crossairOriginalColor;
         private Coroutine _blinkingCrossairCoroutine;
         private bool _blinkingCoroutineIsRunning;
 
+        // For Increasing Pitch Coroutine
+        private float _originalPitch;
         private bool _increasingPitchCoroutineIsRunning;
         private Coroutine _increasingPitchCoroutine;
-        private float _originalPitch;
 
         #region Unity Methods
 
@@ -79,7 +82,7 @@ namespace Code.Scripts.GuiManagement
                     }
                     else
                     {
-                        _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
+                        _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTransparentCoroutine());
                     }
 
                 if (!_increasingPitchCoroutineIsRunning)
@@ -148,7 +151,7 @@ namespace Code.Scripts.GuiManagement
                 }
                 else
                 {
-                    _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTrasparentCoroutine());
+                    _blinkingCrossairCoroutine = StartCoroutine(BlinkingCrossairColorTransparentCoroutine());
                 }
 
                 _increasingPitchCoroutine = StartCoroutine(IncreasingPitchCoroutine());
@@ -158,6 +161,9 @@ namespace Code.Scripts.GuiManagement
             }
         }
         
+        /// <summary>
+        ///  This method is used for stopping the blinking coroutine
+        /// </summary>
         private void StopBlinkingCoroutine()
         {
             if (_blinkingCoroutineIsRunning)
@@ -167,11 +173,15 @@ namespace Code.Scripts.GuiManagement
             }
         }
 
+        /// <summary>
+        ///  This method is used for stopping the increasing audio pitch coroutine
+        /// </summary>
         private void StopIncreasingPitchCoroutine()
         {
             if (_increasingPitchCoroutineIsRunning)
             {
                 StopCoroutine(_increasingPitchCoroutine);
+                _timerAudio.pitch = _originalPitch;
             }
         }
 
@@ -180,7 +190,10 @@ namespace Code.Scripts.GuiManagement
 
         #region Coroutines
 
-        private IEnumerator BlinkingCrossairColorTrasparentCoroutine()
+        /// <summary>
+        /// This coroutine allows the crossair to blink from white to transparent 
+        /// </summary>
+        private IEnumerator BlinkingCrossairColorTransparentCoroutine()
         {
             _blinkingCoroutineIsRunning = true;
             //Debug.Log("startcouroutine blink");
@@ -224,6 +237,9 @@ namespace Code.Scripts.GuiManagement
             yield return null;
         }
 
+        /// <summary>
+        /// This coroutine allows the crossair to blink from white to black
+        /// </summary>
         private IEnumerator BlinkingCrossairWhiteBlackCoroutine()
         {
             _blinkingCoroutineIsRunning = true;
@@ -274,7 +290,9 @@ namespace Code.Scripts.GuiManagement
             yield return null;
         }
 
-
+        /// <summary>
+        /// This coroutine allows the audio to increase the pitch
+        /// </summary>
         private IEnumerator IncreasingPitchCoroutine()
         {
             _increasingPitchCoroutineIsRunning = true;
