@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Code.ScriptableObjects;
+using Code.Scripts.Score;
 using Code.Scripts.Utils;
 using POLIMIGameCollective;
 
@@ -160,6 +161,7 @@ public class NoclipManager : MonoBehaviour
 
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
+        ScoreManager.UpdateScoreAfterNoclipActivation();
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);

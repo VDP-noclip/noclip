@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Code.Scripts.Score;
 using POLIMIGameCollective;
 using UnityEngine;
 
@@ -139,9 +140,10 @@ public class LevelManager : MonoBehaviour
         NoclipManager noclipManager = player.GetComponentInChildren<NoclipManager>();
         if (noclipManager.IsNoclipEnabled())
         {
-            EventManager.TriggerEvent("DisplayHint","RETURN TO YOUR BODY, THEN PRESS K TO SKIP PUZZLE");
+            EventManager.TriggerEvent("DisplayHint","Cannot skip during noclip");
             return;
         }
+        ScoreManager.UpdateScoreAfterPuzzleSkipped();
         
         //find EndAnchor of next puzzle
         GameObject endAnchor = transform.Find("Puzzle_" + _currentPuzzleIndex).Find("Save").gameObject;
