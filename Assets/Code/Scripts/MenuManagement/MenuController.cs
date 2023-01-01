@@ -148,6 +148,7 @@ public class MenuController : MonoBehaviour
         Time.timeScale = 0;
         AudioListener.pause = false;
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
+        EventManager.TriggerEvent("RequestGuiUpdateScore");
 
         _pause.ignoreListenerPause=true;
         _resume.ignoreListenerPause=true;
