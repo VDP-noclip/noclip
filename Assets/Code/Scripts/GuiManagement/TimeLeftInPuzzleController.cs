@@ -170,6 +170,7 @@ namespace Code.Scripts.GuiManagement
             {
                 StopCoroutine(_blinkingCrossairCoroutine);
                 _timerImage.color = _crossairOriginalColor;
+                _blinkingCoroutineIsRunning = false;
             }
         }
 
@@ -182,6 +183,7 @@ namespace Code.Scripts.GuiManagement
             {
                 StopCoroutine(_increasingPitchCoroutine);
                 _timerAudio.pitch = _originalPitch;
+                _increasingPitchCoroutineIsRunning = false;
             }
         }
 
