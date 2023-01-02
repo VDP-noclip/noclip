@@ -6,14 +6,21 @@ using UnityEngine.UI;
 
 public class BlackFadein : MonoBehaviour
 {
-    private int fadeIn = -1;
-    private bool fading = false;
-    [SerializeField] private float fadeTime = 1.0f;
-    private UnityEngine.UI.Image image;
+    private int _fadeIn = -1;
+    private bool _fading = false;
+    [SerializeField] private float _fadeTime = 1.0f;
+    
+    private RespawningManager _respawningManager;
+    private UnityEngine.UI.Image _image;
     // Start is called before the first frame update
     void Start()
     {
-        image = GetComponent<UnityEngine.UI.Image>();
+        _image = GetComponent<UnityEngine.UI.Image>();
+        //find AllPlayer gameobject
+        GameObject allPlayer = GameObject.Find("AllPlayer");
+        //get RespawningManager script from AllPlayer
+        _respawningManager = allPlayer.GetComponent<RespawningManager>();
+        
     }
 
     // Update is called once per frame
@@ -22,25 +29,27 @@ public class BlackFadein : MonoBehaviour
         //if b is pressed toggle fade of this object
         if (Application.isEditor && Input.GetKeyDown(KeyCode.B))
         {
-            fading = true;
-            fadeIn = -fadeIn;
+            _fading = true;
+            _fadeIn = 1;
         }
 
-        if (fading)
+        if (_fading)
         {
-            Color color = image.color;
-            color.a += fadeIn * Time.deltaTime / fadeTime;
+            Color color = _image.color;
+            color.a += _fadeIn * Time.deltaTime / _fadeTime;
             if (color.a >= 1.0f)
             {
                 color.a = 1.0f;
-                fading = false;
+                _fading = true;
+                _fadeIn = -1;
+                _respawningManager.IstantaneousRespawn();
             }
             else if (color.a <= 0.0f)
             {
                 color.a = 0.0f;
-                fading = false;
+                _fading = false;
             }
-            image.color = color;
+            _image.color = color;
         }
     }
 }
