@@ -122,7 +122,7 @@ public class NoclipManager : MonoBehaviour
     {
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
-        EventManager.TriggerEvent("StopTimeConstraintsTimer");
+        EventManager.TriggerEvent("PauseTimeConstraintsTimer");
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);
         

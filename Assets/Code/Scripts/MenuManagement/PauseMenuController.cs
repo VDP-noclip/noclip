@@ -97,6 +97,7 @@ public class PauseMenuController : MonoBehaviour
 
         Time.timeScale = 0;
         AudioListener.pause = false;
+        EventManager.TriggerEvent("PauseTimeConstraintsTimer");
         
         _menuPress.ignoreListenerPause=true;
         _menuPress.Play();
@@ -114,6 +115,7 @@ public class PauseMenuController : MonoBehaviour
         SetGlobalVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
         Time.timeScale = 1;
         AudioListener.pause = false;
+        EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
 
         _menuPress.Play();
         

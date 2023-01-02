@@ -25,7 +25,7 @@ namespace Code.Scripts.PlayerManagement
             EventManager.StartListening("ResetTimeLimitConstraints", ResetTimeLimitConstraints);
             EventManager.StartListening("RestartTimeConstraintsTimer", RestartTimeConstraintsTimer);
             EventManager.StartListening("ResumeTimeConstraintsTimer", ResumeTimeConstraintsTimer);
-            EventManager.StartListening("StopTimeConstraintsTimer", StopTimeConstraintsTimer);
+            EventManager.StartListening("PauseTimeConstraintsTimer", PauseTimeConstraintsTimer);
         }
 
         void Update()
@@ -99,7 +99,7 @@ namespace Code.Scripts.PlayerManagement
             EventManager.TriggerEvent("GuiResumeTimer");
         }
         
-        private void StopTimeConstraintsTimer()
+        private void PauseTimeConstraintsTimer()
         {
             if (!_timeLimitForPuzzleEnabled)
                 return;
