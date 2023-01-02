@@ -47,7 +47,6 @@ public class NoclipManager : MonoBehaviour
     void Awake()
     {
         _cameraManager = FindObjectOfType<CameraManager>();
-        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
         _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
@@ -294,7 +293,7 @@ public class NoclipManager : MonoBehaviour
 
     private void RenderNoclipMode()
     {
-        RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
+        EventManager.TriggerEvent("SetNoclipSkybox");
         foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
             if(objectMaterialSwitcher != null)
@@ -306,7 +305,7 @@ public class NoclipManager : MonoBehaviour
     
     private void RenderRealityMode()
     {
-        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
+        EventManager.TriggerEvent("SetRealitySkybox");
         foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
             if(objectMaterialSwitcher != null)
