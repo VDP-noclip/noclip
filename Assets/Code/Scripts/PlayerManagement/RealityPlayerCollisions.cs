@@ -22,6 +22,7 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("Checkpoint"))
         {
+            EventManager.TriggerEvent("FadeCancel");
             other.GetComponent<AnchorCheckpointController>().ReactToPlayerCollision();
             _respawningManager.UpdateCheckpointValues();
         }

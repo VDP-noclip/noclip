@@ -32,13 +32,6 @@ public class BlackFadein : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if b is pressed toggle fade of this object
-        if (Application.isEditor && Input.GetKeyDown(KeyCode.B))
-        {
-            _fading = true;
-            _fadeIn = 1;
-        }
-
         if (_fading && !_holding)
         {
             Color color = _image.color;

@@ -82,8 +82,6 @@ namespace Code.Scripts.PlayerManagement
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
             _isRunning = false;
             EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
-            
-            EventManager.TriggerEvent("FadeCancel");
             _fading = false;
         }
 
