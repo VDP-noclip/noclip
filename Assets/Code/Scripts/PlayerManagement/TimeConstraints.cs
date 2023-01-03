@@ -20,6 +20,7 @@ namespace Code.Scripts.PlayerManagement
         private bool _isRunning;
 
         private float _fadeTime = 1.0f;
+        private bool _fading = false;
         private void Awake()
         {
             _noclipManager = GetComponent<NoclipManager>();
@@ -55,8 +56,10 @@ namespace Code.Scripts.PlayerManagement
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
             //if (_realityTimeLeftInThisPuzzle <= 0)
             //    StartCoroutine(GameLostCoroutine());
-            if (_realityTimeLeftInThisPuzzle <= _fadeTime)
+            if (_realityTimeLeftInThisPuzzle <= _fadeTime && !_fading){
                 EventManager.TriggerEvent("FadeOutRespawn");
+                _fading = true;
+            }
             
         }
         
@@ -102,6 +105,9 @@ namespace Code.Scripts.PlayerManagement
             _timerWasActive = TimerShouldBeActive();
             EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
             _isRunning = false;
+
+            EventManager.TriggerEvent("FadeCancel");
+            _fading = false;
         }
 
         private IEnumerator GameLostCoroutine()

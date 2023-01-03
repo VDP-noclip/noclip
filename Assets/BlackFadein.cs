@@ -22,6 +22,8 @@ public class BlackFadein : MonoBehaviour
         //get RespawningManager script from AllPlayer
         _respawningManager = allPlayer.GetComponent<RespawningManager>();
         EventManager.StartListening("FadeOutRespawn", FadingTrue);
+        //FadeCancel
+        EventManager.StartListening("FadeCancel", FadeCancel);
     }
 
     // Update is called once per frame
@@ -63,5 +65,11 @@ public class BlackFadein : MonoBehaviour
     public float GetFadeTime()
     {
         return _fadeTime;
+    }
+
+    private void FadeCancel()
+    {
+        _fading = true;
+        _fadeIn = -1;
     }
 }
