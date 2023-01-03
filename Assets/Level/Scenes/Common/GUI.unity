@@ -394,6 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495712702a774bf419f7dfc9844a5ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fadeTime: 0.5
 --- !u!1 &214881739
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,6 +430,7 @@ MonoBehaviour:
   _clockTickThreshold: 0.33
   _blinkingTimeFrequency: 0.5
   _blinkWhiteBlack: 1
+  _maxPitch: 1.5
 --- !u!4 &214881741
 Transform:
   m_ObjectHideFlags: 0

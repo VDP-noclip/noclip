@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using POLIMIGameCollective;
 //import application
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ public class BlackFadein : MonoBehaviour
         GameObject allPlayer = GameObject.Find("AllPlayer");
         //get RespawningManager script from AllPlayer
         _respawningManager = allPlayer.GetComponent<RespawningManager>();
-        
+        EventManager.StartListening("FadeOutRespawn", FadingTrue);
     }
 
     // Update is called once per frame
@@ -51,5 +52,16 @@ public class BlackFadein : MonoBehaviour
             }
             _image.color = color;
         }
+    }
+
+    private void FadingTrue()
+    {
+        _fading = true;
+        _fadeIn = 1;
+    }
+
+    public float GetFadeTime()
+    {
+        return _fadeTime;
     }
 }

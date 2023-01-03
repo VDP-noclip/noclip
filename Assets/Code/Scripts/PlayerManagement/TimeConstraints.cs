@@ -19,6 +19,7 @@ namespace Code.Scripts.PlayerManagement
 
         private bool _isRunning;
 
+        private float _fadeTime = 1.0f;
         private void Awake()
         {
             _noclipManager = GetComponent<NoclipManager>();
@@ -31,6 +32,16 @@ namespace Code.Scripts.PlayerManagement
             EventManager.StartListening("StartTimeConstraintsTimer", StartTimeConstraintsTimer);
         }
         
+        private void Start()
+        {
+            //find BlackFadein gameobject
+            GameObject blackFadein = GameObject.Find("BlackFadein");
+            //get BlackFadein script from BlackFadein
+            BlackFadein blackFadeinScript = blackFadein.GetComponent<BlackFadein>();
+            //get fadeTime from BlackFadein
+            _fadeTime = blackFadeinScript.GetFadeTime();
+        }
+
         void Update()
         {
             if (!_timeLimitForPuzzleEnabled || !_isRunning)
@@ -42,8 +53,10 @@ namespace Code.Scripts.PlayerManagement
                 return;
             
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
-            if (_realityTimeLeftInThisPuzzle <= 0)
-                StartCoroutine(GameLostCoroutine());
+            //if (_realityTimeLeftInThisPuzzle <= 0)
+            //    StartCoroutine(GameLostCoroutine());
+            if (_realityTimeLeftInThisPuzzle <= _fadeTime)
+                EventManager.TriggerEvent("FadeOutRespawn");
             
         }
         

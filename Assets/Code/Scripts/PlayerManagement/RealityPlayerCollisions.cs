@@ -27,7 +27,8 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("OutOfBounds"))
         {
-            _respawningManager.RespawnAllTransforms();
+            //_respawningManager.RespawnAllTransforms();
+            EventManager.TriggerEvent("FadeOutRespawn");
             EventManager.TriggerEvent("DisplayHint", "falling down hurts... (right click to skip animation)");
         }
         else if (other.CompareTag("ProgressSaver"))
