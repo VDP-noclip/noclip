@@ -2257,16 +2257,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canUse: 1
   menuController: {fileID: 771194624}
-  volumeTextValue: {fileID: 0}
   globalVolumeSlider: {fileID: 648433659}
   effectsVolumeSlider: {fileID: 485481173}
   soundtrackVolumeSlider: {fileID: 1881052524}
   audioMixer: {fileID: 24100000, guid: 966f75dff49d65b4a9d6827eea13a365, type: 2}
   qualityDropdown: {fileID: 383834417}
   fullScreenToggle: {fileID: 1396441972}
-  controllerSensitivityTextValue: {fileID: 0}
   controllerSensitivitySlider: {fileID: 646387595}
-  invertYToggle: {fileID: 0}
 --- !u!4 &404335007
 Transform:
   m_ObjectHideFlags: 0
@@ -2452,18 +2449,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
         m_MethodName: SetEffectsVolume
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 771194624}
-        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: VolumeApply
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3465,18 +3450,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
         m_MethodName: SetGlobalVolume
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 771194624}
-        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: VolumeApply
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4574,21 +4547,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1b7573db45d1f439b4689674cdc488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerSensitivityTextValue: {fileID: 0}
-  controllerSensitivitySlider: {fileID: 0}
+  controllerSensitivitySlider: {fileID: 646387595}
   defaultSensitivity: 4
-  mainControllerSensitivity: 4
-  invertYToggle: {fileID: 0}
   qualityDropdown: {fileID: 383834417}
   fullScreenToggle: {fileID: 1396441972}
-  volumeTextValue: {fileID: 0}
   globalVolumeSlider: {fileID: 648433659}
   soundVolumeSlider: {fileID: 1881052524}
   effectsVolumeSlider: {fileID: 485481173}
   defaultVolume: 1
   audioMixer: {fileID: 24100000, guid: 966f75dff49d65b4a9d6827eea13a365, type: 2}
   confirmationPrompt: {fileID: 2054656209}
-  noSavedGameDialog: {fileID: 0}
   _newGameLevel: 0_Main
   resolutionDropdown: {fileID: 1569892673}
 --- !u!4 &771194625
@@ -14110,18 +14078,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
         m_MethodName: SetSoundVolume
         m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 771194624}
-        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: VolumeApply
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

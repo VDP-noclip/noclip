@@ -7,6 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 using TMPro;
 using UnityEditor;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// This is the Menu Controller: a centralized structure where every menu element resides.
@@ -20,8 +21,6 @@ public class MenuController : MonoBehaviour
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
     [SerializeField] private int defaultSensitivity = 4;
-    
-    public int mainControllerSensitivity = 4;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -37,10 +36,6 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Slider effectsVolumeSlider = null;
     [SerializeField] private float defaultVolume = 1.0f;
     [SerializeField] private AudioMixer audioMixer;
-
-    private float _currentSoundVolume;
-    private float _currentGlobalVolume;
-    private float _currentEffectsVolume;
 
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
@@ -139,31 +134,40 @@ public class MenuController : MonoBehaviour
     // Sets volume in Mixer
     public void SetSoundVolume(float volume)
     {
-        _currentSoundVolume = volume;
-        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
+        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("soundtrackVolume", volume);
 
+        soundVolumeSlider.value = volume;
+
+        StartCoroutine(ConfirmationBox());
     }
     
     public void SetGlobalVolume(float volume)
     {
-        _currentGlobalVolume = volume;
-        audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
+        audioMixer.SetFloat("globalVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("globalVolume", volume);
 
+        globalVolumeSlider.value = volume;
+
+        StartCoroutine(ConfirmationBox());
     }
     
     public void SetEffectsVolume(float volume)
     {
-        _currentEffectsVolume = volume;
-        audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
+        audioMixer.SetFloat("effectsVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("effectsVolume", volume);
 
+        effectsVolumeSlider.value = volume;
+
+        StartCoroutine(ConfirmationBox());
     }
     public void SetControllerSensitivity(float sensitivity)
     {
-        mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
-        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+        PlayerPrefs.SetFloat("masterSensitivity", Mathf.RoundToInt(sensitivity));
+
+        controllerSensitivitySlider.value = sensitivity;
+        
+        StartCoroutine(ConfirmationBox());
     }
     
     // Applies changes. These actually save the information.
@@ -174,22 +178,6 @@ public class MenuController : MonoBehaviour
         
         PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
         Screen.fullScreen = _isFullScreen;
-
-        StartCoroutine(ConfirmationBox());
-    }
-    
-    // Applies changes
-    public void VolumeApply()
-    {
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
-        
-        StartCoroutine(ConfirmationBox());
-    }
-    public void GameplayApply()
-    {
-        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
 
         StartCoroutine(ConfirmationBox());
     }

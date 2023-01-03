@@ -15,8 +15,6 @@ public class PauseMenuController : MonoBehaviour
     [Header("Containers")]
     [SerializeField] private GameObject _pauseMenuUI;
     [SerializeField] private GameObject _settingsMenuUI;
-    [SerializeField] private GameObject _audioMenuUI;
-    [SerializeField] private GameObject _gameplayMenuUI;
     [SerializeField] private GameObject _feedbackUI;
     [SerializeField] private GameObject _controlsUI;
 
@@ -27,10 +25,6 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private AudioSource _menuPress;
     [SerializeField] private AudioMixer _audioMixer;
 
-    private float _currentGlobalVolume;
-    private float _currentEffectsVolume;
-    private float _currentSoundVolume;
-    
     [Header("Gameplay Settings")]
     [SerializeField] private Slider _controllerSensitivitySlider = null;
     [SerializeField] private int _defaultSensitivity = 4;
@@ -108,9 +102,7 @@ public class PauseMenuController : MonoBehaviour
     public void OverlayUpdate()
     {
         _pauseMenuUI.SetActive(false);
-        _audioMenuUI.SetActive(false);
         _settingsMenuUI.SetActive(false);
-        _gameplayMenuUI.SetActive(false);
         _feedbackUI.SetActive(false);
         _controlsUI.SetActive(false);
     }
@@ -119,9 +111,7 @@ public class PauseMenuController : MonoBehaviour
     {
         Time.timeScale = 1;
         AudioListener.pause = false;
-        
-        VolumeApply();
-        
+
         _isPaused = false;
         
         SceneManager.LoadScene("Menu_0");
@@ -130,42 +120,40 @@ public class PauseMenuController : MonoBehaviour
     public void SetControllerSensitivity(float sensitivity)
     {
         EventManager.TriggerEvent("setSensitivity", sensitivity.ToString());
-        mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
-    }
-    public void SetSoundtrackVolume(float volume)
-    {
-        _currentSoundVolume = volume;
-        _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
-    }
-    public void SetEffectsVolume(float volume)
-    {
-        _currentEffectsVolume = volume;
-        _audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-    }
-    public void SetGlobalVolume(float volume)
-    {
-        _currentGlobalVolume = volume;
-        _audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
-    }
-    public void GameplayApply()
-    {
-        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+        PlayerPrefs.SetFloat("masterSensitivity", Mathf.RoundToInt(sensitivity));
+
+        _controllerSensitivitySlider.value = sensitivity;
         
         StartCoroutine(ConfirmationBox());
     }
-    
-    public void VolumeApply()
+    public void SetSoundtrackVolume(float volume)
     {
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
-            
+        _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("soundtrackVolume", volume);
+        
+        _volumeSoundtrackSlider.value = volume;
+        
         StartCoroutine(ConfirmationBox());
     }
-  
+    public void SetEffectsVolume(float volume)
+    {
+        _audioMixer.SetFloat("effectsVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("effectsVolume", volume);
+        
+        _volumeEffectsSlider.value = volume;
+        
+        StartCoroutine(ConfirmationBox());
+    }
+    public void SetGlobalVolume(float volume)
+    {
+        _audioMixer.SetFloat("globalVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("globalVolume", volume);
+        
+        _volumeGlobalSlider.value = volume;
+        
+        StartCoroutine(ConfirmationBox());
+    }
+
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
