@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_WaterfallShader Graph
-  m_Shader: {fileID: -6465566751694194690, guid: 211c28bc1eb5e70459721c71b151cda6,
+  m_Name: Waterfall
+  m_Shader: {fileID: -6465566751694194690, guid: 3de61be87f29a364b8c34b460eb5fcc6,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -21,6 +21,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _SampleTexture2D_a75b2eda32ae41788782920e14fae6d7_Texture_1:
+        m_Texture: {fileID: 2800000, guid: a44fd4f8dbf8dbc41b0ab46a9f086299, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -37,9 +41,10 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ScrollSpeed: 0.1
     m_Colors: []
   m_BuildTextureStacks: []
---- !u!114 &7274775184738450021
+--- !u!114 &5068302858493461203
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
