@@ -16,7 +16,7 @@ namespace Code.Scripts.PlayerManagement
         private float _realityTimeLeftInThisPuzzle;
         private bool _isRunning;
 
-        private float _fadeTime = 1.0f;
+        private float _fadeTime;
         private bool _fading = false;
         private void Awake()
         {
