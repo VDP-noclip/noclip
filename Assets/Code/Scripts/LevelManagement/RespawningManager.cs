@@ -114,7 +114,6 @@ public class RespawningManager : MonoBehaviour
         // Switch to reality camera after the animation is complete
         _cameraManager.SwitchCamera(false);
         _realityMovement.ResetSpeedOnRespawn();
-        EventManager.TriggerEvent("StartTimeConstraintsTimer");
         _noclipManager.SetAcceptUserInput(true);
         _respawnAnimationIsRunning = false;
         yield return null;
@@ -142,7 +141,6 @@ public class RespawningManager : MonoBehaviour
         _realityMovement.ResetSpeedOnRespawn();
         EventManager.TriggerEvent("SetLastCheckpointRotation");
         EventManager.TriggerEvent("ResetTimeLimitConstraints");
-        EventManager.TriggerEvent("StartTimeConstraintsTimer");
         _noclipManager.SetAcceptUserInput(true);
     }
     
