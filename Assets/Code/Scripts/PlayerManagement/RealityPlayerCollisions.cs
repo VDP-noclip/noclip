@@ -29,7 +29,6 @@ public class RealityPlayerCollisions : MonoBehaviour
         {
             //_respawningManager.RespawnAllTransforms();
             EventManager.TriggerEvent("FadeOutRespawn");
-            EventManager.TriggerEvent("DisplayHint", "falling down hurts... (right click to skip animation)");
         }
         else if (other.CompareTag("ProgressSaver"))
         {
