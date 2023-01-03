@@ -49,7 +49,7 @@ public class RealityPlayerCollisions : MonoBehaviour
             _noclipManager.SetPlayerIsInsideNoclipEnabler(false);
         } else if (other.CompareTag("Checkpoint"))
         {
-            EventManager.TriggerEvent("StartTimeConstraintsTimer");
+            EventManager.TriggerEvent("RestartTimeConstraintsTimer");
         }
     }
 }
