@@ -20,8 +20,7 @@ public class LoadPrefs : MonoBehaviour
 
     [SerializeField] private MenuController menuController;
 
-    [Header("Volume Settings")] 
-    [SerializeField] private TMP_Text volumeTextValue;
+    [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
     [SerializeField] private Slider effectsVolumeSlider = null;
     [SerializeField] private Slider soundtrackVolumeSlider = null;
@@ -34,12 +33,7 @@ public class LoadPrefs : MonoBehaviour
     [SerializeField] private Toggle fullScreenToggle;
     
     [Header("Sensitivity Settings")]
-    [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
     [SerializeField] private Slider controllerSensitivitySlider = null;
-    
-    [Header("Invert Y Settings")]
-    [SerializeField] private Toggle invertYToggle = null;
-
     private void Start()
     {
         if (canUse)
@@ -106,19 +100,6 @@ public class LoadPrefs : MonoBehaviour
 
                 controllerSensitivitySlider.value = localSensitivity;
                 menuController.mainControllerSensitivity = Mathf.RoundToInt(localSensitivity);
-            }
-            
-            if (PlayerPrefs.HasKey("masterInvertY"))
-            {
-                if (PlayerPrefs.GetInt("masterInvertY") == 1)
-                {
-                    invertYToggle.isOn = true;
-                }
-
-                else
-                {
-                    invertYToggle.isOn = false;
-                }
             }
         }
     }
