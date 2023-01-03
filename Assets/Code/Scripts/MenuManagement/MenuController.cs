@@ -17,15 +17,11 @@ using UnityEngine.Audio;
 /// </summary>
 public class MenuController : MonoBehaviour
 {
-    [Header("Gameplay Settings")] 
-    [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
+    [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
     [SerializeField] private int defaultSensitivity = 4;
     
     public int mainControllerSensitivity = 4;
-
-    [Header("Toggle Settings")] 
-    [SerializeField] private Toggle invertYToggle = null;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -35,8 +31,7 @@ public class MenuController : MonoBehaviour
     private bool _isFullScreen;
     private float _brightnessLevel;
 
-    [Header("Volume Settings")] 
-    [SerializeField] private TMP_Text volumeTextValue = null;
+    [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
     [SerializeField] private Slider soundVolumeSlider = null;
     [SerializeField] private Slider effectsVolumeSlider = null;
@@ -51,9 +46,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject confirmationPrompt = null;
     
     [Header("Levels To Load")]
-    [SerializeField] private GameObject noSavedGameDialog = null;
     public string _newGameLevel;
-    private string levelToLoad;
 
     [Header("Resolution Dropdowns")] 
     public TMP_Dropdown resolutionDropdown;
@@ -97,7 +90,7 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene(_newGameLevel);
     }
 
-    // Loads a previously saved level.
+    /* // Loads a previously saved level.
     public void ResumeGameDialogYes()
     {
         // From a design perspective, when a saved level is found the resume button should become more visible. This will be dealt with when polishing.
@@ -119,7 +112,8 @@ public class MenuController : MonoBehaviour
             noSavedGameDialog.SetActive(true);
         }
     }
-
+    */
+    
     // Quits the game.
     public void QuitGameButton()
     {
@@ -195,15 +189,6 @@ public class MenuController : MonoBehaviour
     }
     public void GameplayApply()
     {
-        if (invertYToggle.isOn)
-        {
-            PlayerPrefs.SetInt("masterInvertY", 1);
-        }
-        else
-        {
-            PlayerPrefs.SetInt("masterInvertY", 0);
-        }
-
         PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
 
         StartCoroutine(ConfirmationBox());
@@ -211,6 +196,7 @@ public class MenuController : MonoBehaviour
 
     // When prompted, the player can reset various settings' values.
     // This button changes based on the menutype it's given.
+    /*
     public void ResetButton(string MenuType)
     {
         if (MenuType == "Audio")
@@ -252,10 +238,11 @@ public class MenuController : MonoBehaviour
             GraphicsApply();
         }
     }
+    */
     
     // Returns an image on the bottom-left.
     // Lets the player know settings have changed.
-    // A chance for a cool animation to take place, perhaps?
+    // A chance for a cool animation to take place, perhaps? | 2023 edit: no.
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
