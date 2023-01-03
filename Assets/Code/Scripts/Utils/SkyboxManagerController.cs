@@ -12,6 +12,10 @@ namespace Code.Scripts.Utils
         private void Awake()
         {
             SetRealitySkybox();
+        }
+
+        private void Start()
+        {
             EventManager.StartListening("SetRealitySkybox", SetRealitySkybox);
             EventManager.StartListening("SetNoclipSkybox", SetNoclipSkybox);
         }
