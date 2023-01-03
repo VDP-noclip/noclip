@@ -22,13 +22,14 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("Checkpoint"))
         {
+            EventManager.TriggerEvent("FadeCancel");
             other.GetComponent<AnchorCheckpointController>().ReactToPlayerCollision();
             _respawningManager.UpdateCheckpointValues();
         }
         else if (other.CompareTag("OutOfBounds"))
         {
-            _respawningManager.RespawnAllTransforms();
-            EventManager.TriggerEvent("DisplayHint", "falling down hurts... (right click to skip animation)");
+            //_respawningManager.RespawnAllTransforms();
+            EventManager.TriggerEvent("FadeOutRespawn");
         }
         else if (other.CompareTag("ProgressSaver"))
         {

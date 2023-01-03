@@ -119,7 +119,7 @@ public class RespawningManager : MonoBehaviour
         yield return null;
     }
 
-    private void IstantaneousRespawn()
+    public void IstantaneousRespawn()
     {
         // Stop the respawn coroutine if it is running
         if (_respawnAnimationIsRunning)
