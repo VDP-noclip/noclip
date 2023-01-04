@@ -16,6 +16,8 @@ namespace Code.Scripts.PlayerManagement
         private float _realityTimeLeftInThisPuzzle;
         private bool _isRunning;
 
+        private float _fadeTime;
+        private bool _fading = false;
         private void Awake()
         {
             _respawningManager = GetComponentInParent<RespawningManager>();
@@ -28,14 +30,28 @@ namespace Code.Scripts.PlayerManagement
             EventManager.StartListening("PauseTimeConstraintsTimer", PauseTimeConstraintsTimer);
         }
 
+        private void Start()
+        {
+            //find BlackFadein gameobject
+            GameObject blackFadein = GameObject.Find("BlackFadein");
+            //get BlackFadein script from BlackFadein
+            BlackFadein blackFadeinScript = blackFadein.GetComponent<BlackFadein>();
+            //get fadeTime from BlackFadein
+            _fadeTime = blackFadeinScript.GetFadeTime();
+        }
         void Update()
         {
             if (!_timeLimitForPuzzleEnabled || !_isRunning)
                 return;
 
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
-            if (_realityTimeLeftInThisPuzzle <= 0)
-                StartCoroutine(GameLostCoroutine());
+
+            //if (_realityTimeLeftInThisPuzzle <= 0)
+            //    StartCoroutine(GameLostCoroutine());
+            if (_realityTimeLeftInThisPuzzle <= _fadeTime && !_fading){
+                EventManager.TriggerEvent("FadeOutRespawn");
+                _fading = true;
+            }
         }
 
         /// <summary>
@@ -66,6 +82,7 @@ namespace Code.Scripts.PlayerManagement
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
             _isRunning = false;
             EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
+            _fading = false;
         }
 
         private IEnumerator GameLostCoroutine()

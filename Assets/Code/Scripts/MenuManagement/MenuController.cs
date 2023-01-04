@@ -7,6 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 using TMPro;
 using UnityEditor;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// This is the Menu Controller: a centralized structure where every menu element resides.
@@ -17,15 +18,9 @@ using UnityEngine.Audio;
 /// </summary>
 public class MenuController : MonoBehaviour
 {
-    [Header("Gameplay Settings")] 
-    [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
+    [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
     [SerializeField] private int defaultSensitivity = 4;
-    
-    public int mainControllerSensitivity = 4;
-
-    [Header("Toggle Settings")] 
-    [SerializeField] private Toggle invertYToggle = null;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -35,25 +30,18 @@ public class MenuController : MonoBehaviour
     private bool _isFullScreen;
     private float _brightnessLevel;
 
-    [Header("Volume Settings")] 
-    [SerializeField] private TMP_Text volumeTextValue = null;
+    [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
     [SerializeField] private Slider soundVolumeSlider = null;
     [SerializeField] private Slider effectsVolumeSlider = null;
     [SerializeField] private float defaultVolume = 1.0f;
     [SerializeField] private AudioMixer audioMixer;
 
-    private float _currentSoundVolume;
-    private float _currentGlobalVolume;
-    private float _currentEffectsVolume;
-
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
     
     [Header("Levels To Load")]
-    [SerializeField] private GameObject noSavedGameDialog = null;
     public string _newGameLevel;
-    private string levelToLoad;
 
     [Header("Resolution Dropdowns")] 
     public TMP_Dropdown resolutionDropdown;
@@ -97,7 +85,7 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene(_newGameLevel);
     }
 
-    // Loads a previously saved level.
+    /* // Loads a previously saved level.
     public void ResumeGameDialogYes()
     {
         // From a design perspective, when a saved level is found the resume button should become more visible. This will be dealt with when polishing.
@@ -119,7 +107,8 @@ public class MenuController : MonoBehaviour
             noSavedGameDialog.SetActive(true);
         }
     }
-
+    */
+    
     // Quits the game.
     public void QuitGameButton()
     {
@@ -145,31 +134,40 @@ public class MenuController : MonoBehaviour
     // Sets volume in Mixer
     public void SetSoundVolume(float volume)
     {
-        _currentSoundVolume = volume;
-        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
+        audioMixer.SetFloat("soundtrackVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("soundtrackVolume", volume);
 
+        soundVolumeSlider.value = volume;
+
+        StartCoroutine(ConfirmationBox());
     }
     
     public void SetGlobalVolume(float volume)
     {
-        _currentGlobalVolume = volume;
-        audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
+        audioMixer.SetFloat("globalVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("globalVolume", volume);
 
+        globalVolumeSlider.value = volume;
+
+        StartCoroutine(ConfirmationBox());
     }
     
     public void SetEffectsVolume(float volume)
     {
-        _currentEffectsVolume = volume;
-        audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
+        audioMixer.SetFloat("effectsVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("effectsVolume", volume);
 
+        effectsVolumeSlider.value = volume;
+
+        StartCoroutine(ConfirmationBox());
     }
     public void SetControllerSensitivity(float sensitivity)
     {
-        mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
-        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+        PlayerPrefs.SetFloat("masterSensitivity", Mathf.RoundToInt(sensitivity));
+
+        controllerSensitivitySlider.value = sensitivity;
+        
+        StartCoroutine(ConfirmationBox());
     }
     
     // Applies changes. These actually save the information.
@@ -183,34 +181,10 @@ public class MenuController : MonoBehaviour
 
         StartCoroutine(ConfirmationBox());
     }
-    
-    // Applies changes
-    public void VolumeApply()
-    {
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
-        
-        StartCoroutine(ConfirmationBox());
-    }
-    public void GameplayApply()
-    {
-        if (invertYToggle.isOn)
-        {
-            PlayerPrefs.SetInt("masterInvertY", 1);
-        }
-        else
-        {
-            PlayerPrefs.SetInt("masterInvertY", 0);
-        }
-
-        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
-
-        StartCoroutine(ConfirmationBox());
-    }
 
     // When prompted, the player can reset various settings' values.
     // This button changes based on the menutype it's given.
+    /*
     public void ResetButton(string MenuType)
     {
         if (MenuType == "Audio")
@@ -252,10 +226,11 @@ public class MenuController : MonoBehaviour
             GraphicsApply();
         }
     }
+    */
     
     // Returns an image on the bottom-left.
     // Lets the player know settings have changed.
-    // A chance for a cool animation to take place, perhaps?
+    // A chance for a cool animation to take place, perhaps? | 2023 edit: no.
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
