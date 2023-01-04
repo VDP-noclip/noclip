@@ -75,19 +75,6 @@ public class LoadPrefsLevels : MonoBehaviour
                 controllerSensitivitySlider.value = localSensitivity;
                 pauseMenuController.mainControllerSensitivity = Mathf.RoundToInt(localSensitivity);
             }
-            
-            if (PlayerPrefs.HasKey("masterInvertY"))
-            {
-                if (PlayerPrefs.GetInt("masterInvertY") == 1)
-                {
-                    invertYToggle.isOn = true;
-                }
-
-                else
-                {
-                    invertYToggle.isOn = false;
-                }
-            }
         }
     }
 }

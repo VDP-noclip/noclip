@@ -36,7 +36,6 @@ public class MouseLook : MonoBehaviour
     private float _yRotationCheckpoint;
     private float _xRotation; // pitch movement variable
     private float _xRotationCheckpoint;
-    private int _invertY = 1;
     private void Awake()
     {
         // Checks whether there are actual sensitivity settings, and if there are
@@ -87,10 +86,6 @@ public class MouseLook : MonoBehaviour
             _xRotation -= mouseY; // the y screen axis corresponds to a rotation on the x axis of the camera 
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);    // Clamping allows to block the rotation
             UpdateRotation();
-            
-            // Checks whether there's local information about vertical axis preference and changes it.
-            UpdateInvertY();
-           
         }
     }
 
@@ -104,17 +99,6 @@ public class MouseLook : MonoBehaviour
         _activeCurrently = active;
     }
     
-    public void UpdateInvertY()
-    {
-        if (PlayerPrefs.HasKey("masterInvertY"))
-        {
-            if (PlayerPrefs.GetInt("masterInvertY") == 1)
-                _invertY = -1;
-            else 
-                _invertY = 1;
-        }
-    }
-
     public void setSensitivity(float sensitivity)
     {
         _sensitivity = sensitivity;
