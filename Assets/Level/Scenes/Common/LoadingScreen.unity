@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &581065163
 RectTransform:
   m_ObjectHideFlags: 0
@@ -833,10 +833,9 @@ MonoBehaviour:
   _loadingSceneOption: {fileID: 11400000, guid: be87c9d6155f80d48801085f3da1efa0,
     type: 2}
   _loadingText: {fileID: 1152398533}
-  _loadingDots: {fileID: 0}
-  _dialogueBox: {fileID: 2047232982}
-  _pressButtons: {fileID: 581065162}
+  _pressButtonsText: {fileID: 1825827439}
   _loadingCircle: {fileID: 1070350432}
+  _fadeInDuration: 2
 --- !u!4 &1412476045
 Transform:
   m_ObjectHideFlags: 0
@@ -869,7 +868,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1825827440
 RectTransform:
   m_ObjectHideFlags: 0
