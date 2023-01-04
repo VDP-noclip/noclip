@@ -17,6 +17,9 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _dialogueTextObject;
         [SerializeField] private GameObject _tutorialTextObject;
         [SerializeField] private GameObject _skipButtonTextObject;
+        [SerializeField] private GameObject _imageObject;
+        
+        [SerializeField] private Image _image;
         
         [Space]
         [SerializeField] private TMP_Text _tutorialText;
@@ -115,6 +118,10 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+
+            _image.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
+            StartCoroutine(FadeInAndOutCoroutine(_imageObject, true, _fadeDuration));
+            
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
 
