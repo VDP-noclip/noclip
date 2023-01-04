@@ -35,6 +35,8 @@ public class NoclipManager : MonoBehaviour
     private float _endCooldownAbsoluteTime;
     private readonly float _backToBodyAnimationDuration = 0.5f;
 
+    private float _animationSlowdownFactor;
+    private AnimatedMaterials animatedMaterials;
     private enum NoclipState
     {
         RealityCannotEnableNoclip,
@@ -58,6 +60,12 @@ public class NoclipManager : MonoBehaviour
         GameObject environment = GameObject.Find("Environment");
         _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
         _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
+
+        //find GameObject_1
+        GameObject animatedMaterialsHolder = GameObject.Find("AnimatedMaterialsHolder");
+        //get AnimatedMaterials component
+        animatedMaterials = animatedMaterialsHolder.GetComponent<AnimatedMaterials>();
+        _animationSlowdownFactor = animatedMaterials.GetNoclipSlowdownFactor();
     }
 
     /// <summary>
@@ -119,6 +127,21 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator EnableNoclip()
     {
+        //for each material in animatedMaterials
+        foreach (var material in animatedMaterials.GetMaterialList())
+        {
+            try {
+                material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")/_animationSlowdownFactor);
+            } catch {
+                Debug.LogError("Ale fix the animated material scroll speed variable name");
+            }
+            try {
+                material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")/_animationSlowdownFactor);
+            } catch {
+                Debug.LogError("Ale fix the animated material scroll speed variable name");
+            }
+        }
+
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
@@ -144,6 +167,21 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
+        //for each material in animatedMaterials
+        foreach (var material in animatedMaterials.GetMaterialList())
+        {
+            try {
+                material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")*_animationSlowdownFactor);
+            } catch {
+                Debug.LogError("Ale fix the animated material scroll speed variable name");
+            }
+            try {
+                material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")*_animationSlowdownFactor);
+            } catch {
+                Debug.LogError("Ale fix the animated material scroll speed variable name");
+            }
+        }
+
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         
