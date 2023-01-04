@@ -15,7 +15,6 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _controlsContainer;
         [SerializeField] private GameObject _dialogueContainer;
         [SerializeField] private GameObject _dialogueTextObject;
-        [SerializeField] private GameObject _tutorialCrosshair;
         [SerializeField] private GameObject _tutorialTextObject;
         [SerializeField] private GameObject _skipButtonTextObject;
         
@@ -95,7 +94,6 @@ namespace Code.Scripts.TutorialManagement
                 StopCoroutine(_displayDialogueCoroutine);
                 _dialogueContainer.SetActive(false);
                 _realityMovement.SetSlowMode(false);
-                _tutorialCrosshair.SetActive(false);
                 _displayDialogueCoroutineIsRunning = false;
             }
         }
@@ -259,12 +257,6 @@ namespace Code.Scripts.TutorialManagement
             _dialogueContainer.SetActive(true);
             _realityMovement.SetSlowMode(dialogueObject.IsSlowDown());
 
-            // overwrite the crossair
-            if (dialogueObject.IsCrossHairHighlighted())
-            {
-                _tutorialCrosshair.SetActive(true);
-            }
-
             _endDialogueTime = Time.realtimeSinceStartup + dialogueObject.GetTotalTime() + _bufferTimeAfterTutorialText;
 
             for (int i = 0; i < dialogueObject.GetDialog().Length; i++)  // Write like a typer
@@ -285,7 +277,6 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
             yield return new WaitForSecondsRealtime(_fadeDuration);
             _realityMovement.SetSlowMode(false);
-            _tutorialCrosshair.SetActive(false);
             _displayDialogueCoroutineIsRunning = false;
         }
 
