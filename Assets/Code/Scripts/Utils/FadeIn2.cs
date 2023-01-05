@@ -42,7 +42,7 @@ public class FadeIn2 : MonoBehaviour
             int i = 0;
             foreach(Material material in GetComponent<MeshRenderer>().materials){
                 //material has property _Color
-                if(!material.HasProperty("_Color") || !material.HasProperty("_MainText") || !material.HasProperty("_AlphaClip")){
+                if(!material.HasProperty("_Color") || !material.HasProperty("_MainTex") || !material.HasProperty("_AlphaClip")){
                     //throw exception
                     throw new Exception("Material " + material.name + " does not have property _Color");
                 }
