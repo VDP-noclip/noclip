@@ -63,6 +63,11 @@ public class NoclipManager : MonoBehaviour
         _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
         _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
 
+        AnimatedMaterialsSetup();
+    }
+
+    private void AnimatedMaterialsSetup()
+    {
         //find AnimatedMaterialsHolder
         GameObject animatedObjectsHolder = GameObject.Find("AnimatedObjectsHolder");
         if (animatedObjectsHolder != null)
@@ -79,6 +84,8 @@ public class NoclipManager : MonoBehaviour
         else
         {
             _animatedObjectsPresent = false;
+            //log no animated objects found
+            Debug.Log("No animated objects found");
         }
     }
 
@@ -141,31 +148,7 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator EnableNoclip()
     {
-        if(_animatedObjectsPresent){
-            //for each material in animatedMaterials
-            /*foreach (var material in animatedMaterials.GetMaterialList())
-            {
-                try {
-                    material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")/_animationSlowdownFactor);
-                } catch {
-                    Debug.LogError("Invalid animated material " + material.name);
-                }
-            }*/
-            //for each object in _animatedObjects
-            foreach (var obj in _animatedObjects)
-            {
-                try {
-                    //get material
-                    Material material = obj.GetComponent<Renderer>().material;
-                    //get scroll speed
-                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
-                    //set new scroll speed
-                    material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
-                } catch {
-                    Debug.LogError("Invalid animated object " + obj.name);
-                }
-            }
-        }
+        SetAnimationSpeed("slow");
 
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
@@ -192,31 +175,7 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
-        if(_animatedObjectsPresent){
-            //for each material in animatedMaterials
-            /*foreach (var material in animatedMaterials.GetMaterialList())
-            {
-                try {
-                    material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")*_animationSlowdownFactor);
-                } catch {
-                    Debug.LogError("Invalid animated material " + material.name);
-                }
-            }*/
-            //for each object in _animatedObjects
-            foreach (var obj in _animatedObjects)
-            {
-                try {
-                    //get material
-                    Material material = obj.GetComponent<Renderer>().material;
-                    //get scroll speed
-                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
-                    //set new scroll speed
-                    material.SetFloat("_ScrollSpeed", scrollSpeed*_animationSlowdownFactor);
-                } catch {
-                    Debug.LogError("Invalid animated object " + obj.name);
-                }
-            }
-        }
+        SetAnimationSpeed("normal");
 
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
@@ -237,6 +196,28 @@ public class NoclipManager : MonoBehaviour
         yield return null;
     }
 
+    private void SetAnimationSpeed(string how){
+        if(_animatedObjectsPresent){
+            //for each object in _animatedObjects
+            foreach (var obj in _animatedObjects)
+            {
+                try {
+                    //get material
+                    Material material = obj.GetComponent<Renderer>().material;
+                    //get scroll speed
+                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
+                    //set new scroll speed
+                    if(how == "slow"){
+                        material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
+                    } else if(how == "normal"){
+                        material.SetFloat("_ScrollSpeed", scrollSpeed*_animationSlowdownFactor);
+                    }
+                } catch {
+                    Debug.LogError("Invalid animated object " + obj.name);
+                }
+            }
+        }
+    }
     
     private void Update()
     {
