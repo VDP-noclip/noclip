@@ -287,9 +287,14 @@ namespace Code.Scripts.TutorialManagement
             if (dialogueObject.GetImage() != null)
             {
                 StartCoroutine(FadeInAndOutCoroutine(_imageObject, false, _fadeDuration));
-                _image.sprite = null;
+                
             }
             yield return new WaitForSecondsRealtime(_fadeDuration);
+
+            if (dialogueObject.GetImage() != null)
+            {
+                _image.sprite = null;
+            }
             _realityMovement.SetSlowMode(false);
             _displayDialogueCoroutineIsRunning = false;
         }
