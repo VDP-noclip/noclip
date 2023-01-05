@@ -118,10 +118,12 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            if (dialogueObject.GetImage() != null)
+            {
+                _image.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
+                StartCoroutine(FadeInAndOutCoroutine(_imageObject, true, _fadeDuration));
+            }
 
-            _image.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
-            StartCoroutine(FadeInAndOutCoroutine(_imageObject, true, _fadeDuration));
-            
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
 
@@ -282,6 +284,11 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
+            if (dialogueObject.GetImage() != null)
+            {
+                StartCoroutine(FadeInAndOutCoroutine(_imageObject, false, _fadeDuration));
+                _image.sprite = null;
+            }
             yield return new WaitForSecondsRealtime(_fadeDuration);
             _realityMovement.SetSlowMode(false);
             _displayDialogueCoroutineIsRunning = false;
