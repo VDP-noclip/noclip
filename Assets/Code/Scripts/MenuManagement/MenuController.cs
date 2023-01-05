@@ -77,6 +77,7 @@ public class MenuController : MonoBehaviour
         StartCoroutine(FadeUI());
 
         // TODO: check if there are playerprefs, and if there aren't set default volume
+        SetFOV(PlayerPrefs.GetFloat("cameraFov"));
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
         SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
