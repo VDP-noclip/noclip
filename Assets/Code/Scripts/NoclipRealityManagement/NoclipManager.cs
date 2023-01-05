@@ -122,6 +122,7 @@ public class NoclipManager : MonoBehaviour
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
+        //EventManager.TriggerEvent("StartNoclipAudioEffects");
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);
         
@@ -144,6 +145,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
+        
+        //EventManager.TriggerEvent("StopNoclipAudioEffects");
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         
