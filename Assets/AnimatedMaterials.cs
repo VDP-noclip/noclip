@@ -7,7 +7,7 @@ public class AnimatedMaterials : MonoBehaviour
     // serialize material field list
     [SerializeField] private List<Material> _animatedMaterials = new List<Material>();
     [SerializeField] private float _noclipSlowdownFactor = 10f;
-    [SerializeField] private string _WARNING = "Se si chiude il gioco con la noclip attivata i materiali rimangono rallentati, dovrebbe succedere solo in editor comunque";
+    [SerializeField] private string _TODO = "Find object by tag instead of children";
     void Start()
     {
         
