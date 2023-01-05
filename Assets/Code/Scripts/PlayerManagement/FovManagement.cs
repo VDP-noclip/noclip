@@ -11,7 +11,7 @@ public class FovManagement : MonoBehaviour
     #region UnityMethods
     private void Update()
     {
-       _camera.fieldOfView = PlayerPrefs.GetFloat("CameraFov");
+       _camera.fieldOfView = PlayerPrefs.GetFloat("cameraFov");
     }
 
     #endregion

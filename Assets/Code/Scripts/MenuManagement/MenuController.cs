@@ -36,6 +36,8 @@ public class MenuController : MonoBehaviour
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
     [SerializeField] private int defaultSensitivity = 4;
+    [SerializeField] private Slider controllerFovSlider = null;
+    [SerializeField] private float defaultFovValue = 90;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -191,6 +193,16 @@ public class MenuController : MonoBehaviour
         controllerSensitivitySlider.value = sensitivity;
         
         StartCoroutine(ConfirmationBox());
+    }
+
+    public void SetFOV(float fov)
+    {
+        PlayerPrefs.SetFloat("cameraFov", fov);
+
+        controllerFovSlider.value = fov;
+        
+        StartCoroutine(ConfirmationBox());
+
     }
     
     // Applies changes. These actually save the information.

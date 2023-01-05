@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.22003148, g: 0.4848137, b: 0.78005964, a: 1}
+  m_IndirectSpecularColor: {r: 0.2145386, g: 0.49893084, b: 0.8379967, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4654,6 +4654,8 @@ MonoBehaviour:
   noclipEcho: {fileID: 482481307}
   controllerSensitivitySlider: {fileID: 646387595}
   defaultSensitivity: 4
+  controllerFovSlider: {fileID: 0}
+  defaultFovValue: 90
   qualityDropdown: {fileID: 383834417}
   fullScreenToggle: {fileID: 1396441972}
   globalVolumeSlider: {fileID: 648433659}
@@ -7054,13 +7056,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 771194624}
         m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: SetControllerSensitivity
-        m_Mode: 0
+        m_MethodName: SetFOV
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: 90
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
