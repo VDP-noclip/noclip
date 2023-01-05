@@ -21,6 +21,7 @@ public class MenuController : MonoBehaviour
     [Header("Objects to fade")] 
     [SerializeField] private GameObject mainCanvas;
     [SerializeField] private GameObject mainGradient;
+    [SerializeField] private GameObject bottomGradient;
     [SerializeField] private GameObject noclipLogo;
     [SerializeField] private GameObject logoBlur;
     [SerializeField] private GameObject enterButton;
@@ -43,6 +44,10 @@ public class MenuController : MonoBehaviour
     private int _qualityLevel;
     private bool _isFullScreen = true;
     private float _brightnessLevel;
+    
+    private bool _isStartPressed = false;
+    private bool _isSettingsPressed = false;
+    private bool _isQuitPressed = false;
 
     [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
@@ -69,6 +74,7 @@ public class MenuController : MonoBehaviour
     {
         StartCoroutine(FadeUI());
 
+        // TODO: check if there are playerprefs, and if there aren't set default volume
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
         SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
@@ -244,6 +250,53 @@ public class MenuController : MonoBehaviour
         }
     }
     */
+
+    public void ChangeStartColor(TMP_Text buttonText)
+    {
+        if (!_isStartPressed)
+        {
+            exitButton.GetComponent<TMP_Text>().color = Color.white;
+            settingsButton.GetComponent<TMP_Text>().color = Color.white;
+            buttonText.color = Color.black;
+        }
+        else
+        {
+            buttonText.color = Color.white;
+        }
+    }
+    
+    public void ChangeSettingsColor(TMP_Text buttonText)
+    {
+        if (!_isSettingsPressed)
+        {
+            exitButton.GetComponent<TMP_Text>().color = Color.white;
+            enterButton.GetComponent<TMP_Text>().color = Color.white;
+            buttonText.color = Color.black;
+        }
+        else
+        {
+            buttonText.color = Color.white;
+        }
+    }
+    
+    public void ChangeQuitColor(TMP_Text buttonText)
+    {
+        if (!_isQuitPressed)
+        {
+            enterButton.GetComponent<TMP_Text>().color = Color.white;
+            settingsButton.GetComponent<TMP_Text>().color = Color.white;
+            buttonText.color = Color.black;
+        }
+        else
+        {
+            buttonText.color = Color.white;
+        }
+    }
+
+    public void ChangeColor(TMP_Text buttonText)
+    {
+        buttonText.color = Color.white;
+    }
     
     // Returns an image on the bottom-left.
     // Lets the player know settings have changed.
@@ -260,6 +313,7 @@ public class MenuController : MonoBehaviour
         StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.5f));
         yield return new WaitForSecondsRealtime(1f);
         StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.5f));
+        StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.5f));
         yield return new WaitForSecondsRealtime(1f);
         StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.5f));
         yield return new WaitForSecondsRealtime(0.2f);
