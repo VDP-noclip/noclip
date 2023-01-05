@@ -33,7 +33,6 @@ public class NoclipManager : MonoBehaviour
     
     private NoclipMovement _noclipMovement;
     private float _endCooldownAbsoluteTime;
-    private readonly float _backToBodyAnimationDuration = 0.5f;
 
     private enum NoclipState
     {
@@ -206,7 +205,7 @@ public class NoclipManager : MonoBehaviour
         while (!IsBackToBody())
         {
             timeElapsed += Time.deltaTime;
-            float t = timeElapsed / _backToBodyAnimationDuration;
+            float t = timeElapsed / _noclipOptions.backToBodyAnimationDuration;
             _noclipCamera.transform.position = Vector3.Lerp(startPosition, _realityCamera.transform.position, t);
             _noclipCamera.transform.rotation = Quaternion.Lerp(startAngle, _realityCamera.transform.rotation, t);
             yield return new WaitForEndOfFrame();
@@ -215,9 +214,10 @@ public class NoclipManager : MonoBehaviour
         yield return DisableNoclip();
         
         // Cooldown phase
-        _noclipState = NoclipState.RealityCooldown;
-        _endCooldownAbsoluteTime = Time.time + _noclipOptions.cooldownSeconds;
-        yield return new WaitForSecondsRealtime(_noclipOptions.cooldownSeconds);
+        if (_noclipOptions.cooldownSeconds > 0)
+            _noclipState = NoclipState.RealityCooldown;
+            _endCooldownAbsoluteTime = Time.time + _noclipOptions.cooldownSeconds;
+            yield return new WaitForSecondsRealtime(_noclipOptions.cooldownSeconds);
         
         // Cooldown is over, update noclipState!
         if (_playerInsideNoclipEnabler)
