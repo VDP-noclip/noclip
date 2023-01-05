@@ -37,6 +37,7 @@ public class NoclipManager : MonoBehaviour
 
     private float _animationSlowdownFactor;
     private AnimatedMaterials animatedMaterials;
+    private bool _animatedMaterialsPresent = false;
     private enum NoclipState
     {
         RealityCannotEnableNoclip,
@@ -61,11 +62,19 @@ public class NoclipManager : MonoBehaviour
         _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
         _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
 
-        //find GameObject_1
+        //find AnimatedMaterialsHolder
         GameObject animatedMaterialsHolder = GameObject.Find("AnimatedMaterialsHolder");
-        //get AnimatedMaterials component
-        animatedMaterials = animatedMaterialsHolder.GetComponent<AnimatedMaterials>();
-        _animationSlowdownFactor = animatedMaterials.GetNoclipSlowdownFactor();
+        if (animatedMaterialsHolder != null)
+        {
+            _animatedMaterialsPresent = true;
+            //get AnimatedMaterials component
+            animatedMaterials = animatedMaterialsHolder.GetComponent<AnimatedMaterials>();
+            _animationSlowdownFactor = animatedMaterials.GetNoclipSlowdownFactor();
+        }
+        else
+        {
+            _animatedMaterialsPresent = false;
+        }
     }
 
     /// <summary>
@@ -127,18 +136,20 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator EnableNoclip()
     {
-        //for each material in animatedMaterials
-        foreach (var material in animatedMaterials.GetMaterialList())
-        {
-            try {
-                material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")/_animationSlowdownFactor);
-            } catch {
-                Debug.LogError("Ale fix the animated material scroll speed variable name");
-            }
-            try {
-                material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")/_animationSlowdownFactor);
-            } catch {
-                Debug.LogError("Ale fix the animated material scroll speed variable name");
+        if(_animatedMaterialsPresent){
+            //for each material in animatedMaterials
+            foreach (var material in animatedMaterials.GetMaterialList())
+            {
+                try {
+                    material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")/_animationSlowdownFactor);
+                } catch {
+                    Debug.LogError("Ale fix the animated material scroll speed variable name");
+                }
+                try {
+                    material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")/_animationSlowdownFactor);
+                } catch {
+                    Debug.LogError("Ale fix the animated material scroll speed variable name");
+                }
             }
         }
 
@@ -167,18 +178,20 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
-        //for each material in animatedMaterials
-        foreach (var material in animatedMaterials.GetMaterialList())
-        {
-            try {
-                material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")*_animationSlowdownFactor);
-            } catch {
-                Debug.LogError("Ale fix the animated material scroll speed variable name");
-            }
-            try {
-                material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")*_animationSlowdownFactor);
-            } catch {
-                Debug.LogError("Ale fix the animated material scroll speed variable name");
+        if(_animatedMaterialsPresent){
+            //for each material in animatedMaterials
+            foreach (var material in animatedMaterials.GetMaterialList())
+            {
+                try {
+                    material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")*_animationSlowdownFactor);
+                } catch {
+                    Debug.LogError("Ale fix the animated material scroll speed variable name");
+                }
+                try {
+                    material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")*_animationSlowdownFactor);
+                } catch {
+                    Debug.LogError("Ale fix the animated material scroll speed variable name");
+                }
             }
         }
 
