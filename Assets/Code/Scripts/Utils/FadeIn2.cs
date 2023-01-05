@@ -20,39 +20,56 @@ public class FadeIn2 : MonoBehaviour
 
     void Start()
     {
-        //GetComponent<MeshRenderer>().materials variable
-        Material[] materials = GetComponent<MeshRenderer>().materials;
-        //_finished array length = materials length
-        _tex = new Texture[materials.Length];
-        _col = new Color[materials.Length];
-        _finished = new bool[materials.Length];
-        _originalMaterial = new Material[materials.Length];
-        _originalAlpha = new float[materials.Length];
-        _prevAlpha = new float[materials.Length];
-        for(int j = 0; j < _prevAlpha.Length; j++){
-            _originalAlpha[j] = 1f;
-            _prevAlpha[j] = 1f;
-            _finished[j] = false;
+        try{
+            //GetComponent<MeshRenderer>().materials variable
+            Material[] materials = GetComponent<MeshRenderer>().materials;
+            //_finished array length = materials length
+            _tex = new Texture[materials.Length];
+            _col = new Color[materials.Length];
+            _finished = new bool[materials.Length];
+            //if size of finished is zero throw exception
+            if(_finished.Length == 0){
+                throw new Exception("Size of finished array is zero");
+            }
+            _originalMaterial = new Material[materials.Length];
+            _originalAlpha = new float[materials.Length];
+            _prevAlpha = new float[materials.Length];
+            for(int j = 0; j < _prevAlpha.Length; j++){
+                _originalAlpha[j] = 1f;
+                _prevAlpha[j] = 1f;
+                _finished[j] = false;
+            }
+            int i = 0;
+            foreach(Material material in GetComponent<MeshRenderer>().materials){
+                //material has property _Color
+                if(!material.HasProperty("_Color") || !material.HasProperty("_MainText") || !material.HasProperty("_AlphaClip")){
+                    //throw exception
+                    throw new Exception("Material " + material.name + " does not have property _Color");
+                }
+                //store material texture into variable
+                _tex[i] = material.mainTexture;
+                //create copy of material
+                _originalMaterial[i] = new Material(material);
+                _originalAlpha[i] = _originalMaterial[i].color.a;
+                _col[i] = material.color;
+                //if object tag is Background set finished to true
+                if (gameObject.tag == "Background")
+                {
+                    _finished[i] = true;
+                }
+                else{
+                    ChangeMaterialTransparency(true, material);
+                    material.color = new Color(material.color.r, material.color.g, material.color.b, 0f);
+                    material.SetInt("_ZWrite", 1);
+                }
+                i++;
+            }
         }
-        int i = 0;
-        foreach(Material material in GetComponent<MeshRenderer>().materials){
-            //store material texture into variable
-            _tex[i] = material.mainTexture;
-            //create copy of material
-            _originalMaterial[i] = new Material(material);
-            _originalAlpha[i] = _originalMaterial[i].color.a;
-            _col[i] = material.color;
-            //if object tag is Background set finished to true
-            if (gameObject.tag == "Background")
-            {
-                _finished[i] = true;
-            }
-            else{
-                ChangeMaterialTransparency(true, material);
-                material.color = new Color(material.color.r, material.color.g, material.color.b, 0f);
-                material.SetInt("_ZWrite", 1);
-            }
-            i++;
+        catch(Exception e){
+            //log remove fadein from this object
+            Debug.Log("FadeIn incompatible with " + gameObject.name);
+            //disable this script
+            this.enabled = false;
         }
     }
     
@@ -82,11 +99,18 @@ public class FadeIn2 : MonoBehaviour
                     //}
                 }
             }
+            int j = 0;
             if(_finished[i]){
+                j++;
                 Material currentMaterial = material;
                 if(currentMaterial.name == _originalMaterial[i].name && currentMaterial.color.a != _originalAlpha[i]){
                     Debug.Log("Fixing fade in");
                     material.CopyPropertiesFromMaterial(_originalMaterial[i]);
+                }
+                //if j is equal to length of _finished array
+                if(j == _finished.Length){
+                    //disable this script
+                    this.enabled = false;
                 }
             }
             i++;
