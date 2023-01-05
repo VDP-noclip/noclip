@@ -7956,6 +7956,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 6ec24d44760421149b7819c03db84e09, type: 2}
   - {fileID: 2100000, guid: c069e0babc841bf40ac735021c170c8f, type: 2}
   _noclipSlowdownFactor: 10
+  _WARNING: Se si chiude il gioco con la noclip attivata i materiali rimangono rallentati,
+    dovrebbe succedere solo in editor comunque
 --- !u!4 &300031627
 Transform:
   m_ObjectHideFlags: 0
@@ -28969,7 +28971,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh30970
+  m_Name: pb_Mesh76350
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -32591,6 +32593,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2546330488181522096, guid: 2c08ea22719730c4498a9727eaf4f88f,
+        type: 3}
+      propertyPath: _animatedMaterials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2546330488181522097, guid: 2c08ea22719730c4498a9727eaf4f88f,
         type: 3}
       propertyPath: m_RootOrder
