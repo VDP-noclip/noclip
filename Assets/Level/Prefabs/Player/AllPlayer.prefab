@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _realityCamera: {fileID: 2740796908604963382}
   _noclipCamera: {fileID: 8905615672618808175}
-  _respawnAnimationApproxDuration: 2
+  _respawnAnimationDuration: 4
 --- !u!114 &958916330490506102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,6 +242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6423799784713560806}
+  - component: {fileID: 1531767950332184459}
   m_Layer: 0
   m_Name: RealityOrientation
   m_TagString: Untagged
@@ -266,6 +267,14 @@ Transform:
   m_Father: {fileID: 5238956359414554662}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &1531767950332184459
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5413496004590197134}
+  m_Enabled: 1
 --- !u!1 &6155750143240272921
 GameObject:
   m_ObjectHideFlags: 0
