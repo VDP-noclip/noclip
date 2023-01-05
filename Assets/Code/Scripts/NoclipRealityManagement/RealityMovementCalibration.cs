@@ -261,7 +261,7 @@ public class RealityMovementCalibration : MonoBehaviour
         Coyote();
 
         // when to jump
-        if (_jumpBuffered && _readyToJump && (_coyote))
+        if (_jumpBuffered && _readyToJump && (_coyote) && OnSlopeOrOnHorizontalPlane())
         {
             _readyToJump = false;
             _coyote = false;
@@ -375,7 +375,7 @@ public class RealityMovementCalibration : MonoBehaviour
             }
         }
         // differentiate movement on the ground and in air
-        else if (_grounded){
+        else if (_grounded && OnSlopeOrOnHorizontalPlane()){
             _groundSpeed = _rigidbody.velocity.magnitude;
             ApplyForce(_moveSpeed * _gravity * _moveDirection.normalized);
         }
@@ -458,6 +458,17 @@ public class RealityMovementCalibration : MonoBehaviour
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
+    }
+
+    private bool OnSlopeOrOnHorizontalPlane()
+    {
+        if (Physics.Raycast(_groundCheck.position, Vector3.down, out _slopeHit, 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
+            return angle < _maxSlopeAngle && _state!=MovementState.Air;
+        }
+
+        return false;
     }
     
     //slider gameobject

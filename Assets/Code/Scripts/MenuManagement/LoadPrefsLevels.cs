@@ -31,10 +31,7 @@ public class LoadPrefsLevels : MonoBehaviour
     
     [Header("Sensitivity Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
-    
-    [Header("Invert Y Settings")]
-    [SerializeField] private Toggle invertYToggle = null;
-    
+
 
     private void Start()
     {
