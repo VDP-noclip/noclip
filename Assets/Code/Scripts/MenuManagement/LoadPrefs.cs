@@ -34,6 +34,9 @@ public class LoadPrefs : MonoBehaviour
     
     [Header("Sensitivity Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
+
+    [Header("Fov settings")] 
+    [SerializeField] private Slider fovSlider;
     private void Start()
     {
         if (canUse)
@@ -43,8 +46,7 @@ public class LoadPrefs : MonoBehaviour
             {
                 
                 float localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-                Debug.Log("local volume menu " + localSoundVolume);
-                
+
                 soundtrackVolumeSlider.value = localSoundVolume;
                 audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
             }
@@ -67,6 +69,14 @@ public class LoadPrefs : MonoBehaviour
 
                 globalVolumeSlider.value = localGlobalVolume;
                 audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume) * 20);
+            }
+            
+            if (PlayerPrefs.HasKey("cameraFov"))
+            {
+                
+                float localFov = PlayerPrefs.GetFloat("cameraFov");
+
+                fovSlider.value = localFov;
             }
             
 

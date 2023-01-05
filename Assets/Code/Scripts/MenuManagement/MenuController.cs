@@ -18,17 +18,38 @@ using UnityEngine.Rendering;
 /// </summary>
 public class MenuController : MonoBehaviour
 {
+    [Header("Objects to fade")] 
+    [SerializeField] private GameObject mainCanvas;
+    [SerializeField] private GameObject mainGradient;
+    [SerializeField] private GameObject bottomGradient;
+    [SerializeField] private GameObject noclipLogo;
+    [SerializeField] private GameObject logoBlur;
+    [SerializeField] private GameObject enterButton;
+    [SerializeField] private GameObject settingsButton;
+    [SerializeField] private GameObject exitButton;
+    [SerializeField] private GameObject feedbackButton;
+    [SerializeField] private GameObject controlsButton;
+
+    [Header("Audio To Play")] 
+    [SerializeField] private AudioSource noclipEcho;
+
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
     [SerializeField] private int defaultSensitivity = 4;
+    [SerializeField] private Slider controllerFovSlider = null;
+    [SerializeField] private float defaultFovValue = 90;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
     [SerializeField] private Toggle fullScreenToggle;
     
     private int _qualityLevel;
-    private bool _isFullScreen;
+    private bool _isFullScreen = true;
     private float _brightnessLevel;
+    
+    private bool _isStartPressed = false;
+    private bool _isSettingsPressed = false;
+    private bool _isQuitPressed = false;
 
     [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
@@ -50,8 +71,13 @@ public class MenuController : MonoBehaviour
 
     // When the Menu starts the game will iterate through various available resolutions.
     // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
+    
     private void Start()
     {
+        StartCoroutine(FadeUI());
+
+        // TODO: check if there are playerprefs, and if there aren't set default volume
+        SetFOV(PlayerPrefs.GetFloat("cameraFov"));
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
         SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
@@ -169,6 +195,16 @@ public class MenuController : MonoBehaviour
         
         StartCoroutine(ConfirmationBox());
     }
+
+    public void SetFOV(float fov)
+    {
+        PlayerPrefs.SetFloat("cameraFov", fov);
+
+        controllerFovSlider.value = fov;
+        
+        StartCoroutine(ConfirmationBox());
+
+    }
     
     // Applies changes. These actually save the information.
     public void GraphicsApply()
@@ -227,6 +263,53 @@ public class MenuController : MonoBehaviour
         }
     }
     */
+
+    public void ChangeStartColor(TMP_Text buttonText)
+    {
+        if (!_isStartPressed)
+        {
+            exitButton.GetComponent<TMP_Text>().color = Color.white;
+            settingsButton.GetComponent<TMP_Text>().color = Color.white;
+            buttonText.color = Color.black;
+        }
+        else
+        {
+            buttonText.color = Color.white;
+        }
+    }
+    
+    public void ChangeSettingsColor(TMP_Text buttonText)
+    {
+        if (!_isSettingsPressed)
+        {
+            exitButton.GetComponent<TMP_Text>().color = Color.white;
+            enterButton.GetComponent<TMP_Text>().color = Color.white;
+            buttonText.color = Color.black;
+        }
+        else
+        {
+            buttonText.color = Color.white;
+        }
+    }
+    
+    public void ChangeQuitColor(TMP_Text buttonText)
+    {
+        if (!_isQuitPressed)
+        {
+            enterButton.GetComponent<TMP_Text>().color = Color.white;
+            settingsButton.GetComponent<TMP_Text>().color = Color.white;
+            buttonText.color = Color.black;
+        }
+        else
+        {
+            buttonText.color = Color.white;
+        }
+    }
+
+    public void ChangeColor(TMP_Text buttonText)
+    {
+        buttonText.color = Color.white;
+    }
     
     // Returns an image on the bottom-left.
     // Lets the player know settings have changed.
@@ -237,4 +320,128 @@ public class MenuController : MonoBehaviour
         yield return new WaitForSeconds(2);
         confirmationPrompt.SetActive(false);
     }
+
+    private IEnumerator FadeUI()
+    {
+        StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.5f));
+        yield return new WaitForSecondsRealtime(1f);
+        StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.5f));
+        StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.5f));
+        yield return new WaitForSecondsRealtime(1f);
+        StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.5f));
+        yield return new WaitForSecondsRealtime(0.2f);
+        StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.5f));
+        yield return new WaitForSecondsRealtime(0.2f);
+        StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.5f));
+        yield return new WaitForSecondsRealtime(0.5f);
+        StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.5f));
+        yield return new WaitForSecondsRealtime(0.5f);
+        StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.5f));
+        yield return new WaitForSecondsRealtime(1f);
+        StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.5f));
+        noclipEcho.Play();
+        yield return new WaitForSecondsRealtime(0.5f);
+        StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.5f));
+    }
+    private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
+        {
+                
+                float counter = 0f;
+
+                //Set Values depending on if fadeIn or fadeOut
+                float a, b;
+                if (fadeIn)
+                {
+                    a = 0;
+                    b = 1;
+                }
+                else
+                {
+                    a = 1;
+                    b = 0;
+                }
+
+                int mode = 0;
+                Color currentColor = Color.clear;
+                
+                SpriteRenderer tempSPRenderer = objectToFade.GetComponent<SpriteRenderer>();
+                Image tempImage = objectToFade.GetComponent<Image>();
+                RawImage tempRawImage = objectToFade.GetComponent<RawImage>();
+                MeshRenderer tempRenderer = objectToFade.GetComponent<MeshRenderer>();
+                TMP_Text tempText = objectToFade.GetComponent<TMP_Text>();
+
+                //Check if this is a Sprite
+                if (tempSPRenderer != null)
+                {
+                    currentColor = tempSPRenderer.color;
+                    mode = 0;
+                }
+                //Check if Image
+                else if (tempImage != null)
+                {
+                    currentColor = tempImage.color;
+                    mode = 1;
+                }
+                //Check if RawImage
+                else if (tempRawImage != null)
+                {
+                    currentColor = tempRawImage.color;
+                    mode = 2;
+                }
+                //Check if Text 
+                else if (tempText != null)
+                {
+                    currentColor = tempText.color;
+                    mode = 3;
+                }
+
+                //Check if 3D Object
+                else if (tempRenderer != null)
+                {
+                    currentColor = tempRenderer.material.color;
+                    mode = 4;
+
+                    //ENABLE FADE Mode on the material if not done already
+                    tempRenderer.material.SetFloat("_Mode", 2);
+                    tempRenderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    tempRenderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    tempRenderer.material.SetInt("_ZWrite", 0);
+                    tempRenderer.material.DisableKeyword("_ALPHATEST_ON");
+                    tempRenderer.material.EnableKeyword("_ALPHABLEND_ON");
+                    tempRenderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    tempRenderer.material.renderQueue = 3000;
+                }
+                else
+                {
+                    yield break;
+                }
+
+                while (counter < duration)
+                {
+                    counter += Time.deltaTime;
+                    float alpha = Mathf.Lerp(a, b, counter / duration);
+
+                    switch (mode)
+                    {
+                        case 0:
+                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 1:
+                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 2:
+                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 3:
+                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 4:
+                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                    }
+                    
+                    
+                    yield return null;
+                }
+        }
 }
