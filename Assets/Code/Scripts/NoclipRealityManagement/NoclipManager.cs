@@ -141,14 +141,13 @@ public class NoclipManager : MonoBehaviour
             foreach (var material in animatedMaterials.GetMaterialList())
             {
                 try {
-                    material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")/_animationSlowdownFactor);
+                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
+                    if (scrollSpeed >= 0.0999f)
+                    {
+                        material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
+                    }
                 } catch {
-                    Debug.LogError("Ale fix the animated material scroll speed variable name");
-                }
-                try {
-                    material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")/_animationSlowdownFactor);
-                } catch {
-                    Debug.LogError("Ale fix the animated material scroll speed variable name");
+                    Debug.LogError("Invalid animated material " + material.name);
                 }
             }
         }
@@ -183,14 +182,9 @@ public class NoclipManager : MonoBehaviour
             foreach (var material in animatedMaterials.GetMaterialList())
             {
                 try {
-                    material.SetFloat("_WaterfallScrollSpeed", material.GetFloat("_WaterfallScrollSpeed")*_animationSlowdownFactor);
-                } catch {
-                    Debug.LogError("Ale fix the animated material scroll speed variable name");
-                }
-                try {
                     material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")*_animationSlowdownFactor);
                 } catch {
-                    Debug.LogError("Ale fix the animated material scroll speed variable name");
+                    Debug.LogError("Invalid animated material " + material.name);
                 }
             }
         }
