@@ -36,8 +36,9 @@ public class NoclipManager : MonoBehaviour
     private readonly float _backToBodyAnimationDuration = 0.5f;
 
     private float _animationSlowdownFactor;
-    private AnimatedMaterials animatedMaterials;
-    private bool _animatedMaterialsPresent = false;
+    private bool _animatedObjectsPresent = false;
+    //gameobject list animated objects
+    private List<GameObject> _animatedObjects = new List<GameObject>();
     private enum NoclipState
     {
         RealityCannotEnableNoclip,
@@ -63,17 +64,21 @@ public class NoclipManager : MonoBehaviour
         _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
 
         //find AnimatedMaterialsHolder
-        GameObject animatedMaterialsHolder = GameObject.Find("AnimatedMaterialsHolder");
-        if (animatedMaterialsHolder != null)
+        GameObject animatedObjectsHolder = GameObject.Find("AnimatedObjectsHolder");
+        if (animatedObjectsHolder != null)
         {
-            _animatedMaterialsPresent = true;
-            //get AnimatedMaterials component
-            animatedMaterials = animatedMaterialsHolder.GetComponent<AnimatedMaterials>();
+            _animatedObjectsPresent = true;
+            AnimatedMaterials animatedMaterials = animatedObjectsHolder.GetComponent<AnimatedMaterials>();
             _animationSlowdownFactor = animatedMaterials.GetNoclipSlowdownFactor();
+            //add all children to _animatedObjects
+            foreach (Transform child in animatedObjectsHolder.transform)
+            {
+                _animatedObjects.Add(child.gameObject);
+            }
         }
         else
         {
-            _animatedMaterialsPresent = false;
+            _animatedObjectsPresent = false;
         }
     }
 
@@ -136,18 +141,28 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator EnableNoclip()
     {
-        if(_animatedMaterialsPresent){
+        if(_animatedObjectsPresent){
             //for each material in animatedMaterials
-            foreach (var material in animatedMaterials.GetMaterialList())
+            /*foreach (var material in animatedMaterials.GetMaterialList())
             {
                 try {
-                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
-                    if (scrollSpeed >= 0.0999f)
-                    {
-                        material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
-                    }
+                    material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")/_animationSlowdownFactor);
                 } catch {
                     Debug.LogError("Invalid animated material " + material.name);
+                }
+            }*/
+            //for each object in _animatedObjects
+            foreach (var obj in _animatedObjects)
+            {
+                try {
+                    //get material
+                    Material material = obj.GetComponent<Renderer>().material;
+                    //get scroll speed
+                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
+                    //set new scroll speed
+                    material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
+                } catch {
+                    Debug.LogError("Invalid animated object " + obj.name);
                 }
             }
         }
@@ -177,14 +192,28 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
-        if(_animatedMaterialsPresent){
+        if(_animatedObjectsPresent){
             //for each material in animatedMaterials
-            foreach (var material in animatedMaterials.GetMaterialList())
+            /*foreach (var material in animatedMaterials.GetMaterialList())
             {
                 try {
                     material.SetFloat("_ScrollSpeed", material.GetFloat("_ScrollSpeed")*_animationSlowdownFactor);
                 } catch {
                     Debug.LogError("Invalid animated material " + material.name);
+                }
+            }*/
+            //for each object in _animatedObjects
+            foreach (var obj in _animatedObjects)
+            {
+                try {
+                    //get material
+                    Material material = obj.GetComponent<Renderer>().material;
+                    //get scroll speed
+                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
+                    //set new scroll speed
+                    material.SetFloat("_ScrollSpeed", scrollSpeed*_animationSlowdownFactor);
+                } catch {
+                    Debug.LogError("Invalid animated object " + obj.name);
                 }
             }
         }
