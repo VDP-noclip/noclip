@@ -41,7 +41,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Toggle fullScreenToggle;
     
     private int _qualityLevel;
-    private bool _isFullScreen;
+    private bool _isFullScreen = true;
     private float _brightnessLevel;
 
     [Header("Volume Settings")]
