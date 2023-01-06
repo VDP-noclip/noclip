@@ -122,6 +122,7 @@ public class NoclipManager : MonoBehaviour
         _noclipState = NoclipState.NoclipEnabled;
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
         //EventManager.TriggerEvent("StartNoclipAudioEffects");
+        EventManager.TriggerEvent("ChangeVolumeInNoclip", "noclip");
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);
         
@@ -146,6 +147,8 @@ public class NoclipManager : MonoBehaviour
     {
         
         //EventManager.TriggerEvent("StopNoclipAudioEffects");
+        EventManager.TriggerEvent("ChangeVolumeInNoclip", "reality");
+
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         

@@ -19,7 +19,7 @@ namespace Code.Scripts.Audio
 
         #region Unity Methods
 
-        private void Awake()
+        private void Start()
         {
             Debug.Log(_audioTracks.defaultAreaSoundtrack.name);
             Debug.Log(_customAreaSoundtrack);
@@ -36,11 +36,14 @@ namespace Code.Scripts.Audio
             EventManager.StartListening("StartNoclipAudioEffects", StartNoclipAudioEffects);
             EventManager.StartListening("StopNocliAudioEffects", StopNoclipSoundEffect);
             EventManager.StartListening("ChangeAreaSoundTrack", ChangeAreaSoundtrack);
+
+            EventManager.StartListening("ChangeVolumeInNoclip", ChangeVolumeInNoclip);
+            
+            PlayAudioSoundtrack();
         }
 
         private void OnEnable()
         {
-            PlayAudioSoundtrack();
         }
 
         #endregion
@@ -54,6 +57,18 @@ namespace Code.Scripts.Audio
             _audioSource.loop = true;
             _audioSource.Play();
         }
+        
+        private void ChangeVolumeInNoclip(string mode)
+        {
+            float originalVolume;
+            _mixer.GetFloat("globalVolume", out originalVolume);
+            Debug.Log("orginalvolume "+originalVolume);
+            //if mode is "noclip" then decrease volume, else if mode is "reality" decrease volume
+            float modifiedVolume = mode == "noclip" ? originalVolume - 10: originalVolume + 10;
+            Debug.Log("newvolume "+modifiedVolume);
+            _mixer.SetFloat("globalVolume", modifiedVolume);
+        }
+
         private void StartNoclipAudioEffects()
         {
             EventManager.StopListening("StartNoclipAudioEffects", StartNoclipAudioEffects);
