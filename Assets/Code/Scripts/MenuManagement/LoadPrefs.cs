@@ -22,82 +22,37 @@ public class LoadPrefs : MonoBehaviour
 
     private void Awake()
     {
-        PlayerPrefs.DeleteAll();
+        // PlayerPrefs.DeleteAll();
         
         if (!canUse) return;
         
-        // localSoundVolume
-        float localSoundVolume;
-        if (PlayerPrefs.HasKey("soundtrackVolume"))
-            localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-        else
-        {
-            localSoundVolume = _defaultPlayerPrefs.soundTracksVolumeDecibel;
-            PlayerPrefs.SetFloat("soundtrackVolume", localSoundVolume);
-        }
-        Debug.Log("localSoundVolume:" + localSoundVolume);
+        if (! PlayerPrefs.HasKey("soundtrackVolume"))
+            PlayerPrefs.SetFloat("soundtrackVolume", _defaultPlayerPrefs.soundTracksVolumeDecibel);
+        
+        if (! PlayerPrefs.HasKey("effectsVolume"))
+            PlayerPrefs.SetFloat("effectsVolume", _defaultPlayerPrefs.effectsVolumeDecibel);
+        
+        if (!PlayerPrefs.HasKey("globalVolume"))
+            PlayerPrefs.SetFloat("globalVolume", _defaultPlayerPrefs.globalVolumeDecibel);
+        
+        if (!PlayerPrefs.HasKey("cameraFov"))
+            PlayerPrefs.SetFloat("cameraFov", _defaultPlayerPrefs.defaultFov);
 
-        // effectsVolume
-        float effectsVolume;
-        if (PlayerPrefs.HasKey("effectsVolume"))
-            effectsVolume = PlayerPrefs.GetFloat("effectsVolume");
-        else
-        {
-            effectsVolume = _defaultPlayerPrefs.effectsVolumeDecibel;
-            PlayerPrefs.SetFloat("effectsVolume", effectsVolume);
-        }
-
-        // globalVolume
-        float globalVolume;
-        if (PlayerPrefs.HasKey("globalVolume"))
-            globalVolume = PlayerPrefs.GetFloat("globalVolume");
-        else
-        {
-            globalVolume = _defaultPlayerPrefs.globalVolumeDecibel;
-            PlayerPrefs.SetFloat("globalVolume", globalVolume);
-        }
-
-        // cameraFov
-        float cameraFov;
-        if (PlayerPrefs.HasKey("cameraFov"))
-            cameraFov = PlayerPrefs.GetFloat("cameraFov");
-        else
-        {
-            cameraFov = _defaultPlayerPrefs.defaultFov;
-            PlayerPrefs.SetFloat("cameraFov", cameraFov);
-        }
-
-        // masterQuality
-        int masterQuality;
-        if (PlayerPrefs.HasKey("masterQuality"))
-            masterQuality = PlayerPrefs.GetInt("masterQuality");
-        else
-        {
-            masterQuality = _defaultPlayerPrefs.masterQuality;
-            PlayerPrefs.SetInt("masterQuality", masterQuality);
-        }
-        QualitySettings.SetQualityLevel(masterQuality);
-
-        // masterSensitivity
-        float masterSensitivity;
-        if (PlayerPrefs.HasKey("masterSensitivity"))
-            masterSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
-        else
-        {
-            masterSensitivity = _defaultPlayerPrefs.masterSensitivity;
-            PlayerPrefs.SetFloat("masterSensitivity", masterSensitivity);
-        }
+        if (!PlayerPrefs.HasKey("masterQuality"))
+            PlayerPrefs.SetInt("masterQuality", _defaultPlayerPrefs.masterQuality);
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("masterQuality"));
+        
+        if (!PlayerPrefs.HasKey("masterSensitivity"))
+            PlayerPrefs.SetFloat("masterSensitivity", _defaultPlayerPrefs.masterSensitivity);
 
         // full screen
-        int defaultMasterFullScreen;
-        if (PlayerPrefs.HasKey("masterFullscreen"))
-            defaultMasterFullScreen = PlayerPrefs.GetInt("masterFullscreen");
-        else
+        if (!PlayerPrefs.HasKey("masterFullscreen"))
         {
+            int defaultMasterFullScreen;
             defaultMasterFullScreen = _defaultPlayerPrefs.masterFullScreen ? 1 : 0;
             PlayerPrefs.SetInt("masterFullscreen", defaultMasterFullScreen);
         }
-        if (defaultMasterFullScreen == 1)
+        if (PlayerPrefs.GetInt("masterFullscreen") == 1)
         {
             Screen.fullScreen = true;
         }
