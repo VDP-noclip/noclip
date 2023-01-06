@@ -175,8 +175,6 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
-        SetAnimationSpeed("normal");
-
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         
