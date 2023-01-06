@@ -261,7 +261,7 @@ public class RealityMovementCalibration : MonoBehaviour
         Coyote();
 
         // when to jump
-        if (_jumpBuffered && _readyToJump && (_coyote) && OnSlopeOrOnHorizontalPlane())
+        if (_jumpBuffered && _readyToJump && (_coyote))
         {
             _readyToJump = false;
             _coyote = false;
@@ -306,7 +306,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
     private void Coyote() // allows to jump for a short time after leaving the ground without jumping
     {
-        if (_grounded && _readyToJump)
+        if (OnSlopeOrOnHorizontalPlane() && _readyToJump)
         {
             _prevGroundedTime = 0;
             _coyote = true;
