@@ -18,8 +18,7 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _tutorialTextObject;
         [SerializeField] private GameObject _skipButtonTextObject;
         [SerializeField] private GameObject _imageObject;
-        [SerializeField] private GameObject _bottomGradient;
-        
+
         [SerializeField] private Image _image;
         
         [Space]
@@ -77,7 +76,6 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
-            StartCoroutine(FadeInAndOutCoroutine(_bottomGradient, true, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
@@ -87,7 +85,6 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, true, _fadeDuration));
-            StartCoroutine(FadeInAndOutCoroutine(_bottomGradient, true, _fadeDuration));
             _displayHintCoroutine = StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         }
