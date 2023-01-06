@@ -38,18 +38,14 @@ public class MouseLook : MonoBehaviour
     private float _xRotationCheckpoint;
     private void Awake()
     {
-        // Checks whether there are actual sensitivity settings, and if there are
-        // it applies them by simply multiplying sensitivity with the _localSensitivity multiplier.
-        if (PlayerPrefs.HasKey("masterSensitivity"))
-        {
-            float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
-            _sensitivity *= localSensitivity;
-        }
         _transform = GetComponent<Transform>();
     }
 
     void Start()
     {
+        float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
+        _sensitivity *= localSensitivity;
+
         EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
         EventManager.StartListening("StoreCheckpointRotation", StoreCheckpointRotation);
         EventManager.StartListening("SetLastCheckpointRotation", SetLastCheckpointRotation);
