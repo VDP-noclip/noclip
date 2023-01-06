@@ -24,7 +24,6 @@ namespace Code.Scripts.TutorialManagement
         [Space]
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
-        [SerializeField] private KeyCode _skipDialogueKey; // TODO put a name and use it in the InputManager
         
         [Space]
         [Header("Timers")]
@@ -60,7 +59,7 @@ namespace Code.Scripts.TutorialManagement
 
         private void Update()
         {
-            if (_displayDialogueCoroutineIsRunning && Input.GetKeyDown(_skipDialogueKey))
+            if (_displayDialogueCoroutineIsRunning && Input.GetButtonDown("SkipDialogue"))
             {
                 StopCurrentDialogue();
             }
