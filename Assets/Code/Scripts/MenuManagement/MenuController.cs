@@ -36,9 +36,7 @@ public class MenuController : MonoBehaviour
 
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
-    [SerializeField] private int defaultSensitivity = 4;
     [SerializeField] private Slider controllerFovSlider = null;
-    [SerializeField] private float defaultFovValue = 90;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -56,7 +54,6 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Slider globalVolumeSlider = null;
     [SerializeField] private Slider soundVolumeSlider = null;
     [SerializeField] private Slider effectsVolumeSlider = null;
-    [SerializeField] private float defaultVolume = 1.0f;
     [SerializeField] private AudioMixer audioMixer;
 
     [Header("Confirmation")] 
@@ -77,7 +74,6 @@ public class MenuController : MonoBehaviour
     {
         StartCoroutine(FadeUI());
 
-        // TODO: check if there are playerprefs, and if there aren't set default volume
         SetFOV(PlayerPrefs.GetFloat("cameraFov"));
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));

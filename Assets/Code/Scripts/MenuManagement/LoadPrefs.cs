@@ -16,8 +16,7 @@ using UnityEngine.Audio;
 /// </summary>
 public class LoadPrefs : MonoBehaviour
 {
-    [Header("General Settings")] 
-    [SerializeField] private bool canUse = false;
+    [SerializeField] private bool canUse = true;
     [SerializeField] private DefaultPlayerPrefs _defaultPlayerPrefs;
 
     private void Awake()
