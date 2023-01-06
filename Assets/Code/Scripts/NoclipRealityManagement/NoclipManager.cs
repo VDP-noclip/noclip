@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -211,6 +212,10 @@ public class NoclipManager : MonoBehaviour
                         material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
                     } else if(how == "normal"){
                         material.SetFloat("_ScrollSpeed", scrollSpeed*_animationSlowdownFactor);
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid value. Got '{how}'");
                     }
                 } catch {
                     Debug.LogError("Invalid animated object " + obj.name);
