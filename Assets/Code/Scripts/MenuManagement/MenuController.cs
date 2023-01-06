@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using POLIMIGameCollective;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -199,6 +200,7 @@ public class MenuController : MonoBehaviour
     public void SetFOV(float fov)
     {
         PlayerPrefs.SetFloat("cameraFov", fov);
+        EventManager.TriggerEvent("UpdateFovFromPlayerPrefs");
 
         controllerFovSlider.value = fov;
         

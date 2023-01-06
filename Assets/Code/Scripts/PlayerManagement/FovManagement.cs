@@ -10,10 +10,19 @@ public class FovManagement : MonoBehaviour
     [SerializeField] private float _fovDefaultValue = 90f;
 
     #region UnityMethods
-    private void Update()
+
+    private void Start()
+    {
+        EventManager.StartListening("UpdateFovFromPlayerPrefs", UpdateFovFromPlayerPrefs);
+        UpdateFovFromPlayerPrefs();
+    }
+    
+    #endregion
+    
+    private void UpdateFovFromPlayerPrefs()
     {
         _camera.fieldOfView = PlayerPrefs.GetFloat("cameraFov", _fovDefaultValue);
     }
 
-    #endregion
+
 }
