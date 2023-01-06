@@ -33,12 +33,9 @@ namespace Code.Scripts.Audio
             }
                 
             
-            EventManager.StartListening("StartNoclipAudioEffects", StartNoclipAudioEffects);
-            EventManager.StartListening("StopNocliAudioEffects", StopNoclipSoundEffect);
+            
             EventManager.StartListening("ChangeAreaSoundTrack", ChangeAreaSoundtrack);
 
-            EventManager.StartListening("ChangeVolumeInNoclip", ChangeVolumeInNoclip);
-            
             PlayAudioSoundtrack();
         }
 
@@ -58,44 +55,6 @@ namespace Code.Scripts.Audio
             _audioSource.Play();
         }
         
-        private void ChangeVolumeInNoclip(string mode)
-        {
-            float originalVolume;
-            _mixer.GetFloat("globalVolume", out originalVolume);
-            Debug.Log("orginalvolume "+originalVolume);
-            //if mode is "noclip" then decrease volume, else if mode is "reality" decrease volume
-            float modifiedVolume = mode == "noclip" ? originalVolume - 10: originalVolume + 10;
-            Debug.Log("newvolume "+modifiedVolume);
-            _mixer.SetFloat("globalVolume", modifiedVolume);
-        }
-
-        private void StartNoclipAudioEffects()
-        {
-            EventManager.StopListening("StartNoclipAudioEffects", StartNoclipAudioEffects);
-            
-            Debug.Log("abbassssssaaaa");
-            float originalVolume;
-            _mixer.GetFloat("globalVolume", out originalVolume);
-            Debug.Log(originalVolume);
-            float modifiedVolume =  originalVolume - Mathf.Log(_noclipDecreaseVolumeValue) * 20 ;
-            Debug.Log(modifiedVolume);
-            _mixer.SetFloat("globalVolume", modifiedVolume);
-            EventManager.StartListening("StartNoclipAudioEffects", StartNoclipAudioEffects);
-        }
-
-        private void StopNoclipSoundEffect()
-        {
-            EventManager.StopListening("StopNocliAudioEffects", StopNoclipSoundEffect);
-            Debug.Log("alllzzzzaaaa");
-            float modifiedVolume;
-            _mixer.GetFloat("globalVolume", out modifiedVolume);
-            float originalVolume = modifiedVolume + Mathf.Log(_noclipDecreaseVolumeValue) * 20;
-            _mixer.SetFloat("globalVolume", originalVolume);
-            EventManager.StartListening("StopNocliAudioEffects", StopNoclipSoundEffect);
-        }
-        
-        
-
         private void ChangeAreaSoundtrack(string newSoundtrackName)
         {
             EventManager.StopListening("ChangeAreaSoundTrack", ChangeAreaSoundtrack);
