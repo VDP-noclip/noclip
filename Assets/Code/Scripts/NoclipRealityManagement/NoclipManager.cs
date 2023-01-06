@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +34,11 @@ public class NoclipManager : MonoBehaviour
     
     private NoclipMovement _noclipMovement;
     private float _endCooldownAbsoluteTime;
-    private readonly float _backToBodyAnimationDuration = 0.5f;
 
+    private float _animationSlowdownFactor;
+    private bool _animatedObjectsPresent = false;
+    //gameobject list animated objects
+    private List<GameObject> _animatedObjects = new List<GameObject>();
     private enum NoclipState
     {
         RealityCannotEnableNoclip,
@@ -58,6 +62,31 @@ public class NoclipManager : MonoBehaviour
         GameObject environment = GameObject.Find("Environment");
         _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
         _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
+
+        AnimatedMaterialsSetup();
+    }
+
+    private void AnimatedMaterialsSetup()
+    {
+        //find AnimatedMaterialsHolder
+        GameObject animatedObjectsHolder = GameObject.Find("AnimatedObjectsHolder");
+        if (animatedObjectsHolder != null)
+        {
+            _animatedObjectsPresent = true;
+            AnimatedMaterials animatedMaterials = animatedObjectsHolder.GetComponent<AnimatedMaterials>();
+            _animationSlowdownFactor = animatedMaterials.GetNoclipSlowdownFactor();
+            //add all children to _animatedObjects
+            foreach (Transform child in animatedObjectsHolder.transform)
+            {
+                _animatedObjects.Add(child.gameObject);
+            }
+        }
+        else
+        {
+            _animatedObjectsPresent = false;
+            //log no animated objects found
+            Debug.Log("No animated objects found");
+        }
     }
 
     /// <summary>
@@ -119,6 +148,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator EnableNoclip()
     {
+        SetAnimationSpeed("slow");
+
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
@@ -144,6 +175,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
+        SetAnimationSpeed("normal");
+
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         
@@ -163,6 +196,32 @@ public class NoclipManager : MonoBehaviour
         yield return null;
     }
 
+    private void SetAnimationSpeed(string how){
+        if(_animatedObjectsPresent){
+            //for each object in _animatedObjects
+            foreach (var obj in _animatedObjects)
+            {
+                try {
+                    //get material
+                    Material material = obj.GetComponent<Renderer>().material;
+                    //get scroll speed
+                    float scrollSpeed = material.GetFloat("_ScrollSpeed");
+                    //set new scroll speed
+                    if(how == "slow"){
+                        material.SetFloat("_ScrollSpeed", scrollSpeed/_animationSlowdownFactor);
+                    } else if(how == "normal"){
+                        material.SetFloat("_ScrollSpeed", scrollSpeed*_animationSlowdownFactor);
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid value. Got '{how}'");
+                    }
+                } catch {
+                    Debug.LogError("Invalid animated object " + obj.name);
+                }
+            }
+        }
+    }
     
     private void Update()
     {
@@ -206,7 +265,7 @@ public class NoclipManager : MonoBehaviour
         while (!IsBackToBody())
         {
             timeElapsed += Time.deltaTime;
-            float t = timeElapsed / _backToBodyAnimationDuration;
+            float t = timeElapsed / _noclipOptions.backToBodyAnimationDuration;
             _noclipCamera.transform.position = Vector3.Lerp(startPosition, _realityCamera.transform.position, t);
             _noclipCamera.transform.rotation = Quaternion.Lerp(startAngle, _realityCamera.transform.rotation, t);
             yield return new WaitForEndOfFrame();
@@ -215,9 +274,10 @@ public class NoclipManager : MonoBehaviour
         yield return DisableNoclip();
         
         // Cooldown phase
-        _noclipState = NoclipState.RealityCooldown;
-        _endCooldownAbsoluteTime = Time.time + _noclipOptions.cooldownSeconds;
-        yield return new WaitForSecondsRealtime(_noclipOptions.cooldownSeconds);
+        if (_noclipOptions.cooldownSeconds > 0)
+            _noclipState = NoclipState.RealityCooldown;
+            _endCooldownAbsoluteTime = Time.time + _noclipOptions.cooldownSeconds;
+            yield return new WaitForSecondsRealtime(_noclipOptions.cooldownSeconds);
         
         // Cooldown is over, update noclipState!
         if (_playerInsideNoclipEnabler)
