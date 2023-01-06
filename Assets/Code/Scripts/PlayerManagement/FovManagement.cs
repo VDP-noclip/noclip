@@ -11,12 +11,17 @@ public class FovManagement : MonoBehaviour
 
     #region UnityMethods
 
-    private void Start()
+    private void Awake()
     {
         EventManager.StartListening("UpdateFovFromPlayerPrefs", UpdateFovFromPlayerPrefs);
         UpdateFovFromPlayerPrefs();
     }
-    
+
+    private void OnEnable()
+    {
+        UpdateFovFromPlayerPrefs();
+    }
+
     #endregion
     
     private void UpdateFovFromPlayerPrefs()
