@@ -98,6 +98,8 @@ namespace Code.Scripts.TutorialManagement
                 _dialogueContainer.SetActive(false);
                 _realityMovement.SetSlowMode(false);
                 _displayDialogueCoroutineIsRunning = false;
+                _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0f);
+                _image.sprite = null;
             }
         }
         
