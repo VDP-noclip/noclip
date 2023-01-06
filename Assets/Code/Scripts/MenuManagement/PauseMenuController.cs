@@ -28,20 +28,14 @@ public class PauseMenuController : MonoBehaviour
 
     [Header("Gameplay Settings")]
     [SerializeField] private Slider _controllerSensitivitySlider = null;
-    [SerializeField] private int _defaultSensitivity = 4;
 
-    public int mainControllerSensitivity = 4;
-    
     [Header("Volume Settings")]
     [SerializeField] private Slider _volumeSoundtrackSlider;
     [SerializeField] private Slider _volumeEffectsSlider;
     [SerializeField] private Slider _volumeGlobalSlider;
-    [SerializeField] private float _defaultVolume = 1.0f;
     
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
-
-
 
     private void Start()
     {

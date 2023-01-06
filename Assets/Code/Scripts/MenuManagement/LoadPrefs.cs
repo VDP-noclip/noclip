@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Code.ScriptableObjects;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,101 +16,49 @@ using UnityEngine.Audio;
 /// </summary>
 public class LoadPrefs : MonoBehaviour
 {
-    [Header("General Settings")] 
-    [SerializeField] private bool canUse = false;
+    [SerializeField] private bool canUse = true;
+    [SerializeField] private DefaultPlayerPrefs _defaultPlayerPrefs;
 
-    [SerializeField] private MenuController menuController;
-
-    [Header("Volume Settings")]
-    [SerializeField] private Slider globalVolumeSlider = null;
-    [SerializeField] private Slider effectsVolumeSlider = null;
-    [SerializeField] private Slider soundtrackVolumeSlider = null;
-    [SerializeField] private AudioMixer audioMixer;
-
-    [Header("Quality Level Settings")]
-    [SerializeField] private TMP_Dropdown qualityDropdown;
-    
-    [Header("Fullscreen Settings")]
-    [SerializeField] private Toggle fullScreenToggle;
-    
-    [Header("Sensitivity Settings")]
-    [SerializeField] private Slider controllerSensitivitySlider = null;
-
-    [Header("Fov settings")] 
-    [SerializeField] private Slider fovSlider;
-    private void Start()
+    private void Awake()
     {
-        if (canUse)
+        // PlayerPrefs.DeleteAll();
+        
+        if (!canUse) return;
+        
+        if (! PlayerPrefs.HasKey("soundtrackVolume"))
+            PlayerPrefs.SetFloat("soundtrackVolume", _defaultPlayerPrefs.soundTracksVolumeDecibel);
+        
+        if (! PlayerPrefs.HasKey("effectsVolume"))
+            PlayerPrefs.SetFloat("effectsVolume", _defaultPlayerPrefs.effectsVolumeDecibel);
+        
+        if (!PlayerPrefs.HasKey("globalVolume"))
+            PlayerPrefs.SetFloat("globalVolume", _defaultPlayerPrefs.globalVolumeDecibel);
+        
+        if (!PlayerPrefs.HasKey("cameraFov"))
+            PlayerPrefs.SetFloat("cameraFov", _defaultPlayerPrefs.defaultFov);
+
+        if (!PlayerPrefs.HasKey("masterQuality"))
+            PlayerPrefs.SetInt("masterQuality", _defaultPlayerPrefs.masterQuality);
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("masterQuality"));
+        
+        if (!PlayerPrefs.HasKey("masterSensitivity"))
+            PlayerPrefs.SetFloat("masterSensitivity", _defaultPlayerPrefs.masterSensitivity);
+
+        // full screen
+        if (!PlayerPrefs.HasKey("masterFullscreen"))
         {
-            // Changes soundtrack volume based on stored value
-            if (PlayerPrefs.HasKey("soundtrackVolume"))
-            {
-                
-                float localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-
-                soundtrackVolumeSlider.value = localSoundVolume;
-                audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
-            }
-            
-
-            if (PlayerPrefs.HasKey("effectsVolume"))
-            {
-                
-                float localEffectsVolume = PlayerPrefs.GetFloat("effectsVolume");
-                
-                effectsVolumeSlider.value = localEffectsVolume;
-                audioMixer.SetFloat("effectsVolume", Mathf.Log(localEffectsVolume) * 20);
-            }
-
-            
-            if (PlayerPrefs.HasKey("globalVolume"))
-            {
-                
-                float localGlobalVolume = PlayerPrefs.GetFloat("globalVolume");
-
-                globalVolumeSlider.value = localGlobalVolume;
-                audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume) * 20);
-            }
-            
-            if (PlayerPrefs.HasKey("cameraFov"))
-            {
-                
-                float localFov = PlayerPrefs.GetFloat("cameraFov");
-
-                fovSlider.value = localFov;
-            }
-            
-
-            if (PlayerPrefs.HasKey("masterQuality"))
-            {
-                int localQuality = PlayerPrefs.GetInt("masterQuality");
-                qualityDropdown.value = localQuality;
-                QualitySettings.SetQualityLevel(localQuality);
-            }
-
-            if (PlayerPrefs.HasKey("masterFullscreen"))
-            {
-                int localFullscreen = PlayerPrefs.GetInt("masterFullscreen");
-
-                if (localFullscreen == 1)
-                {
-                    Screen.fullScreen = true;
-                    fullScreenToggle.isOn = true;
-                }
-                else
-                {
-                    Screen.fullScreen = false;
-                    fullScreenToggle.isOn = false;
-                }
-            }
-            
-            // More infos about these two checks in MouseLook.cs.
-            if (PlayerPrefs.HasKey("masterSensitivity"))
-            {
-                float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
-
-                controllerSensitivitySlider.value = localSensitivity;
-            }
+            int defaultMasterFullScreen;
+            defaultMasterFullScreen = _defaultPlayerPrefs.masterFullScreen ? 1 : 0;
+            PlayerPrefs.SetInt("masterFullscreen", defaultMasterFullScreen);
+        }
+        if (PlayerPrefs.GetInt("masterFullscreen") == 1)
+        {
+            Screen.fullScreen = true;
+        }
+        else
+        {
+            Screen.fullScreen = false;
         }
     }
+    
 }
