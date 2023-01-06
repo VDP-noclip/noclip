@@ -50,7 +50,7 @@ public class LoadingScreenController : MonoBehaviour
 
         if (_isLoaded)
         {
-            if (Input.anyKey && !(Input.GetButton("Jump") || Input.GetButton("NextPuzzle")))  // These two key are excluded because of possible bugs in the area after the loading screen
+            if (Input.anyKey && !Input.GetButton("NextPuzzle"))  // These two key are excluded because of possible bugs in the area after the loading screen
             {
                 _loadingSceneOption.ChangeSceneNumber();
                 GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
