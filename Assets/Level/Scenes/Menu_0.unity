@@ -1981,15 +1981,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canUse: 1
-  menuController: {fileID: 771194624}
-  globalVolumeSlider: {fileID: 648433659}
-  effectsVolumeSlider: {fileID: 485481173}
-  soundtrackVolumeSlider: {fileID: 1881052524}
-  audioMixer: {fileID: 24100000, guid: 966f75dff49d65b4a9d6827eea13a365, type: 2}
-  qualityDropdown: {fileID: 383834417}
-  fullScreenToggle: {fileID: 1396441972}
-  controllerSensitivitySlider: {fileID: 646387595}
-  fovSlider: {fileID: 1126235947}
+  _defaultPlayerPrefs: {fileID: 0}
 --- !u!4 &404335007
 Transform:
   m_ObjectHideFlags: 0
@@ -2171,7 +2163,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &485481171
 GameObject:
@@ -4969,27 +4961,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1b7573db45d1f439b4689674cdc488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCanvas: {fileID: 119334343}
-  mainGradient: {fileID: 1100075629}
-  bottomGradient: {fileID: 2106197170}
-  noclipLogo: {fileID: 953935045}
-  logoBlur: {fileID: 1692472894}
   enterButton: {fileID: 1697059506}
   settingsButton: {fileID: 1581064738}
   exitButton: {fileID: 1635988078}
-  feedbackButton: {fileID: 1840862878}
-  controlsButton: {fileID: 44306047}
   noclipEcho: {fileID: 482481307}
   controllerSensitivitySlider: {fileID: 646387595}
-  defaultSensitivity: 4
   controllerFovSlider: {fileID: 1126235947}
-  defaultFovValue: 90
   qualityDropdown: {fileID: 383834417}
   fullScreenToggle: {fileID: 1396441972}
+  animations: {fileID: 2061589826}
   globalVolumeSlider: {fileID: 648433659}
   soundVolumeSlider: {fileID: 1881052524}
   effectsVolumeSlider: {fileID: 485481173}
-  defaultVolume: 1
   audioMixer: {fileID: 24100000, guid: 966f75dff49d65b4a9d6827eea13a365, type: 2}
   confirmationPrompt: {fileID: 2054656209}
   _newGameLevel: 0_Main
@@ -5007,7 +4990,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &771194626
 MonoBehaviour:
@@ -15699,6 +15682,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2055698177}
   m_CullTransparentMesh: 1
+--- !u!1 &2061589826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2061589827}
+  - component: {fileID: 2061589828}
+  m_Layer: 0
+  m_Name: Animations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2061589827
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061589826}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 715.8258, y: 396.37662, z: -758.23126}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2061589828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061589826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16f201f3a9a9ee489bc5f669ce301e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCanvas: {fileID: 119334343}
+  mainGradient: {fileID: 1100075629}
+  bottomGradient: {fileID: 2106197170}
+  noclipLogo: {fileID: 953935045}
+  logoBlur: {fileID: 1692472894}
+  enterButton: {fileID: 1697059506}
+  settingsButton: {fileID: 1581064738}
+  exitButton: {fileID: 1635988078}
+  feedbackButton: {fileID: 1840862878}
+  controlsButton: {fileID: 44306047}
+  noclipEcho: {fileID: 482481307}
 --- !u!1 &2093662618
 GameObject:
   m_ObjectHideFlags: 0
