@@ -17,6 +17,9 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _dialogueTextObject;
         [SerializeField] private GameObject _tutorialTextObject;
         [SerializeField] private GameObject _skipButtonTextObject;
+        [SerializeField] private GameObject _imageObject;
+        
+        [SerializeField] private Image _image;
         
         [Space]
         [SerializeField] private TMP_Text _tutorialText;
@@ -95,6 +98,8 @@ namespace Code.Scripts.TutorialManagement
                 _dialogueContainer.SetActive(false);
                 _realityMovement.SetSlowMode(false);
                 _displayDialogueCoroutineIsRunning = false;
+                _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0f);
+                _image.sprite = null;
             }
         }
         
@@ -115,6 +120,12 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            if (dialogueObject.GetImage() != null)
+            {
+                _image.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
+                StartCoroutine(FadeInAndOutCoroutine(_imageObject, true, _fadeDuration));
+            }
+
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
 
@@ -275,7 +286,17 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
+            if (dialogueObject.GetImage() != null)
+            {
+                StartCoroutine(FadeInAndOutCoroutine(_imageObject, false, _fadeDuration));
+                
+            }
             yield return new WaitForSecondsRealtime(_fadeDuration);
+
+            if (dialogueObject.GetImage() != null)
+            {
+                _image.sprite = null;
+            }
             _realityMovement.SetSlowMode(false);
             _displayDialogueCoroutineIsRunning = false;
         }
