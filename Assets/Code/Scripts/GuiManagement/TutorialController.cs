@@ -18,6 +18,7 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _tutorialTextObject;
         [SerializeField] private GameObject _skipButtonTextObject;
         [SerializeField] private GameObject _imageObject;
+        [SerializeField] private GameObject _bottomGradient;
         
         [SerializeField] private Image _image;
         
@@ -76,6 +77,7 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_bottomGradient, true, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
@@ -85,6 +87,7 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_bottomGradient, true, _fadeDuration));
             _displayHintCoroutine = StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         }
@@ -252,6 +255,7 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             
+            
             yield return new WaitForSecondsRealtime(_fadeDuration);
             
             _controlsContainer.SetActive(false);
@@ -284,7 +288,7 @@ namespace Code.Scripts.TutorialManagement
             // These coroutines are synchronized!!!!
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
-            StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
+            
             if (dialogueObject.GetImage() != null)
             {
                 StartCoroutine(FadeInAndOutCoroutine(_imageObject, false, _fadeDuration));
