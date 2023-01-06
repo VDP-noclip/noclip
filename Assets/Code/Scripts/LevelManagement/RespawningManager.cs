@@ -7,6 +7,7 @@ public class RespawningManager : MonoBehaviour
 {
     [SerializeField] private GameObject _realityCamera;
     [SerializeField] private GameObject _noclipCamera;
+    [SerializeField] private float _respawnAnimationDuration = 4f;
 
     private Transform _transform;
     private List<Transform> _childrenTransforms;
@@ -21,8 +22,10 @@ public class RespawningManager : MonoBehaviour
     private int _realityCameraTransformIndex;
     private CameraManager _cameraManager;
     private MouseLook _realityCameraMouselook;
-    private readonly float _respawnAnimationDuration = 1f;
     private NoclipManager _noclipManager;
+    
+    private Coroutine _respawnAnimationCoroutine;
+    private bool _respawnAnimationIsRunning;
 
     private void Awake()
     {
@@ -41,6 +44,8 @@ public class RespawningManager : MonoBehaviour
             if (_childrenTransforms[i] == _realityCameraTransform)
                 _realityCameraTransformIndex = i;
         }
+        
+        EventManager.StartListening("UpdateCheckpointValues", UpdateCheckpointValues);
     }
 
     private void Start()
@@ -50,23 +55,25 @@ public class RespawningManager : MonoBehaviour
 
     private void Update()
     {
-        if (Application.isEditor)
+        if (_respawnAnimationIsRunning && Input.GetButtonDown("Noclip"))
+            IstantaneousRespawn();
+        
+        else if (Application.isEditor && !_respawnAnimationIsRunning && Input.GetKeyDown(KeyCode.Z))
         {
-            // For debug, it should respawn everything!
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                RespawnAllTransforms();
-            }
+            RespawnAllTransforms();
+            EventManager.TriggerEvent("DisplayHint", 
+                "Hi developer, are you testing the respawn? (right click to skip animation)");
         }
     }
 
     public void RespawnAllTransforms()
     {
-        StartCoroutine(RespawnCoroutine());
+        _respawnAnimationCoroutine = StartCoroutine(RespawnCoroutine());
     }
 
     private IEnumerator RespawnCoroutine()
     {
+        _respawnAnimationIsRunning = true;
         EventManager.TriggerEvent("ResetTimeLimitConstraints");
         _noclipManager.SetAcceptUserInput(false);
         // Switch to noclip camera before starting the respawn
@@ -107,11 +114,36 @@ public class RespawningManager : MonoBehaviour
         // Switch to reality camera after the animation is complete
         _cameraManager.SwitchCamera(false);
         _realityMovement.ResetSpeedOnRespawn();
-        EventManager.TriggerEvent("StartTimeConstraintsTimer");
         _noclipManager.SetAcceptUserInput(true);
+        _respawnAnimationIsRunning = false;
         yield return null;
     }
 
+    public void IstantaneousRespawn()
+    {
+        // Stop the respawn coroutine if it is running
+        if (_respawnAnimationIsRunning)
+        {
+            StopCoroutine(_respawnAnimationCoroutine);
+            _cameraManager.SwitchCamera(false);
+            _respawnAnimationIsRunning = false;
+        }
+        
+        // Istantaneous respawn
+        transform.position = _lastCheckPointPosition;
+        transform.rotation = _lastCheckPointRotation;
+        for (int i = 0; i < _childrenTransforms.Count; i++)
+        {
+            _childrenTransforms[i].position = _lastCheckPointChildrenPositions[i];
+            _childrenTransforms[i].rotation = _lastCheckPointChildrenRotations[i];
+        }
+        
+        _realityMovement.ResetSpeedOnRespawn();
+        EventManager.TriggerEvent("SetLastCheckpointRotation");
+        EventManager.TriggerEvent("ResetTimeLimitConstraints");
+        _noclipManager.SetAcceptUserInput(true);
+    }
+    
     /// <summary>
     /// Store a copy of current position and rotations of the current game object and of all its children.
     /// </summary>

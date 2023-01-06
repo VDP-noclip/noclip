@@ -20,8 +20,7 @@ public class LoadPrefs : MonoBehaviour
 
     [SerializeField] private MenuController menuController;
 
-    [Header("Volume Settings")] 
-    [SerializeField] private TMP_Text volumeTextValue;
+    [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
     [SerializeField] private Slider effectsVolumeSlider = null;
     [SerializeField] private Slider soundtrackVolumeSlider = null;
@@ -34,12 +33,10 @@ public class LoadPrefs : MonoBehaviour
     [SerializeField] private Toggle fullScreenToggle;
     
     [Header("Sensitivity Settings")]
-    [SerializeField] private TMP_Text controllerSensitivityTextValue = null;
     [SerializeField] private Slider controllerSensitivitySlider = null;
-    
-    [Header("Invert Y Settings")]
-    [SerializeField] private Toggle invertYToggle = null;
 
+    [Header("Fov settings")] 
+    [SerializeField] private Slider fovSlider;
     private void Start()
     {
         if (canUse)
@@ -49,8 +46,7 @@ public class LoadPrefs : MonoBehaviour
             {
                 
                 float localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
-                Debug.Log("local volume menu " + localSoundVolume);
-                
+
                 soundtrackVolumeSlider.value = localSoundVolume;
                 audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
             }
@@ -73,6 +69,14 @@ public class LoadPrefs : MonoBehaviour
 
                 globalVolumeSlider.value = localGlobalVolume;
                 audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume) * 20);
+            }
+            
+            if (PlayerPrefs.HasKey("cameraFov"))
+            {
+                
+                float localFov = PlayerPrefs.GetFloat("cameraFov");
+
+                fovSlider.value = localFov;
             }
             
 
@@ -105,20 +109,6 @@ public class LoadPrefs : MonoBehaviour
                 float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
 
                 controllerSensitivitySlider.value = localSensitivity;
-                menuController.mainControllerSensitivity = Mathf.RoundToInt(localSensitivity);
-            }
-            
-            if (PlayerPrefs.HasKey("masterInvertY"))
-            {
-                if (PlayerPrefs.GetInt("masterInvertY") == 1)
-                {
-                    invertYToggle.isOn = true;
-                }
-
-                else
-                {
-                    invertYToggle.isOn = false;
-                }
             }
         }
     }

@@ -22,19 +22,21 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("Checkpoint"))
         {
+            EventManager.TriggerEvent("FadeCancel");
             other.GetComponent<AnchorCheckpointController>().ReactToPlayerCollision();
             _respawningManager.UpdateCheckpointValues();
         }
         else if (other.CompareTag("OutOfBounds"))
         {
-            _respawningManager.RespawnAllTransforms();
+            //_respawningManager.RespawnAllTransforms();
+            EventManager.TriggerEvent("FadeOutRespawn");
         }
         else if (other.CompareTag("ProgressSaver"))
         {
             Debug.Log("I'm saving this scene: " + SceneManager.GetActiveScene().name);
             PlayerPrefs.SetString("SavedLevel", SceneManager.GetActiveScene().name);
         }
-        else if (other.CompareTag(("GoalPlatform")))
+        else if (other.CompareTag("GoalPlatform"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
@@ -47,7 +49,7 @@ public class RealityPlayerCollisions : MonoBehaviour
             _noclipManager.SetPlayerIsInsideNoclipEnabler(false);
         } else if (other.CompareTag("Checkpoint"))
         {
-            EventManager.TriggerEvent("StartTimeConstraintsTimer");
+            EventManager.TriggerEvent("RestartTimeConstraintsTimer");
         }
     }
 }

@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _realityCamera: {fileID: 2740796908604963382}
   _noclipCamera: {fileID: 8905615672618808175}
-  _respawnAnimationApproxDuration: 2
+  _respawnAnimationDuration: 4
 --- !u!114 &958916330490506102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 6144083167551141880}
   - component: {fileID: 6699231496826278040}
   - component: {fileID: 436167084411905872}
+  - component: {fileID: 118656322030048809}
   m_Layer: 0
   m_Name: RealityCamera
   m_TagString: Untagged
@@ -233,6 +234,19 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2740796908604963382}
   m_Enabled: 0
+--- !u!114 &118656322030048809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740796908604963382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f983e36709a15149a2cfcbad25abe5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 5100550035080717454}
 --- !u!1 &5413496004590197134
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,6 +256,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6423799784713560806}
+  - component: {fileID: 1531767950332184459}
   m_Layer: 0
   m_Name: RealityOrientation
   m_TagString: Untagged
@@ -266,6 +281,14 @@ Transform:
   m_Father: {fileID: 5238956359414554662}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &1531767950332184459
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5413496004590197134}
+  m_Enabled: 1
 --- !u!1 &6155750143240272921
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,6 +854,7 @@ GameObject:
   - component: {fileID: 3660949222304381492}
   - component: {fileID: 3046797087946575208}
   - component: {fileID: 2134688602994416116}
+  - component: {fileID: 361957710244848083}
   m_Layer: 0
   m_Name: NoclipCamera
   m_TagString: Untagged
@@ -979,6 +1003,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &361957710244848083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8905615672618808175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f983e36709a15149a2cfcbad25abe5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 5423897912509419702}
 --- !u!1 &9039045316966482032
 GameObject:
   m_ObjectHideFlags: 0

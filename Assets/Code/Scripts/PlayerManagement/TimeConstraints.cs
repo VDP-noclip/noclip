@@ -7,59 +7,53 @@ namespace Code.Scripts.PlayerManagement
 {
     public class TimeConstraints : MonoBehaviour
     {
-        private NoclipManager _noclipManager;
         private RespawningManager _respawningManager;
-        
+
         // If True, the player needs to finish the puzzle before _maxTimeToFinishPuzzle
         private bool _timeLimitForPuzzleEnabled;
         private float _maxTimeToFinishPuzzle;
-        
-        private float _realityTimeLeftInThisPuzzle;
-        private bool _timerWasActive;
 
+        private float _realityTimeLeftInThisPuzzle;
         private bool _isRunning;
 
+        private float _fadeTime;
+        private bool _fading = false;
         private void Awake()
         {
-            _noclipManager = GetComponent<NoclipManager>();
             _respawningManager = GetComponentInParent<RespawningManager>();
             ResetTimeLimitConstraints();
-            _timerWasActive = _noclipManager.RealityPlayerCanMove();
-            
+
             EventManager.StartListening("SetNewTimeLimitConstraint", SetNewTimeLimitConstraint);
             EventManager.StartListening("ResetTimeLimitConstraints", ResetTimeLimitConstraints);
-            EventManager.StartListening("StartTimeConstraintsTimer", StartTimeConstraintsTimer);
+            EventManager.StartListening("RestartTimeConstraintsTimer", RestartTimeConstraintsTimer);
+            EventManager.StartListening("ResumeTimeConstraintsTimer", ResumeTimeConstraintsTimer);
+            EventManager.StartListening("PauseTimeConstraintsTimer", PauseTimeConstraintsTimer);
         }
-        
+
+        private void Start()
+        {
+            //find BlackFadein gameobject
+            GameObject blackFadein = GameObject.Find("BlackFadein");
+            //get BlackFadein script from BlackFadein
+            BlackFadein blackFadeinScript = blackFadein.GetComponent<BlackFadein>();
+            //get fadeTime from BlackFadein
+            _fadeTime = blackFadeinScript.GetFadeTime();
+        }
         void Update()
         {
             if (!_timeLimitForPuzzleEnabled || !_isRunning)
                 return;
 
-            ResumeOrPauseGuiTimer();
-            
-            if (_noclipManager.IsNoclipEnabled())
-                return;
-            
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
-            if (_realityTimeLeftInThisPuzzle <= 0)
-                StartCoroutine(GameLostCoroutine("you ran out of time"));
-            
-        }
-        
-        /// <summary>
-        /// This function is ONLY to trigger the start/stop of the GUI
-        /// </summary>
-        private void ResumeOrPauseGuiTimer()
-        {
-            if (!_noclipManager.RealityPlayerCanMove() && !_timerWasActive)
-                EventManager.TriggerEvent("GuiPauseTimer");
-            else if (_noclipManager.RealityPlayerCanMove() && _timerWasActive)
-                EventManager.TriggerEvent("GuiResumeTimer");
 
-            _timerWasActive = _noclipManager.RealityPlayerCanMove();
+            //if (_realityTimeLeftInThisPuzzle <= 0)
+            //    StartCoroutine(GameLostCoroutine());
+            if (_realityTimeLeftInThisPuzzle <= _fadeTime && !_fading){
+                EventManager.TriggerEvent("FadeOutRespawn");
+                _fading = true;
+            }
         }
-        
+
         /// <summary>
         /// Set the time that the player needs to finish this puzzle.
         /// IMPORTANT: if maxTimeToFinishPuzzle is '0', the puzzle does not have a time limit.
@@ -77,7 +71,7 @@ namespace Code.Scripts.PlayerManagement
                 Debug.Log($"Setting time constraint for this puzzle to {maxTimeToFinishPuzzle}");
                 _timeLimitForPuzzleEnabled = true;
             }
-            
+
             _maxTimeToFinishPuzzle = maxTimeToFinishPuzzle;
             ResetTimeLimitConstraints();
         }
@@ -86,33 +80,48 @@ namespace Code.Scripts.PlayerManagement
         {
             Debug.Log($"Resetting time limit constraints. Time to finish is {_maxTimeToFinishPuzzle}");
             _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
-            _timerWasActive = _noclipManager.RealityPlayerCanMove();
-            EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
             _isRunning = false;
+            EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
+            _fading = false;
         }
 
-        private IEnumerator GameLostCoroutine(string gameLostMessage)
+        private IEnumerator GameLostCoroutine()
         {
-            Debug.Log(gameLostMessage);
-            EventManager.TriggerEvent("DisplayHint", gameLostMessage);
+            EventManager.TriggerEvent("DisplayHint", "you ran out of time (right click to skip animation)");
             _respawningManager.RespawnAllTransforms();
             ResetTimeLimitConstraints();
             yield return null;
         }
-        
+
         /// <summary>
         /// Start the internal timer and triggers the GUI
         /// </summary>
-        private void StartTimeConstraintsTimer()
+        private void RestartTimeConstraintsTimer()
         {
             ResetTimeLimitConstraints();
-            
+
             if (!_timeLimitForPuzzleEnabled)
                 return;
-            
-            if (!_noclipManager.RealityPlayerCanMove())
-                EventManager.TriggerEvent("GuiResumeTimer");
+
             _isRunning = true;
+            EventManager.TriggerEvent("GuiResumeTimer");
+        }
+        
+        private void ResumeTimeConstraintsTimer()
+        {
+            if (!_timeLimitForPuzzleEnabled)
+                return;
+
+            _isRunning = true;
+            EventManager.TriggerEvent("GuiResumeTimer");
+        }
+        
+        private void PauseTimeConstraintsTimer()
+        {
+            if (!_timeLimitForPuzzleEnabled)
+                return;
+            _isRunning = false;
+            EventManager.TriggerEvent("GuiPauseTimer");
         }
     }
 }

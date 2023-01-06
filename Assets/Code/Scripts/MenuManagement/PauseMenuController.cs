@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
@@ -15,29 +16,8 @@ public class PauseMenuController : MonoBehaviour
     [Header("Containers")]
     [SerializeField] private GameObject _pauseMenuUI;
     [SerializeField] private GameObject _settingsMenuUI;
-    [SerializeField] private GameObject _audioMenuUI;
-    [SerializeField] private GameObject _gameplayMenuUI;
     [SerializeField] private GameObject _feedbackUI;
     [SerializeField] private GameObject _controlsUI;
-    
-    [Header("Buttons")]
-    [SerializeField] private Button _resume;
-    [SerializeField] private TMP_Text _resumeText;
-    
-    [SerializeField] private Button _settings;
-    [SerializeField] private TMP_Text _settingsText;
-        
-    [SerializeField] private Button _exit;
-    [SerializeField] private TMP_Text _exitText;
-        
-    [SerializeField] private Button _audio;
-    [SerializeField] private TMP_Text _audioText;
-        
-    [SerializeField] private Button _gameplay;
-    [SerializeField] private TMP_Text _gameplayText;
-        
-    [SerializeField] private Button _return;
-    [SerializeField] private TMP_Text _returnText;
 
     [Header("Pause Status")]
     [SerializeField] private bool _isPaused;
@@ -45,17 +25,11 @@ public class PauseMenuController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource _menuPress;
     [SerializeField] private AudioMixer _audioMixer;
-    [SerializeField] private float _mufflingQuantity;
 
-    private float _currentGlobalVolume;
-    private float _currentEffectsVolume;
-    private float _currentSoundVolume;
-    
     [Header("Gameplay Settings")]
     [SerializeField] private Slider _controllerSensitivitySlider = null;
     [SerializeField] private int _defaultSensitivity = 4;
-    [SerializeField] private Toggle invertYToggle = null;
-    
+
     public int mainControllerSensitivity = 4;
     
     [Header("Volume Settings")]
@@ -66,6 +40,8 @@ public class PauseMenuController : MonoBehaviour
     
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
+
+
 
     private void Start()
     {
@@ -93,10 +69,10 @@ public class PauseMenuController : MonoBehaviour
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
         SetSoundtrackVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
-        
-
+     
         Time.timeScale = 0;
         AudioListener.pause = false;
+        EventManager.TriggerEvent("PauseTimeConstraintsTimer");
         
         _menuPress.ignoreListenerPause=true;
         _menuPress.Play();
@@ -114,6 +90,7 @@ public class PauseMenuController : MonoBehaviour
         SetGlobalVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
         Time.timeScale = 1;
         AudioListener.pause = false;
+        EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
 
         _menuPress.Play();
         
@@ -128,38 +105,16 @@ public class PauseMenuController : MonoBehaviour
     public void OverlayUpdate()
     {
         _pauseMenuUI.SetActive(false);
-        _audioMenuUI.SetActive(false);
         _settingsMenuUI.SetActive(false);
-        _gameplayMenuUI.SetActive(false);
         _feedbackUI.SetActive(false);
         _controlsUI.SetActive(false);
-        
-        _resume.enabled = true;
-        _resumeText.alpha = 1;
-        
-        _settings.enabled = true;
-        _settingsText.alpha = 1;
-        
-        _exit.enabled = true;
-        _exitText.alpha = 1;
-
-        _audio.enabled = true;
-        _audioText.alpha = 1;
-        
-        _gameplay.enabled = true;
-        _gameplayText.alpha = 1;
-        
-        _return.enabled = true;
-        _returnText.alpha = 1;
     }
 
     public void ReturnToMenu()
     {
         Time.timeScale = 1;
         AudioListener.pause = false;
-        
-        VolumeApply();
-        
+
         _isPaused = false;
         
         SceneManager.LoadScene("Menu_0");
@@ -168,80 +123,40 @@ public class PauseMenuController : MonoBehaviour
     public void SetControllerSensitivity(float sensitivity)
     {
         EventManager.TriggerEvent("setSensitivity", sensitivity.ToString());
-        mainControllerSensitivity = Mathf.RoundToInt(sensitivity);
-    }
-    public void SetSoundtrackVolume(float volume)
-    {
-        _currentSoundVolume = volume;
-        _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(_currentSoundVolume) * 20);
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
-    }
-    public void SetEffectsVolume(float volume)
-    {
-        _currentEffectsVolume = volume;
-        _audioMixer.SetFloat("effectsVolume", Mathf.Log(_currentEffectsVolume) * 20);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-    }
-    public void SetGlobalVolume(float volume)
-    {
-        _currentGlobalVolume = volume;
-        _audioMixer.SetFloat("globalVolume", Mathf.Log(_currentGlobalVolume) * 20);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
-    }
-    public void GameplayApply()
-    {
-        if (invertYToggle.isOn)
-        {
-            PlayerPrefs.SetInt("masterInvertY", 1);
-            
-        }
-        else
-        {
-            PlayerPrefs.SetInt("masterInvertY", 0);
-        }
+        PlayerPrefs.SetFloat("masterSensitivity", Mathf.RoundToInt(sensitivity));
 
-        Debug.Log("Setting sensitivity in LoadPrefs: " + mainControllerSensitivity);
-        PlayerPrefs.SetFloat("masterSensitivity", mainControllerSensitivity);
+        _controllerSensitivitySlider.value = sensitivity;
         
         StartCoroutine(ConfirmationBox());
     }
-    
-    public void VolumeApply()
+    public void SetSoundtrackVolume(float volume)
     {
-
-        PlayerPrefs.SetFloat("soundtrackVolume", _currentSoundVolume);
-        PlayerPrefs.SetFloat("effectsVolume", _currentEffectsVolume);
-        PlayerPrefs.SetFloat("globalVolume", _currentGlobalVolume);
-            
+        _audioMixer.SetFloat("soundtrackVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("soundtrackVolume", volume);
+        
+        _volumeSoundtrackSlider.value = volume;
+        
         StartCoroutine(ConfirmationBox());
     }
-    
-    
-    public void ResetButton(string MenuType)
+    public void SetEffectsVolume(float volume)
     {
-        if (MenuType == "Audio")
-        {
-            _currentSoundVolume = _defaultVolume;
-            _currentEffectsVolume = _defaultVolume;
-            _currentGlobalVolume = _defaultVolume;
-            
-            _volumeEffectsSlider.value = _defaultVolume;
-            _volumeSoundtrackSlider.value = _defaultVolume;
-            _volumeGlobalSlider.value = _defaultVolume;
-
-            VolumeApply();
-        }
-
-        if (MenuType == "Gameplay")
-        {
-            _controllerSensitivitySlider.value = _defaultSensitivity;
-            mainControllerSensitivity = _defaultSensitivity;
-            invertYToggle.isOn = false;
-            
-            GameplayApply();
-        }
+        _audioMixer.SetFloat("effectsVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("effectsVolume", volume);
+        
+        _volumeEffectsSlider.value = volume;
+        
+        StartCoroutine(ConfirmationBox());
     }
-    
+    public void SetGlobalVolume(float volume)
+    {
+        _audioMixer.SetFloat("globalVolume", Mathf.Log(volume) * 20);
+        PlayerPrefs.SetFloat("globalVolume", volume);
+        
+        _volumeGlobalSlider.value = volume;
+        
+        StartCoroutine(ConfirmationBox());
+    }
+
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
@@ -257,4 +172,105 @@ public class PauseMenuController : MonoBehaviour
             yield return null;
         }
     }
+    private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
+        {
+                
+                float counter = 0f;
+
+                //Set Values depending on if fadeIn or fadeOut
+                float a, b;
+                if (fadeIn)
+                {
+                    a = 0;
+                    b = 1;
+                }
+                else
+                {
+                    a = 1;
+                    b = 0;
+                }
+
+                int mode = 0;
+                Color currentColor = Color.clear;
+                
+                SpriteRenderer tempSPRenderer = objectToFade.GetComponent<SpriteRenderer>();
+                Image tempImage = objectToFade.GetComponent<Image>();
+                RawImage tempRawImage = objectToFade.GetComponent<RawImage>();
+                MeshRenderer tempRenderer = objectToFade.GetComponent<MeshRenderer>();
+                TMP_Text tempText = objectToFade.GetComponent<TMP_Text>();
+
+                //Check if this is a Sprite
+                if (tempSPRenderer != null)
+                {
+                    currentColor = tempSPRenderer.color;
+                    mode = 0;
+                }
+                //Check if Image
+                else if (tempImage != null)
+                {
+                    currentColor = tempImage.color;
+                    mode = 1;
+                }
+                //Check if RawImage
+                else if (tempRawImage != null)
+                {
+                    currentColor = tempRawImage.color;
+                    mode = 2;
+                }
+                //Check if Text 
+                else if (tempText != null)
+                {
+                    currentColor = tempText.color;
+                    mode = 3;
+                }
+
+                //Check if 3D Object
+                else if (tempRenderer != null)
+                {
+                    currentColor = tempRenderer.material.color;
+                    mode = 4;
+
+                    //ENABLE FADE Mode on the material if not done already
+                    tempRenderer.material.SetFloat("_Mode", 2);
+                    tempRenderer.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    tempRenderer.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    tempRenderer.material.SetInt("_ZWrite", 0);
+                    tempRenderer.material.DisableKeyword("_ALPHATEST_ON");
+                    tempRenderer.material.EnableKeyword("_ALPHABLEND_ON");
+                    tempRenderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                    tempRenderer.material.renderQueue = 3000;
+                }
+                else
+                {
+                    yield break;
+                }
+
+                while (counter < duration)
+                {
+                    counter += Time.deltaTime;
+                    float alpha = Mathf.Lerp(a, b, counter / duration);
+
+                    switch (mode)
+                    {
+                        case 0:
+                            tempSPRenderer.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 1:
+                            tempImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 2:
+                            tempRawImage.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 3:
+                            tempText.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                        case 4:
+                            tempRenderer.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alpha);
+                            break;
+                    }
+                    
+                    
+                    yield return null;
+                }
+        }
 }

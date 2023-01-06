@@ -33,7 +33,6 @@ public class NoclipManager : MonoBehaviour
     
     private NoclipMovement _noclipMovement;
     private float _endCooldownAbsoluteTime;
-    private readonly float _backToBodyAnimationDuration = 0.5f;
 
     private enum NoclipState
     {
@@ -47,7 +46,6 @@ public class NoclipManager : MonoBehaviour
     void Awake()
     {
         _cameraManager = FindObjectOfType<CameraManager>();
-        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
         GetReadyForPuzzle();
         _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
@@ -122,6 +120,7 @@ public class NoclipManager : MonoBehaviour
     {
         EventManager.TriggerEvent("ClearHints");
         _noclipState = NoclipState.NoclipEnabled;
+        EventManager.TriggerEvent("PauseTimeConstraintsTimer");
         _postprocessReality.SetActive(false);
         _postprocessNoclip.SetActive(true);
         
@@ -159,6 +158,7 @@ public class NoclipManager : MonoBehaviour
         });
         _cameraManager.SwitchCamera();
         RenderRealityMode();
+        EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
         yield return null;
     }
 
@@ -205,7 +205,7 @@ public class NoclipManager : MonoBehaviour
         while (!IsBackToBody())
         {
             timeElapsed += Time.deltaTime;
-            float t = timeElapsed / _backToBodyAnimationDuration;
+            float t = timeElapsed / _noclipOptions.backToBodyAnimationDuration;
             _noclipCamera.transform.position = Vector3.Lerp(startPosition, _realityCamera.transform.position, t);
             _noclipCamera.transform.rotation = Quaternion.Lerp(startAngle, _realityCamera.transform.rotation, t);
             yield return new WaitForEndOfFrame();
@@ -214,9 +214,10 @@ public class NoclipManager : MonoBehaviour
         yield return DisableNoclip();
         
         // Cooldown phase
-        _noclipState = NoclipState.RealityCooldown;
-        _endCooldownAbsoluteTime = Time.time + _noclipOptions.cooldownSeconds;
-        yield return new WaitForSecondsRealtime(_noclipOptions.cooldownSeconds);
+        if (_noclipOptions.cooldownSeconds > 0)
+            _noclipState = NoclipState.RealityCooldown;
+            _endCooldownAbsoluteTime = Time.time + _noclipOptions.cooldownSeconds;
+            yield return new WaitForSecondsRealtime(_noclipOptions.cooldownSeconds);
         
         // Cooldown is over, update noclipState!
         if (_playerInsideNoclipEnabler)
@@ -294,7 +295,7 @@ public class NoclipManager : MonoBehaviour
 
     private void RenderNoclipMode()
     {
-        RenderSettings.skybox = _noclipOptions.noClipSkyboxMaterial;
+        EventManager.TriggerEvent("SetNoclipSkybox");
         foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
             if(objectMaterialSwitcher != null)
@@ -306,7 +307,7 @@ public class NoclipManager : MonoBehaviour
     
     private void RenderRealityMode()
     {
-        RenderSettings.skybox = _noclipOptions.realitySkyboxMaterial;
+        EventManager.TriggerEvent("SetRealitySkybox");
         foreach (var objectMaterialSwitcher in _objectMaterialSwitchers)
         {
             if(objectMaterialSwitcher != null)
