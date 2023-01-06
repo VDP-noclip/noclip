@@ -175,6 +175,7 @@ public class MenuController : MonoBehaviour
         PlayerPrefs.SetFloat("globalVolume", volume);
 
         globalVolumeSlider.value = volume;
+        Debug.Log("YOOOOOOOOOOOOO");
 
         StartCoroutine(ConfirmationBox());
     }

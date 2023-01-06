@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Code.ScriptableObjects;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,99 +18,93 @@ public class LoadPrefs : MonoBehaviour
 {
     [Header("General Settings")] 
     [SerializeField] private bool canUse = false;
+    [SerializeField] private DefaultPlayerPrefs _defaultPlayerPrefs;
 
-    [SerializeField] private MenuController menuController;
-
-    [Header("Volume Settings")]
-    [SerializeField] private Slider globalVolumeSlider = null;
-    [SerializeField] private Slider effectsVolumeSlider = null;
-    [SerializeField] private Slider soundtrackVolumeSlider = null;
-    [SerializeField] private AudioMixer audioMixer;
-
-    [Header("Quality Level Settings")]
-    [SerializeField] private TMP_Dropdown qualityDropdown;
-    
-    [Header("Fullscreen Settings")]
-    [SerializeField] private Toggle fullScreenToggle;
-    
-    [Header("Sensitivity Settings")]
-    [SerializeField] private Slider controllerSensitivitySlider = null;
-
-    [Header("Fov settings")] 
-    [SerializeField] private Slider fovSlider;
-    private void Start()
+    private void Awake()
     {
-        if (canUse)
+        PlayerPrefs.DeleteAll();
+        
+        if (!canUse) return;
+        
+        // localSoundVolume
+        float localSoundVolume;
+        if (PlayerPrefs.HasKey("soundtrackVolume"))
+            localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
+        else
         {
-            // Changes soundtrack volume based on stored value
-            if (PlayerPrefs.HasKey("soundtrackVolume"))
-            {
-                
-                float localSoundVolume = PlayerPrefs.GetFloat("soundtrackVolume");
+            localSoundVolume = _defaultPlayerPrefs.soundTracksVolumeDecibel;
+            PlayerPrefs.SetFloat("soundtrackVolume", localSoundVolume);
+        }
+        Debug.Log("localSoundVolume:" + localSoundVolume);
 
-                soundtrackVolumeSlider.value = localSoundVolume;
-                audioMixer.SetFloat("soundtrackVolume", Mathf.Log(localSoundVolume) * 20);
-            }
-            
+        // effectsVolume
+        float effectsVolume;
+        if (PlayerPrefs.HasKey("effectsVolume"))
+            effectsVolume = PlayerPrefs.GetFloat("effectsVolume");
+        else
+        {
+            effectsVolume = _defaultPlayerPrefs.effectsVolumeDecibel;
+            PlayerPrefs.SetFloat("effectsVolume", effectsVolume);
+        }
 
-            if (PlayerPrefs.HasKey("effectsVolume"))
-            {
-                
-                float localEffectsVolume = PlayerPrefs.GetFloat("effectsVolume");
-                
-                effectsVolumeSlider.value = localEffectsVolume;
-                audioMixer.SetFloat("effectsVolume", Mathf.Log(localEffectsVolume) * 20);
-            }
+        // globalVolume
+        float globalVolume;
+        if (PlayerPrefs.HasKey("globalVolume"))
+            globalVolume = PlayerPrefs.GetFloat("globalVolume");
+        else
+        {
+            globalVolume = _defaultPlayerPrefs.globalVolumeDecibel;
+            PlayerPrefs.SetFloat("globalVolume", globalVolume);
+        }
 
-            
-            if (PlayerPrefs.HasKey("globalVolume"))
-            {
-                
-                float localGlobalVolume = PlayerPrefs.GetFloat("globalVolume");
+        // cameraFov
+        float cameraFov;
+        if (PlayerPrefs.HasKey("cameraFov"))
+            cameraFov = PlayerPrefs.GetFloat("cameraFov");
+        else
+        {
+            cameraFov = _defaultPlayerPrefs.defaultFov;
+            PlayerPrefs.SetFloat("cameraFov", cameraFov);
+        }
 
-                globalVolumeSlider.value = localGlobalVolume;
-                audioMixer.SetFloat("globalVolume", Mathf.Log(localGlobalVolume) * 20);
-            }
-            
-            if (PlayerPrefs.HasKey("cameraFov"))
-            {
-                
-                float localFov = PlayerPrefs.GetFloat("cameraFov");
+        // masterQuality
+        int masterQuality;
+        if (PlayerPrefs.HasKey("masterQuality"))
+            masterQuality = PlayerPrefs.GetInt("masterQuality");
+        else
+        {
+            masterQuality = _defaultPlayerPrefs.masterQuality;
+            PlayerPrefs.SetInt("masterQuality", masterQuality);
+        }
+        QualitySettings.SetQualityLevel(masterQuality);
 
-                fovSlider.value = localFov;
-            }
-            
+        // masterSensitivity
+        float masterSensitivity;
+        if (PlayerPrefs.HasKey("masterSensitivity"))
+            masterSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
+        else
+        {
+            masterSensitivity = _defaultPlayerPrefs.masterSensitivity;
+            PlayerPrefs.SetFloat("masterSensitivity", masterSensitivity);
+        }
 
-            if (PlayerPrefs.HasKey("masterQuality"))
-            {
-                int localQuality = PlayerPrefs.GetInt("masterQuality");
-                qualityDropdown.value = localQuality;
-                QualitySettings.SetQualityLevel(localQuality);
-            }
-
-            if (PlayerPrefs.HasKey("masterFullscreen"))
-            {
-                int localFullscreen = PlayerPrefs.GetInt("masterFullscreen");
-
-                if (localFullscreen == 1)
-                {
-                    Screen.fullScreen = true;
-                    fullScreenToggle.isOn = true;
-                }
-                else
-                {
-                    Screen.fullScreen = false;
-                    fullScreenToggle.isOn = false;
-                }
-            }
-            
-            // More infos about these two checks in MouseLook.cs.
-            if (PlayerPrefs.HasKey("masterSensitivity"))
-            {
-                float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
-
-                controllerSensitivitySlider.value = localSensitivity;
-            }
+        // full screen
+        int defaultMasterFullScreen;
+        if (PlayerPrefs.HasKey("masterFullscreen"))
+            defaultMasterFullScreen = PlayerPrefs.GetInt("masterFullscreen");
+        else
+        {
+            defaultMasterFullScreen = _defaultPlayerPrefs.masterFullScreen ? 1 : 0;
+            PlayerPrefs.SetInt("masterFullscreen", defaultMasterFullScreen);
+        }
+        if (defaultMasterFullScreen == 1)
+        {
+            Screen.fullScreen = true;
+        }
+        else
+        {
+            Screen.fullScreen = false;
         }
     }
+    
 }
