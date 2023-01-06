@@ -5,6 +5,7 @@ using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Code.Scripts.TutorialManagement
@@ -19,7 +20,8 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _skipButtonTextObject;
         [SerializeField] private GameObject _imageObject;
         
-        [SerializeField] private Image _image;
+        [SerializeField] private Image _imageTutorial;
+        [SerializeField] private AudioSource _audioTutorial;
         
         [Space]
         [SerializeField] private TMP_Text _tutorialText;
@@ -97,8 +99,10 @@ namespace Code.Scripts.TutorialManagement
                 _dialogueContainer.SetActive(false);
                 _realityMovement.SetSlowMode(false);
                 _displayDialogueCoroutineIsRunning = false;
-                _image.color = new Color(_image.color.r, _image.color.g, _image.color.b, 0f);
-                _image.sprite = null;
+                _imageTutorial.color = new Color(_imageTutorial.color.r, _imageTutorial.color.g, _imageTutorial.color.b, 0f);
+                _imageTutorial.sprite = null;
+                _audioTutorial.Stop();
+                _audioTutorial.clip = null;
             }
         }
         
@@ -121,8 +125,14 @@ namespace Code.Scripts.TutorialManagement
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             if (dialogueObject.GetImage() != null)
             {
-                _image.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
+                _imageTutorial.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
                 StartCoroutine(FadeInAndOutCoroutine(_imageObject, true, _fadeDuration));
+            }
+
+            if (dialogueObject.GetAudioTutorial() != null)
+            {
+                _audioTutorial.clip = dialogueObject.GetAudioTutorial();
+                _audioTutorial.Play();
             }
 
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
@@ -294,7 +304,7 @@ namespace Code.Scripts.TutorialManagement
 
             if (dialogueObject.GetImage() != null)
             {
-                _image.sprite = null;
+                _imageTutorial.sprite = null;
             }
             _realityMovement.SetSlowMode(false);
             _displayDialogueCoroutineIsRunning = false;

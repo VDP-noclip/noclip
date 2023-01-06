@@ -12,14 +12,16 @@ namespace Code.POLIMIgameCollective.EventManager
         private readonly bool _highlightCrosshair;
         private readonly float _timePerLetter;
         private readonly GameObject _image;
+        private readonly AudioClip _audioTutorial;
 
-        public TutorialDialogObject(string dialog, float timePerLetter, bool slowDown, bool highlightCrosshair, GameObject image)
+        public TutorialDialogObject(string dialog, float timePerLetter, bool slowDown, bool highlightCrosshair, GameObject image, AudioClip audioTutorial)
         {
             _dialog = dialog;
             _slowDown = slowDown;
             _highlightCrosshair = highlightCrosshair;
             _timePerLetter = timePerLetter;
             _image = image;
+            _audioTutorial = audioTutorial;
         }
 
         public string GetDialog()
@@ -50,6 +52,11 @@ namespace Code.POLIMIgameCollective.EventManager
         public GameObject GetImage()
         {
             return _image;
+        }
+
+        public AudioClip GetAudioTutorial()
+        {
+            return _audioTutorial;
         }
     }
 }
