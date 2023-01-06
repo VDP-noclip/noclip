@@ -7,12 +7,12 @@ using UnityEngine;
 public class FovManagement : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
-    [SerializeField] private float fovDefaultValue = 90f;
+    [SerializeField] private float _fovDefaultValue = 90f;
 
     #region UnityMethods
     private void Update()
     {
-        _camera.fieldOfView = PlayerPrefs.GetFloat("cameraFov", fovDefaultValue);
+        _camera.fieldOfView = PlayerPrefs.GetFloat("cameraFov", _fovDefaultValue);
     }
 
     #endregion
