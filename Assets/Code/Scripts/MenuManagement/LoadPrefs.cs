@@ -18,12 +18,21 @@ public class LoadPrefs : MonoBehaviour
 {
     [SerializeField] private bool canUse = true;
     [SerializeField] private DefaultPlayerPrefs _defaultPlayerPrefs;
+    
+    private int _requiredPlayerPrefsVersion = 1;
 
     private void Awake()
     {
-        // PlayerPrefs.DeleteAll();
-        
         if (!canUse) return;
+        
+        // Reset player-prefs if "playerPrefsVersion" is lower than the one that we want
+        int storedPlayerPrefsVersion = PlayerPrefs.GetInt("playerPrefsVersion", _requiredPlayerPrefsVersion - 1);
+        if (storedPlayerPrefsVersion < _requiredPlayerPrefsVersion)
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.SetInt("playerPrefsVersion", _requiredPlayerPrefsVersion);
+        }
+            
         
         if (! PlayerPrefs.HasKey("soundtrackVolume"))
             PlayerPrefs.SetFloat("soundtrackVolume", _defaultPlayerPrefs.soundTracksVolumeDecibel);
