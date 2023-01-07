@@ -16,15 +16,12 @@ using UnityEngine.Audio;
 /// </summary>
 public class LoadPrefs : MonoBehaviour
 {
-    [SerializeField] private bool canUse = true;
     [SerializeField] private DefaultPlayerPrefs _defaultPlayerPrefs;
     
     private int _requiredPlayerPrefsVersion = 1;
 
     private void Awake()
     {
-        if (!canUse) return;
-        
         // Reset player-prefs if "playerPrefsVersion" is lower than the one that we want
         int storedPlayerPrefsVersion = PlayerPrefs.GetInt("playerPrefsVersion", _requiredPlayerPrefsVersion - 1);
         if (storedPlayerPrefsVersion < _requiredPlayerPrefsVersion)
@@ -48,8 +45,7 @@ public class LoadPrefs : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("masterQuality"))
             PlayerPrefs.SetInt("masterQuality", _defaultPlayerPrefs.masterQuality);
-        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("masterQuality"));
-        
+
         if (!PlayerPrefs.HasKey("masterSensitivity"))
             PlayerPrefs.SetFloat("masterSensitivity", _defaultPlayerPrefs.masterSensitivity);
 

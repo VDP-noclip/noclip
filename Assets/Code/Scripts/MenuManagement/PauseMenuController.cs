@@ -37,6 +37,8 @@ public class PauseMenuController : MonoBehaviour
     [Header("Confirmation")] 
     [SerializeField] private GameObject confirmationPrompt = null;
 
+
+
     private void Start()
     {
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));

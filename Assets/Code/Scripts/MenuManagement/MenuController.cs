@@ -26,10 +26,18 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject noclipLogo;
     [SerializeField] private GameObject logoBlur;
     [SerializeField] private GameObject enterButton;
+    [SerializeField] private TMP_Text _resumeText;
     [SerializeField] private GameObject settingsButton;
+    [SerializeField] private TMP_Text settingsText;
     [SerializeField] private GameObject exitButton;
     [SerializeField] private GameObject feedbackButton;
     [SerializeField] private GameObject controlsButton;
+    [SerializeField] private GameObject pressedExit;
+    [SerializeField] private GameObject pressedOptions;
+    [SerializeField] private GameObject popoutContainer;
+    [SerializeField] private GameObject exitContainer;
+    [SerializeField] private GameObject feedbackContainer;
+    [SerializeField] private GameObject controlsContainer;
 
     [Header("Audio To Play")] 
     [SerializeField] private AudioSource noclipEcho;
@@ -41,14 +49,17 @@ public class MenuController : MonoBehaviour
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
     [SerializeField] private Toggle fullScreenToggle;
-    
-    private int _qualityLevel;
-    private bool _isFullScreen = true;
-    private float _brightnessLevel;
-    
+
+    [Header("Utils")] 
+    [SerializeField] private GameObject animations;
+
     private bool _isStartPressed = false;
     private bool _isSettingsPressed = false;
     private bool _isQuitPressed = false;
+    
+    [Header("Pause Settings")]
+    [SerializeField] private bool _isPauseMenu = false;
+    [SerializeField] private AudioSource _menuPress;
 
     [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
@@ -67,17 +78,25 @@ public class MenuController : MonoBehaviour
 
     private Resolution[] resolutions;
 
+    private bool _fadeIsRunning;
+    private bool _isPaused;
+
     // When the Menu starts the game will iterate through various available resolutions.
     // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
     
     private void Start()
     {
-        StartCoroutine(FadeUI());
-
+        if (!_isPauseMenu)
+        {
+            animations.SetActive(true);
+        }
+        
         SetFOV(PlayerPrefs.GetFloat("cameraFov"));
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
         SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
+        SetFullScreen(PlayerPrefs.GetInt("masterFullscreen") == 1);
+        SetQuality(PlayerPrefs.GetInt("masterQuality"));
         
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
@@ -100,6 +119,80 @@ public class MenuController : MonoBehaviour
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+    }
+    
+    private void Update()
+    {
+        if (Input.GetButtonDown("Pause") && _isPauseMenu && !_fadeIsRunning)
+        {
+            if (!_isPaused)
+            {
+                ActivateMenu();
+            }
+            else
+            {
+                DeactivateMenu();
+            }
+        }
+    }
+
+    public void ActivateMenu()
+    {
+        StartCoroutine(_FadeInUI());
+
+        _isStartPressed = false;
+        _isSettingsPressed = false;
+        _isQuitPressed = false;
+        
+        Time.timeScale = 0;
+        AudioListener.pause = false;
+        EventManager.TriggerEvent("PauseTimeConstraintsTimer");
+
+        _menuPress.ignoreListenerPause=true;
+        _menuPress.Play();
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        _isPaused = true;
+    }
+
+    public void DeactivateMenu()
+    {
+        Time.timeScale = 1;
+        AudioListener.pause = false;
+        EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
+
+        _menuPress.Play();
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        pressedExit.SetActive(false);
+        pressedOptions.SetActive(false);
+        popoutContainer.SetActive(false);
+        exitContainer.SetActive(false);
+        feedbackContainer.SetActive(false);
+        controlsContainer.SetActive(false);
+        
+        StartCoroutine(FadeOutUI());
+        
+        ChangeColor(settingsText);
+        ChangeColor(_resumeText);
+        
+        _isPaused = false;
+    }
+    
+    
+    
+    public void ReturnToMenu()
+    {
+        Time.timeScale = 1;
+        AudioListener.pause = false;
+
+        _isPaused = false;
+        
+        SceneManager.LoadScene("Menu_0");
     }
     
     // Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
@@ -145,15 +238,7 @@ public class MenuController : MonoBehaviour
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
-    public void SetFullScreen(bool isFullscreen)
-    {
-        _isFullScreen = isFullscreen;
-    }
-    public void SetQuality(int qualityIndex)
-    {
-        _qualityLevel = qualityIndex;
-    }
-    
+
     // Sets volume in Mixer
     public void SetSoundVolume(float volume)
     {
@@ -188,6 +273,7 @@ public class MenuController : MonoBehaviour
     public void SetControllerSensitivity(float sensitivity)
     {
         PlayerPrefs.SetFloat("masterSensitivity", Mathf.RoundToInt(sensitivity));
+        EventManager.TriggerEvent("setSensitivity", sensitivity.ToString());
 
         controllerSensitivitySlider.value = sensitivity;
         
@@ -208,13 +294,23 @@ public class MenuController : MonoBehaviour
     // Applies changes. These actually save the information.
     public void GraphicsApply()
     {
-        PlayerPrefs.SetInt("masterQuality", _qualityLevel);
-        QualitySettings.SetQualityLevel(_qualityLevel);
-        
-        PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
-        Screen.fullScreen = _isFullScreen;
-
+        SetQuality(qualityDropdown.value);
+        SetFullScreen(fullScreenToggle.isOn);
         StartCoroutine(ConfirmationBox());
+    }
+    
+    public void SetFullScreen(bool isFullscreen)
+    {
+        PlayerPrefs.SetInt("masterFullscreen", isFullscreen ? 1 : 0);
+        Screen.fullScreen = isFullscreen;
+        fullScreenToggle.isOn = isFullscreen;
+    }
+    
+    public void SetQuality(int qualityIndex)
+    {
+        PlayerPrefs.SetInt("masterQuality", qualityIndex);
+        QualitySettings.SetQualityLevel(qualityIndex);
+        qualityDropdown.value = qualityIndex;
     }
 
     // When prompted, the player can reset various settings' values.
@@ -316,32 +412,75 @@ public class MenuController : MonoBehaviour
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
-        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(WaitForRealSeconds(2f));
         confirmationPrompt.SetActive(false);
     }
-
-    private IEnumerator FadeUI()
-    {
-        StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
-        StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.5f));
-        StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
-        StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.2f);
-        StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.2f);
-        StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.5f);
-        StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.5f);
-        StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
-        StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.5f));
-        noclipEcho.Play();
-        yield return new WaitForSecondsRealtime(0.5f);
-        StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.5f));
-    }
+    
+        private IEnumerator _FadeInUI()
+        {
+            _fadeIsRunning = true;
+            StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.1f));
+            StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            
+            ChangeColor(settingsText);
+            ChangeColor(_resumeText);
+            
+            StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.1f));
+            StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
+            noclipEcho.Play();
+            yield return StartCoroutine(WaitForRealSeconds(0.15f));
+            StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.1f));
+            _fadeIsRunning = false;
+        }
+        
+        private IEnumerator FadeOutUI()
+        {
+            _fadeIsRunning = true;
+            ChangeColor(settingsText);
+            ChangeColor(_resumeText);
+            
+            StartCoroutine(FadeInAndOutCoroutine(exitButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(settingsButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(enterButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(controlsButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(feedbackButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(noclipLogo, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(logoBlur, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(mainGradient, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(bottomGradient, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(mainCanvas, false, 0.05f));
+            _fadeIsRunning = false;
+        }
+        
+        public static IEnumerator WaitForRealSeconds(float time)
+        {
+            float start = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup < start + time)
+            {
+                yield return null;
+            }
+        }
     private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
         {
                 
@@ -417,7 +556,7 @@ public class MenuController : MonoBehaviour
 
                 while (counter < duration)
                 {
-                    counter += Time.deltaTime;
+                    counter += Time.unscaledDeltaTime;
                     float alpha = Mathf.Lerp(a, b, counter / duration);
 
                     switch (mode)

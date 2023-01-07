@@ -13,6 +13,7 @@ public class LoadingScreenController : MonoBehaviour
     [SerializeField] private GameObject _pressButtonsText;
     [SerializeField] private Image _loadingCircle;
     [SerializeField] private float _fadeInDuration = 3f;
+    [SerializeField] private AudioSource _audioSource;
     float _firstTime = 0;
     private float _loadingTime;
 
@@ -22,12 +23,20 @@ public class LoadingScreenController : MonoBehaviour
 
     private void Start()
     {
+
+        
+        
         _loadingCircle.fillAmount = 0;
 
         _loadingText.text = _loadingSceneOption._dialogs[_loadingSceneOption.GetSceneNumber()];
         _loadingTime = _loadingSceneOption._timeDialogs[_loadingSceneOption.GetSceneNumber()];
+        _audioSource.clip = _loadingSceneOption._audioclipDialogues[_loadingSceneOption.GetSceneNumber()];
         
         StartCoroutine(FadeInAndOutTextCoroutine(_loadingText, true, _fadeInDuration));
+        
+        _audioSource.Play();
+        
+        
 
         
     }
@@ -50,9 +59,11 @@ public class LoadingScreenController : MonoBehaviour
 
         if (_isLoaded)
         {
-            if (Input.anyKey)
+            if (Input.anyKey && !Input.GetButton("NextPuzzle"))  // These two key are excluded because of possible bugs in the area after the loading screen
             {
                 _loadingSceneOption.ChangeSceneNumber();
+                _audioSource.Stop();
+                _audioSource.clip = null;
                 GameObject.Find("GameManager").GetComponent<GameManager>().SetAreaFinished();
             }
         }

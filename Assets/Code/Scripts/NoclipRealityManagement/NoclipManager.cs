@@ -55,14 +55,14 @@ public class NoclipManager : MonoBehaviour
         _noclipZoneAudioSource.volume = _audioTracks.noClipSoundVolumeMultiplier;
         _noclipMovement = _noclipCamera.GetComponent<NoclipMovement>();
         _noclipState = NoclipState.RealityCannotEnableNoclip;
+
+        GameObject environment = GameObject.Find("Environment");
+        _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
+        _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
     }
 
     private void Start()
     {
-        GameObject environment = GameObject.Find("Environment");
-        _postprocessReality = environment.transform.Find("PostProcessingReality").gameObject;
-        _postprocessNoclip = environment.transform.Find("PostProcessingNoclip").gameObject;
-
         AnimatedMaterialsSetup();
     }
 
