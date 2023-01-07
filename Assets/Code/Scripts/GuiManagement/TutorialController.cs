@@ -17,11 +17,14 @@ namespace Code.Scripts.TutorialManagement
         [SerializeField] private GameObject _dialogueTextObject;
         [SerializeField] private GameObject _tutorialTextObject;
         [SerializeField] private GameObject _skipButtonTextObject;
+        [SerializeField] private GameObject _imageObject;
+        
+        [SerializeField] private Image _imageTutorial;
+        [SerializeField] private AudioSource _audioTutorial;
         
         [Space]
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
-        [SerializeField] private KeyCode _skipDialogueKey; // TODO put a name and use it in the InputManager
         
         [Space]
         [Header("Timers")]
@@ -57,7 +60,7 @@ namespace Code.Scripts.TutorialManagement
 
         private void Update()
         {
-            if (_displayDialogueCoroutineIsRunning && Input.GetKeyDown(_skipDialogueKey))
+            if (_displayDialogueCoroutineIsRunning && Input.GetButtonDown("SkipDialogue"))
             {
                 StopCurrentDialogue();
             }
@@ -95,6 +98,10 @@ namespace Code.Scripts.TutorialManagement
                 _dialogueContainer.SetActive(false);
                 _realityMovement.SetSlowMode(false);
                 _displayDialogueCoroutineIsRunning = false;
+                _imageTutorial.color = new Color(_imageTutorial.color.r, _imageTutorial.color.g, _imageTutorial.color.b, 0f);
+                _imageTutorial.sprite = null;
+                _audioTutorial.Stop();
+                _audioTutorial.clip = null;
             }
         }
         
@@ -115,6 +122,18 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
+            if (dialogueObject.GetImage() != null)
+            {
+                _imageTutorial.sprite = dialogueObject.GetImage().GetComponent<Image>().sprite;
+                StartCoroutine(FadeInAndOutCoroutine(_imageObject, true, _fadeDuration));
+            }
+
+            if (dialogueObject.GetAudioTutorial() != null)
+            {
+                _audioTutorial.clip = dialogueObject.GetAudioTutorial();
+                _audioTutorial.Play();
+            }
+
             EventManager.StartListening("DisplayDialogue", DisplayDialogue);
         }
 
@@ -275,7 +294,17 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
+            if (dialogueObject.GetImage() != null)
+            {
+                StartCoroutine(FadeInAndOutCoroutine(_imageObject, false, _fadeDuration));
+                
+            }
             yield return new WaitForSecondsRealtime(_fadeDuration);
+
+            if (dialogueObject.GetImage() != null)
+            {
+                _imageTutorial.sprite = null;
+            }
             _realityMovement.SetSlowMode(false);
             _displayDialogueCoroutineIsRunning = false;
         }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using POLIMIGameCollective;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -25,37 +26,47 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject noclipLogo;
     [SerializeField] private GameObject logoBlur;
     [SerializeField] private GameObject enterButton;
+    [SerializeField] private TMP_Text _resumeText;
     [SerializeField] private GameObject settingsButton;
+    [SerializeField] private TMP_Text settingsText;
     [SerializeField] private GameObject exitButton;
     [SerializeField] private GameObject feedbackButton;
     [SerializeField] private GameObject controlsButton;
+    [SerializeField] private GameObject pressedExit;
+    [SerializeField] private GameObject pressedOptions;
+    [SerializeField] private GameObject popoutContainer;
+    [SerializeField] private GameObject exitContainer;
+    [SerializeField] private GameObject feedbackContainer;
+    [SerializeField] private GameObject controlsContainer;
 
     [Header("Audio To Play")] 
     [SerializeField] private AudioSource noclipEcho;
 
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
-    [SerializeField] private int defaultSensitivity = 4;
     [SerializeField] private Slider controllerFovSlider = null;
-    [SerializeField] private float defaultFovValue = 90;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
     [SerializeField] private Toggle fullScreenToggle;
-    
+
+    [Header("Utils")] [SerializeField] private GameObject animations;
     private int _qualityLevel;
     private bool _isFullScreen = true;
-    private float _brightnessLevel;
-    
+
     private bool _isStartPressed = false;
     private bool _isSettingsPressed = false;
     private bool _isQuitPressed = false;
+    
+    [Header("Pause Settings")]
+    [SerializeField] private bool _canPause = false;
+    [SerializeField] private bool _isPaused;
+    [SerializeField] private AudioSource _menuPress;
 
     [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
     [SerializeField] private Slider soundVolumeSlider = null;
     [SerializeField] private Slider effectsVolumeSlider = null;
-    [SerializeField] private float defaultVolume = 1.0f;
     [SerializeField] private AudioMixer audioMixer;
 
     [Header("Confirmation")] 
@@ -74,9 +85,11 @@ public class MenuController : MonoBehaviour
     
     private void Start()
     {
-        StartCoroutine(FadeUI());
-
-        // TODO: check if there are playerprefs, and if there aren't set default volume
+        if (!_canPause)
+        {
+            animations.SetActive(true);
+        }
+        
         SetFOV(PlayerPrefs.GetFloat("cameraFov"));
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
@@ -103,6 +116,80 @@ public class MenuController : MonoBehaviour
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+    }
+    
+    private void Update()
+    {
+        if (Input.GetButtonDown("Pause"))
+        {
+            if (!_isPaused && _canPause)
+            {
+                ActivateMenu();
+            }
+            else if (_isPaused && _canPause)
+            {
+                DeactivateMenu();
+            }
+        }
+    }
+
+    public void ActivateMenu()
+    {
+        StartCoroutine(FadeUI());
+
+        _isStartPressed = false;
+        _isSettingsPressed = false;
+        _isQuitPressed = false;
+        
+        Time.timeScale = 0;
+        AudioListener.pause = false;
+        EventManager.TriggerEvent("PauseTimeConstraintsTimer");
+
+        _menuPress.ignoreListenerPause=true;
+        _menuPress.Play();
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        _isPaused = true;
+    }
+
+    public void DeactivateMenu()
+    {
+        Time.timeScale = 1;
+        AudioListener.pause = false;
+        EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
+
+        _menuPress.Play();
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        pressedExit.SetActive(false);
+        pressedOptions.SetActive(false);
+        popoutContainer.SetActive(false);
+        exitContainer.SetActive(false);
+        feedbackContainer.SetActive(false);
+        controlsContainer.SetActive(false);
+        
+        StartCoroutine(FadeOutUI());
+        
+        ChangeColor(settingsText);
+        ChangeColor(_resumeText);
+        
+        _isPaused = false;
+    }
+    
+    
+    
+    public void ReturnToMenu()
+    {
+        Time.timeScale = 1;
+        AudioListener.pause = false;
+
+        _isPaused = false;
+        
+        SceneManager.LoadScene("Menu_0");
     }
     
     // Starts a new game. _newGameLevel will be the first level passed to the SceneManager.
@@ -174,6 +261,7 @@ public class MenuController : MonoBehaviour
         PlayerPrefs.SetFloat("globalVolume", volume);
 
         globalVolumeSlider.value = volume;
+        Debug.Log("YOOOOOOOOOOOOO");
 
         StartCoroutine(ConfirmationBox());
     }
@@ -199,6 +287,7 @@ public class MenuController : MonoBehaviour
     public void SetFOV(float fov)
     {
         PlayerPrefs.SetFloat("cameraFov", fov);
+        EventManager.TriggerEvent("UpdateFovFromPlayerPrefs");
 
         controllerFovSlider.value = fov;
         
@@ -317,32 +406,72 @@ public class MenuController : MonoBehaviour
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
-        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(WaitForRealSeconds(2f));
         confirmationPrompt.SetActive(false);
     }
-
-    private IEnumerator FadeUI()
-    {
-        StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
-        StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.5f));
-        StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
-        StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.2f);
-        StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.2f);
-        StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.5f);
-        StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(0.5f);
-        StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
-        StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.5f));
-        noclipEcho.Play();
-        yield return new WaitForSecondsRealtime(0.5f);
-        StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.5f));
-    }
+    
+        private IEnumerator FadeUI()
+            {
+                StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.07f));
+                StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.1f));
+                StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.07f));
+                StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.07f));
+                StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.07f));
+                StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.07f));
+                
+                ChangeColor(settingsText);
+                ChangeColor(_resumeText);
+                
+                StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.07f));
+                StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
+                yield return StartCoroutine(WaitForRealSeconds(0.1f));
+                StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
+                noclipEcho.Play();
+                yield return StartCoroutine(WaitForRealSeconds(0.15f));
+                StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.1f));
+            }
+        
+        private IEnumerator FadeOutUI()
+        {
+            ChangeColor(settingsText);
+            ChangeColor(_resumeText);
+            
+            StartCoroutine(FadeInAndOutCoroutine(exitButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(settingsButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(enterButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(controlsButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(feedbackButton, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(noclipLogo, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(logoBlur, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(mainGradient, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(bottomGradient, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(mainCanvas, false, 0.05f));
+            
+        }
+        
+        public static IEnumerator WaitForRealSeconds(float time)
+        {
+            float start = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup < start + time)
+            {
+                yield return null;
+            }
+        }
     private IEnumerator FadeInAndOutCoroutine(GameObject objectToFade, bool fadeIn, float duration)
         {
                 
@@ -418,7 +547,7 @@ public class MenuController : MonoBehaviour
 
                 while (counter < duration)
                 {
-                    counter += Time.deltaTime;
+                    counter += Time.unscaledDeltaTime;
                     float alpha = Mathf.Lerp(a, b, counter / duration);
 
                     switch (mode)
