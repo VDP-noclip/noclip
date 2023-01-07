@@ -60,7 +60,8 @@ public class MenuController : MonoBehaviour
     
     [Header("Pause Settings")]
     [SerializeField] private bool _isPauseMenu = false;
-    [SerializeField] private AudioSource _menuPress;
+    [SerializeField] private AudioSource _pause;
+    [SerializeField] private AudioSource _resume;
 
     [Header("Volume Settings")]
     [SerializeField] private Slider globalVolumeSlider = null;
@@ -147,8 +148,9 @@ public class MenuController : MonoBehaviour
         AudioListener.pause = false;
         EventManager.TriggerEvent("PauseTimeConstraintsTimer");
 
-        _menuPress.ignoreListenerPause=true;
-        _menuPress.Play();
+        _pause.ignoreListenerPause=true;
+        _resume.ignoreListenerPause=true;
+        _pause.Play();
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -162,8 +164,8 @@ public class MenuController : MonoBehaviour
         AudioListener.pause = false;
         EventManager.TriggerEvent("ResumeTimeConstraintsTimer");
 
-        _menuPress.Play();
-        
+        _resume.Play();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 

@@ -21,7 +21,7 @@ namespace Code.Scripts.TutorialManagement
         
         [SerializeField] private Image _imageTutorial;
         [SerializeField] private AudioSource _audioTutorial;
-        
+
         [Space]
         [SerializeField] private TMP_Text _tutorialText;
         [SerializeField] private TMP_Text _dialogueText;
