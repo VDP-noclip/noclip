@@ -44,7 +44,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6277054878093885935}
   m_Enabled: 0
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -63,12 +63,12 @@ MeshRenderer:
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
+  m_ScaleInLightmap: 0
   m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 2
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -94,6 +94,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SaveLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 499231064565726796, guid: 54885a9005157ff448ece26df48cd35d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3251581719327238238, guid: 54885a9005157ff448ece26df48cd35d,
         type: 3}
@@ -215,6 +220,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnchorNoclipEnabler
       objectReference: {fileID: 0}
+    - target: {fileID: 805916349263283584, guid: dbd885a97a8c83a41a85b9abd8dbe127,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
       propertyPath: m_RootOrder
@@ -223,7 +233,7 @@ PrefabInstance:
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 21.5
+      value: 7.25625
       objectReference: {fileID: 0}
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
@@ -233,12 +243,12 @@ PrefabInstance:
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 21.5
+      value: 7.3066406
       objectReference: {fileID: 0}
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.63
+      value: 3.42
       objectReference: {fileID: 0}
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
@@ -248,7 +258,7 @@ PrefabInstance:
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.39
+      value: 3.49
       objectReference: {fileID: 0}
     - target: {fileID: 926688594261567918, guid: dbd885a97a8c83a41a85b9abd8dbe127,
         type: 3}
@@ -426,6 +436,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7942664057905681759, guid: a8fd5df4f4f300c41bd57377c534ae27,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7989622321809429788, guid: a8fd5df4f4f300c41bd57377c534ae27,
         type: 3}
       propertyPath: m_Name
@@ -525,6 +540,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AnchorCheckpoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8265376064099971386, guid: 898fbddd83730654e8b50e663dd127c2,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 898fbddd83730654e8b50e663dd127c2, type: 3}
