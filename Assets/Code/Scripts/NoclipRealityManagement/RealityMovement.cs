@@ -439,7 +439,6 @@ public class RealityMovement : MonoBehaviour
             //_maxAirSpeed = _airSpeedSlider.GetComponent<Slider>().value;
             _maxSlopeAngle = _slopeSlider.GetComponent<Slider>().value;
             _runForceMultiplier = _accSlider.GetComponent<Slider>().value;
-            _mouseLook.setSensitivity(_sensitivitySlider.GetComponent<Slider>().value);
 
             //set speed monitor value to current speed
             _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
