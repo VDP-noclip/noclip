@@ -14,6 +14,7 @@ namespace Code.Scripts.TutorialManagement
         [Header("Gameobjects")]
         [SerializeField] private GameObject _controlsContainer;
         [SerializeField] private GameObject _dialogueContainer;
+        [SerializeField] private GameObject _dialogueBackGroundGradient;
         [SerializeField] private GameObject _dialogueTextObject;
         [SerializeField] private GameObject _tutorialTextObject;
         //[SerializeField] private GameObject _skipButtonTextObject;
@@ -120,6 +121,7 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentDialogue();
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueBackGroundGradient, true, _fadeDuration));
             //StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             if (dialogueObject.GetImage() != null)
@@ -293,6 +295,7 @@ namespace Code.Scripts.TutorialManagement
             // These coroutines are synchronized!!!!
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueBackGroundGradient, false, _fadeDuration));
             //StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
             if (dialogueObject.GetImage() != null)
             {
