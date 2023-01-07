@@ -5,16 +5,30 @@ using UnityEngine;
 public class SpawnPlayer : MonoBehaviour
 {
     private bool _puzzleReached = false;
+    Rigidbody _realityBody;
+    GameObject _player;
     // Start is called before the first frame update
     void Start()
     {
-
+        _player = GameObject.Find("AllPlayer").gameObject;
+        //find RealityBody in player
+        GameObject realityPlayer = _player.transform.Find("RealityPlayer").gameObject;
+        //set realitybody speed to 0
+        _realityBody = realityPlayer.GetComponent<Rigidbody>();
+        _realityBody.velocity = Vector3.zero;
+        //move the player to the spawn point plus 1 meter
+        _player.transform.position = transform.position + new Vector3(0, 10, 0);
+        //rotate the player to the spawn point
+        _player.transform.rotation = transform.rotation;
+        //update mouselook
+        _player.GetComponentInChildren<MouseLook>().SyncYRotation();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!_puzzleReached){
+            _realityBody.velocity = Vector3.zero;
             //find gameobject Puzzles
             GameObject puzzles = GameObject.Find("Puzzles");
             //print objects colliding with this object
@@ -29,15 +43,8 @@ public class SpawnPlayer : MonoBehaviour
             }
             try{
                 if(_puzzleReached){
-                    GameObject player = GameObject.Find("AllPlayer").gameObject;
-                    //move the player to the spawn point plus 1 meter
-                    player.transform.position = transform.position + new Vector3(0, 20, 0);
-                    //rotate the player to the spawn point
-                    player.transform.rotation = transform.rotation;
-                    //update mouselook
-                    player.GetComponentInChildren<MouseLook>().SyncYRotation();
                     //get respawningmanager in player and call update checkpoints
-                    player.GetComponent<RespawningManager>().UpdateCheckpointValues();
+                    _player.GetComponent<RespawningManager>().UpdateCheckpointValues();
                     gameObject.SetActive(false);
                 }
                 else{

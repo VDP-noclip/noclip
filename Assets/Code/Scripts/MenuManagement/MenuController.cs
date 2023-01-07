@@ -50,9 +50,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] private TMP_Dropdown qualityDropdown;
     [SerializeField] private Toggle fullScreenToggle;
 
-    [Header("Utils")] [SerializeField] private GameObject animations;
-    private int _qualityLevel;
-    private bool _isFullScreen = true;
+    [Header("Utils")] 
+    [SerializeField] private GameObject animations;
 
     private bool _isStartPressed = false;
     private bool _isSettingsPressed = false;
@@ -96,6 +95,8 @@ public class MenuController : MonoBehaviour
         SetEffectsVolume(PlayerPrefs.GetFloat("effectsVolume"));
         SetGlobalVolume(PlayerPrefs.GetFloat("globalVolume"));
         SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
+        SetFullScreen(PlayerPrefs.GetInt("masterFullscreen") == 1);
+        SetQuality(PlayerPrefs.GetInt("masterQuality"));
         
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
@@ -237,15 +238,7 @@ public class MenuController : MonoBehaviour
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
-    public void SetFullScreen(bool isFullscreen)
-    {
-        _isFullScreen = isFullscreen;
-    }
-    public void SetQuality(int qualityIndex)
-    {
-        _qualityLevel = qualityIndex;
-    }
-    
+
     // Sets volume in Mixer
     public void SetSoundVolume(float volume)
     {
@@ -301,13 +294,23 @@ public class MenuController : MonoBehaviour
     // Applies changes. These actually save the information.
     public void GraphicsApply()
     {
-        PlayerPrefs.SetInt("masterQuality", _qualityLevel);
-        QualitySettings.SetQualityLevel(_qualityLevel);
-        
-        PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
-        Screen.fullScreen = _isFullScreen;
-
+        SetQuality(qualityDropdown.value);
+        SetFullScreen(fullScreenToggle.isOn);
         StartCoroutine(ConfirmationBox());
+    }
+    
+    public void SetFullScreen(bool isFullscreen)
+    {
+        PlayerPrefs.SetInt("masterFullscreen", isFullscreen ? 1 : 0);
+        Screen.fullScreen = isFullscreen;
+        fullScreenToggle.isOn = isFullscreen;
+    }
+    
+    public void SetQuality(int qualityIndex)
+    {
+        PlayerPrefs.SetInt("masterQuality", qualityIndex);
+        QualitySettings.SetQualityLevel(qualityIndex);
+        qualityDropdown.value = qualityIndex;
     }
 
     // When prompted, the player can reset various settings' values.

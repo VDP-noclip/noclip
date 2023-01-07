@@ -17,6 +17,11 @@ public class LoadingSceneOption : ScriptableObject
     [SerializeField] public float[] _timeDialogs;
 
     /// <summary>
+    /// List of audio tracks. Each of it is related to the dialog in the _dialogs list
+    /// </summary>
+    [SerializeField] public AudioClip[] _audioclipDialogues;
+
+    /// <summary>
     /// This parameter is used to save the dialog index that will be loaded
     /// </summary>
     private int _currentScene = 0;
