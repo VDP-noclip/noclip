@@ -13,6 +13,8 @@ public class NoclipSwitchAnimation : MonoBehaviour
     private float _holdingSince = 0f;
     [SerializeField] private float _fadeTime = 1.0f;
     [SerializeField] private float _holdTime = 0.3f;
+    //serialize max alpha
+    [SerializeField] private float _maxAlpha = 0.5f;
     
     private RespawningManager _respawningManager;
     private UnityEngine.UI.Image _image;
@@ -34,9 +36,9 @@ public class NoclipSwitchAnimation : MonoBehaviour
         {
             Color color = _image.color;
             color.a += _fadeIn * Time.deltaTime / _fadeTime;
-            if (color.a >= 1.0f)
+            if (color.a >= _maxAlpha)
             {
-                color.a = 1.0f;
+                color.a = _maxAlpha;
                 _fading = true;
                 _fadeIn = -1;
                 Hold();
