@@ -148,6 +148,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator EnableNoclip()
     {
+        EventManager.TriggerEvent("StartNoclipAnimation");
+
         SetAnimationSpeed("slow");
 
         EventManager.TriggerEvent("ClearHints");
@@ -175,6 +177,8 @@ public class NoclipManager : MonoBehaviour
     /// </summary>
     private IEnumerator DisableNoclip()
     {
+        EventManager.TriggerEvent("StartNoclipAnimation");
+        
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         
