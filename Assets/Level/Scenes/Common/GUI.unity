@@ -158,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0.00054445857}
   m_AnchorMax: {x: 0.9974272, y: 1}
-  m_AnchoredPosition: {x: -154.95125, y: -346}
-  m_SizeDelta: {x: 7.5585, y: -317.574}
+  m_AnchoredPosition: {x: -186.74023, y: -346}
+  m_SizeDelta: {x: 7.5585, y: -253.9968}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4753209
 CanvasRenderer:
@@ -205,7 +205,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -1.4421, y: -0.022903442}
-  m_SizeDelta: {x: 342.2139, y: 322.7446}
+  m_SizeDelta: {x: 342.2139, y: 386.3218}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &109594222
 MonoBehaviour:
@@ -630,7 +630,6 @@ MonoBehaviour:
   _dialogueContainer: {fileID: 928630269}
   _dialogueTextObject: {fileID: 1957341070}
   _tutorialTextObject: {fileID: 109594220}
-  _skipButtonTextObject: {fileID: 0}
   _imageObject: {fileID: 1506645597}
   _imageTutorial: {fileID: 1506645599}
   _audioTutorial: {fileID: 462882186}
@@ -848,8 +847,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 340.3763, y: -925.46497}
-  m_SizeDelta: {x: -1578.65, y: 643.0367}
+  m_AnchoredPosition: {x: 340.37634, y: -893.6763}
+  m_SizeDelta: {x: -1515.0728, y: 643.0367}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &674829783
 CanvasRenderer:
@@ -1092,7 +1091,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 928630269}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 20.856592, y: 22.357456, z: 22.0412}
   m_ConstrainProportionsScale: 0
@@ -1101,11 +1100,11 @@ RectTransform:
   - {fileID: 1506645598}
   m_Father: {fileID: 951079781}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -3.9971924, y: 162.9058}
-  m_SizeDelta: {x: -1903.1249, y: 88.7457}
+  m_AnchoredPosition: {x: 29, y: 194.67}
+  m_SizeDelta: {x: -1823.0737, y: 18.409}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &928630272
 CanvasRenderer:
@@ -1182,7 +1181,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: -11.671875}
-  m_SizeDelta: {x: 0, y: 336.8784}
+  m_SizeDelta: {x: 0, y: 400.4556}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &951079782
 MonoBehaviour:
@@ -1247,14 +1246,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506645597}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.04794647, y: 0.044727806, z: 0.04536958}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 928630270}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.9, y: -8.85}
@@ -1323,18 +1322,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1957341070}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.047792673, y: 0.045369577, z: 0.04536958}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 928630270}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.6500244, y: 18.34}
-  m_SizeDelta: {x: 379.28693, y: 343.7661}
+  m_AnchoredPosition: {x: -30.43, y: 9.7478}
+  m_SizeDelta: {x: 344.15, y: 381.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1957341072
 MonoBehaviour:
