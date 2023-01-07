@@ -45,8 +45,7 @@ public class LoadPrefs : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("masterQuality"))
             PlayerPrefs.SetInt("masterQuality", _defaultPlayerPrefs.masterQuality);
-        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("masterQuality"));
-        
+
         if (!PlayerPrefs.HasKey("masterSensitivity"))
             PlayerPrefs.SetFloat("masterSensitivity", _defaultPlayerPrefs.masterSensitivity);
 
