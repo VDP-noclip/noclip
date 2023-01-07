@@ -13,8 +13,10 @@ namespace Code.Scripts.TutorialManagement
     {
         [Header("Gameobjects")]
         [SerializeField] private GameObject _controlsContainer;
+        [SerializeField] private GameObject _controlsGradient;
         [SerializeField] private GameObject _dialogueContainer;
         [SerializeField] private GameObject _dialogueBackGroundGradient;
+        [SerializeField] private GameObject _dialogueBottomGradient;
         [SerializeField] private GameObject _dialogueTextObject;
         [SerializeField] private GameObject _tutorialTextObject;
         //[SerializeField] private GameObject _skipButtonTextObject;
@@ -78,6 +80,7 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsGradient, false, _fadeDuration));
             EventManager.StartListening("ClearHints", ClearHints);
         }
 
@@ -87,6 +90,7 @@ namespace Code.Scripts.TutorialManagement
             StopCurrentHintCoroutine();
             StartCoroutine(FadeInAndOutCoroutine(_controlsContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_tutorialTextObject, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_controlsGradient, true, _fadeDuration));
             _displayHintCoroutine = StartCoroutine(DisplayHintCoroutine(hint));
             EventManager.StartListening("DisplayHint", DisplayHint);
         }
@@ -122,6 +126,7 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, true, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueBackGroundGradient, true, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueBottomGradient, true, _fadeDuration));
             //StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, true, _fadeDuration));
             _displayDialogueCoroutine = StartCoroutine(DisplayDialogueCoroutine(dialogueObject));
             if (dialogueObject.GetImage() != null)
@@ -296,6 +301,7 @@ namespace Code.Scripts.TutorialManagement
             StartCoroutine(FadeInAndOutCoroutine(_dialogueContainer, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueTextObject, false, _fadeDuration));
             StartCoroutine(FadeInAndOutCoroutine(_dialogueBackGroundGradient, false, _fadeDuration));
+            StartCoroutine(FadeInAndOutCoroutine(_dialogueBottomGradient, false, _fadeDuration));
             //StartCoroutine(FadeInAndOutCoroutine(_skipButtonTextObject, false, _fadeDuration));
             if (dialogueObject.GetImage() != null)
             {
