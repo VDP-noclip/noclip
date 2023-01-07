@@ -59,8 +59,7 @@ public class MenuController : MonoBehaviour
     private bool _isQuitPressed = false;
     
     [Header("Pause Settings")]
-    [SerializeField] private bool _canPause = false;
-    [SerializeField] private bool _isPaused;
+    [SerializeField] private bool _isPauseMenu = false;
     [SerializeField] private AudioSource _menuPress;
 
     [Header("Volume Settings")]
@@ -80,12 +79,15 @@ public class MenuController : MonoBehaviour
 
     private Resolution[] resolutions;
 
+    private bool _fadeIsRunning;
+    private bool _isPaused;
+
     // When the Menu starts the game will iterate through various available resolutions.
     // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
     
     private void Start()
     {
-        if (!_canPause)
+        if (!_isPauseMenu)
         {
             animations.SetActive(true);
         }
@@ -120,13 +122,13 @@ public class MenuController : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetButtonDown("Pause"))
+        if (Input.GetButtonDown("Pause") && _isPauseMenu && !_fadeIsRunning)
         {
-            if (!_isPaused && _canPause)
+            if (!_isPaused)
             {
                 ActivateMenu();
             }
-            else if (_isPaused && _canPause)
+            else
             {
                 DeactivateMenu();
             }
@@ -135,7 +137,7 @@ public class MenuController : MonoBehaviour
 
     public void ActivateMenu()
     {
-        StartCoroutine(FadeUI());
+        StartCoroutine(_FadeInUI());
 
         _isStartPressed = false;
         _isSettingsPressed = false;
@@ -278,6 +280,7 @@ public class MenuController : MonoBehaviour
     public void SetControllerSensitivity(float sensitivity)
     {
         PlayerPrefs.SetFloat("masterSensitivity", Mathf.RoundToInt(sensitivity));
+        EventManager.TriggerEvent("setSensitivity", sensitivity.ToString());
 
         controllerSensitivitySlider.value = sensitivity;
         
@@ -410,35 +413,38 @@ public class MenuController : MonoBehaviour
         confirmationPrompt.SetActive(false);
     }
     
-        private IEnumerator FadeUI()
-            {
-                StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.07f));
-                StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.1f));
-                StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.07f));
-                StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.07f));
-                StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.07f));
-                StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.07f));
-                
-                ChangeColor(settingsText);
-                ChangeColor(_resumeText);
-                
-                StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.07f));
-                StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
-                yield return StartCoroutine(WaitForRealSeconds(0.1f));
-                StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
-                noclipEcho.Play();
-                yield return StartCoroutine(WaitForRealSeconds(0.15f));
-                StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.1f));
-            }
+        private IEnumerator _FadeInUI()
+        {
+            _fadeIsRunning = true;
+            StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.1f));
+            StartCoroutine(FadeInAndOutCoroutine(bottomGradient, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(enterButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(settingsButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(exitButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            
+            ChangeColor(settingsText);
+            ChangeColor(_resumeText);
+            
+            StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.1f));
+            StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
+            noclipEcho.Play();
+            yield return StartCoroutine(WaitForRealSeconds(0.15f));
+            StartCoroutine(FadeInAndOutCoroutine(noclipLogo, true, 0.1f));
+            _fadeIsRunning = false;
+        }
         
         private IEnumerator FadeOutUI()
         {
+            _fadeIsRunning = true;
             ChangeColor(settingsText);
             ChangeColor(_resumeText);
             
@@ -461,7 +467,7 @@ public class MenuController : MonoBehaviour
             StartCoroutine(FadeInAndOutCoroutine(bottomGradient, false, 0.05f));
             yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(mainCanvas, false, 0.05f));
-            
+            _fadeIsRunning = false;
         }
         
         public static IEnumerator WaitForRealSeconds(float time)
