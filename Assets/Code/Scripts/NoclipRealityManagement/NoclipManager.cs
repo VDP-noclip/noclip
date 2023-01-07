@@ -179,6 +179,8 @@ public class NoclipManager : MonoBehaviour
     {
         EventManager.TriggerEvent("StartNoclipAnimation");
         
+        SetAnimationSpeed("normal");
+
         _postprocessNoclip.SetActive(false);
         _postprocessReality.SetActive(true);
         
