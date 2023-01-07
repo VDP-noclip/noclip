@@ -19,6 +19,9 @@ namespace Code.ScriptableObjects
 
         [Header("Default area soundtrack, if we do no specify a custom one in its audio source")]
         public AudioClip defaultAreaSoundtrack;
+
+        [Header("List of soundtrack that can be played by an event")]
+        public AudioClip[] availableSoundtracks;
         
         [Header("Miscellanea")]
         public AudioClip finishPuzzle;

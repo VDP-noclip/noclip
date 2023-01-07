@@ -104,7 +104,7 @@ public class FadeIn2 : MonoBehaviour
                 j++;
                 Material currentMaterial = material;
                 if(currentMaterial.name == _originalMaterial[i].name && currentMaterial.color.a != _originalAlpha[i]){
-                    Debug.Log("Fixing fade in");
+                    //Debug.Log("Fixing fade in");
                     material.CopyPropertiesFromMaterial(_originalMaterial[i]);
                 }
                 //if j is equal to length of _finished array
