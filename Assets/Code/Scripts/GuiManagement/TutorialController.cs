@@ -5,7 +5,6 @@ using Code.POLIMIgameCollective.EventManager;
 using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Code.Scripts.TutorialManagement
