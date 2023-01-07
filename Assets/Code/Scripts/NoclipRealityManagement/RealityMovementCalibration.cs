@@ -89,8 +89,10 @@ public class RealityMovementCalibration : MonoBehaviour
         _transform = GetComponent<Transform>();
         _noclipManager = FindObjectOfType<NoclipManager>();
         //set gravity to gravity magnitude
-        Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
-        Physics.gravity *= 2;
+        //Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
+        //Physics.gravity *= 2;
+        //set gravity to -39.24
+        Physics.gravity = new Vector3(0, -39.24f, 0);
     }
 
     // Start is called before the first frame update
@@ -107,8 +109,8 @@ public class RealityMovementCalibration : MonoBehaviour
         if (Physics.gravity.magnitude == 0)
         {
             //set gravity to gravity magnitude
-            Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
-            Physics.gravity *= 2;
+            //Physics.gravity = new Vector3(0, -_gravity, 0) * _gravityMultiplier;
+            //Physics.gravity *= 2;
         }
     }
 
@@ -574,7 +576,7 @@ public class RealityMovementCalibration : MonoBehaviour
             //set speed monitor value to current speed
             _speedMonitor.GetComponent<Slider>().value = _rigidbody.velocity.magnitude;
 
-            Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
+            //Physics.gravity = new Vector3(0, -_gravity * _gravityMultiplier, 0);
             //g button toggle
             if (Input.GetButtonDown("DebugCalibartionGUI"))
             {

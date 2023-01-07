@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
             if (SceneManager.sceneCount == 1)
             {
                 _mainStarted = true;
-                Physics.gravity = new Vector3(0, 0, 0);
+                //Physics.gravity = new Vector3(0, 0, 0);
                 //load scene if name is not in active scenes
                 if (!activeScenes.Contains(_gameAreas[_currentGameAreaIndex]))
                 {
