@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     _gameState = GameState.NewArea;
+                    SceneManager.SetActiveScene(gameObject.scene);
                     CloseAllScenes();
                     //DestroyOtherGameObjects();
                     _currentGameAreaIndex += 1;
