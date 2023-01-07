@@ -16,6 +16,7 @@ public class DialogueBoxController : MonoBehaviour
     private BoxCollider collider;
 
     [SerializeField] private GameObject _image;
+    [SerializeField] private AudioClip _audioTutorial;
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class DialogueBoxController : MonoBehaviour
     {
         if (other.CompareTag("RealityPlayer"))
         {
-            var tutorialDialogObject = new TutorialDialogObject(_dialog, _timePerLetter, _slowDown, _crosshairTutorial, _image);
+            var tutorialDialogObject = new TutorialDialogObject(_dialog, _timePerLetter, _slowDown, _crosshairTutorial, _image, _audioTutorial);
             EventManager.TriggerEvent("DisplayDialogue", tutorialDialogObject);  // We need to pass also the time
             if (!_persistent)
                 collider.enabled = false;
