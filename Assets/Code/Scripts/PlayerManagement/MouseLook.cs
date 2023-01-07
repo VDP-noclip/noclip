@@ -23,7 +23,8 @@ public class MouseLook : MonoBehaviour
     [Tooltip("Set the mouse sensitivity")]
     [SerializeField] private float _xSensitivity = 50f;
     [SerializeField] private float _ySensitivity = 50f;
-    [SerializeField] private float _sensitivity = 1f;
+    
+    private float _sensitivity = 1f;
     
         
     // It's true if the camera is active, false otherwise
@@ -38,13 +39,6 @@ public class MouseLook : MonoBehaviour
     private float _xRotationCheckpoint;
     private void Awake()
     {
-        // Checks whether there are actual sensitivity settings, and if there are
-        // it applies them by simply multiplying sensitivity with the _localSensitivity multiplier.
-        if (PlayerPrefs.HasKey("masterSensitivity"))
-        {
-            float localSensitivity = PlayerPrefs.GetFloat("masterSensitivity");
-            _sensitivity *= localSensitivity;
-        }
         _transform = GetComponent<Transform>();
     }
 
@@ -54,7 +48,10 @@ public class MouseLook : MonoBehaviour
         EventManager.StartListening("StoreCheckpointRotation", StoreCheckpointRotation);
         EventManager.StartListening("SetLastCheckpointRotation", SetLastCheckpointRotation);
         
-        
+        if (PlayerPrefs.HasKey("masterSensitivity"))
+        {
+            _sensitivity = PlayerPrefs.GetFloat("masterSensitivity");
+        }
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -99,11 +96,6 @@ public class MouseLook : MonoBehaviour
         _activeCurrently = active;
     }
     
-    public void setSensitivity(float sensitivity)
-    {
-        _sensitivity = sensitivity;
-    }
-
     public void CopyRotationCoordinates(MouseLook mouseLook)
     {
         _xRotation = mouseLook.GetXRotation();
@@ -121,19 +113,12 @@ public class MouseLook : MonoBehaviour
         return _yRotation;
     }
 
-    // TODO: This doesn't work with floats. Why..........
     private void SetSensitivityFromPause(string sensitivityPlaceholder)
     {
         EventManager.StopListening("setSensitivity", SetSensitivityFromPause);
         Debug.Log("SetSensitivityFromPause");
         _sensitivity = float.Parse(sensitivityPlaceholder);
         EventManager.StartListening("setSensitivity", SetSensitivityFromPause);
-    }
-
-    private IEnumerator SetSensitivityFromPauseCoroutine(string sensitivityPlaceholder)
-    {
-        _sensitivity = float.Parse(sensitivityPlaceholder);
-        yield return null;
     }
 
     private void StoreCheckpointRotation()
