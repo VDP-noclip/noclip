@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731713, g: 0.13414736, b: 0.12107852, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -205,7 +205,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 666.52026, y: 381.8}
+  m_SizeDelta: {x: 1026.5918, y: 381.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &105038516
 MonoBehaviour:
@@ -227,16 +227,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Thanks for playing this game!
-
-    More to come
-
-
-    CREDITS
-
-
-    Skip
-    to next puzzle to exit!'
+  m_text: "Thanks for playing NOCLIP\nA new level will come soon\n\nCredits to\nSamuele
+    Castiglia -> UX/UI Programmer, Sound Programmer\r\nAlessio De Nicol\xF2 -> Game
+    Designer, 3D Artist, Music Composer\r\nStefano Fossati -> Gameplay Programmer,
+    Co-Sound Programmer\r\nNicola Ischia -> Gameplay Programmer, Data Structures
+    Management\r\nMaurizio Vetere -> Level / Gameplay Programmer\n\nPress TAB to
+    exit!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 938491f6674461447b957646f21c608a, type: 2}
   m_sharedMaterial: {fileID: -4341662999127336149, guid: 938491f6674461447b957646f21c608a,
