@@ -62,6 +62,10 @@ public class GameManager : MonoBehaviour
                 {
                     _gameState = GameState.GameCompleted;
                     Debug.Log("Congratulations, you have completed the game!");
+                    CloseAllScenes();
+                    SceneManager.LoadScene("Menu_0");
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
                 }
                 else
                 {
