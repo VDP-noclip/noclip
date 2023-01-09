@@ -18,12 +18,12 @@ public class LoadPrefs : MonoBehaviour
 {
     [SerializeField] private DefaultPlayerPrefs _defaultPlayerPrefs;
     
-    private int _requiredPlayerPrefsVersion = 1;
+    private int _requiredPlayerPrefsVersion = 2;
 
     private void Awake()
     {
         //DELETE THIS
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         // Reset player-prefs if "playerPrefsVersion" is lower than the one that we want
         int storedPlayerPrefsVersion = PlayerPrefs.GetInt("playerPrefsVersion", _requiredPlayerPrefsVersion - 1);
         if (storedPlayerPrefsVersion < _requiredPlayerPrefsVersion)
