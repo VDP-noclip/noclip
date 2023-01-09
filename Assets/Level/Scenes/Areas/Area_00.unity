@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.032
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1284544243}
-  m_IndirectSpecularColor: {r: 0.0005585765, g: 0.0008909935, b: 0.0044246037, a: 0.032}
+  m_IndirectSpecularColor: {r: 0.0005573185, g: 0.00088949496, b: 0.0044209897, a: 0.032}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -55366,8 +55366,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 189886560}
-  - {fileID: 11742405}
   - {fileID: 1138106349}
+  - {fileID: 11742405}
   m_Father: {fileID: 820070384}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -58145,6 +58145,11 @@ PrefabInstance:
       propertyPath: _customAreaSoundtrack
       value: 
       objectReference: {fileID: 8300000, guid: 5982cad83995b5e40957c0b9700fb1ff, type: 3}
+    - target: {fileID: 3225412207167737313, guid: 653048c31db304d4c9dedd7e832c3385,
+        type: 3}
+      propertyPath: noclipHintsEnabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4755851670936372076, guid: 653048c31db304d4c9dedd7e832c3385,
         type: 3}
       propertyPath: _scenesToLoad.Array.data[0]

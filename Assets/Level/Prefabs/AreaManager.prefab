@@ -178,6 +178,7 @@ Transform:
   - {fileID: 4755851670936372079}
   - {fileID: 6808108631478938220}
   - {fileID: 3302489467471476068}
+  - {fileID: 6059518201548706836}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -229,6 +230,59 @@ MonoBehaviour:
   - PauseMenuUI_v2
   - SceneWithPlayer
   - GUI
+  _ambientIntensity: 0.7
+  _reflectionIntensity: 1
+  _fogStartDistance: 100
+  _fogEndDistance: 400
+  _fogColor: {r: 0, g: 0.65, b: 1, a: 1}
+  _fogMode: 1
+  _fogDensity: 3
+  _fog: 1
+--- !u!1 &8035935741461222947
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6059518201548706836}
+  - component: {fileID: 3225412207167737313}
+  m_Layer: 0
+  m_Name: NoclipHintsEnabler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6059518201548706836
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8035935741461222947}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1832818251895023719}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3225412207167737313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8035935741461222947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af68a12c4a7487d90dbbb962040caf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noclipHintsEnabled: 1
 --- !u!1 &9109041096669486898
 GameObject:
   m_ObjectHideFlags: 0

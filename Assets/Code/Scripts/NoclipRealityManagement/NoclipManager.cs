@@ -27,6 +27,7 @@ public class NoclipManager : MonoBehaviour
     private bool _playerInsideNoclipEnabler;
     private bool _insideNoclipAreaZoneIsPlaying;
     private bool _acceptUserInput = true;
+    private bool _hintsAreEnabled = true;
     private NoclipState _noclipState;
     
     private GameObject _postprocessReality;
@@ -114,7 +115,7 @@ public class NoclipManager : MonoBehaviour
         if (playerInsideNoclipEnabler && _noclipState == NoclipState.RealityCannotEnableNoclip)
         {
             if (_acceptUserInput)
-                EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
+                SendHint(_noclipOptions.howToActivateNoclip);
             _noclipState = NoclipState.RealityCanEnableNoclip;
             return;
         }
@@ -141,6 +142,11 @@ public class NoclipManager : MonoBehaviour
     public void SetAcceptUserInput(bool acceptUserInput)
     {
         _acceptUserInput = acceptUserInput;
+    }
+
+    public void SetHintsAreEnabled(bool hintsAreEnabled)
+    {
+        _hintsAreEnabled = hintsAreEnabled;
     }
 
     /// <summary>
@@ -241,10 +247,10 @@ public class NoclipManager : MonoBehaviour
                     break;
                 case NoclipState.RealityCooldown:
                     int secondsToWait = Mathf.CeilToInt(_endCooldownAbsoluteTime - Time.time);
-                    EventManager.TriggerEvent("DisplayHint", $"Noclip cooldown, wait {secondsToWait}s!");
+                    SendHint($"Noclip cooldown, wait {secondsToWait}s!");
                     break;
                 default:
-                    EventManager.TriggerEvent("DisplayHint", _noclipOptions.tryToActivateNoclipOutside);
+                    SendHint(_noclipOptions.tryToActivateNoclipOutside);
                     break;
             }
         }
@@ -287,7 +293,7 @@ public class NoclipManager : MonoBehaviour
         if (_playerInsideNoclipEnabler)
         {
             _noclipState = NoclipState.RealityCanEnableNoclip;
-            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
+            SendHint(_noclipOptions.howToActivateNoclip);
         }
         else
         {
@@ -303,6 +309,15 @@ public class NoclipManager : MonoBehaviour
         bool backToBody = Vector3.Distance(_noclipCamera.transform.position, _realityCamera.transform.position) < distThreshold;
         bool sameRealCameraOrientation = Quaternion.Angle(_noclipCamera.transform.rotation, _realityCamera.transform.rotation) < degreesThreshold;
         return backToBody && sameRealCameraOrientation;
+    }
+
+    private void SendHint(string hintText)
+    {
+        if (_hintsAreEnabled)
+            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
+        else
+            Debug.Log("Hint disabled: " + hintText);
+
     }
 
     private IEnumerator GetNoClipObjControllers()
