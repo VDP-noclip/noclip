@@ -12,6 +12,8 @@ public class RealityMovementFeedbacks : MonoBehaviour
     [SerializeField] private float _headbobVariationWalking = 0.06f;
     [Tooltip("It's the frequency of  the headbob movement, high value correspond to an high frequency")]
     [SerializeField] private float _headbobFrequency = 3f;
+    [Range(0, 1)] [Tooltip("Indicates the volume of the step sound")]
+    [SerializeField] private float _stepVolume = 1f;
     private float _headbobVariation;
     private float _headBobTimer;
 
@@ -88,7 +90,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
             //checks the minimum speed of audio activation, if the audio is still playing and if the camera is at the low position of the headbob sine wave
             if (_moveSpeed > _speedAudioActivation && _footstepTimer < 0 && _camera.transform.localPosition.y < _cameraPosition.y - _headbobVariation*0.9) 
             {
-                _audioSource.volume = Random.Range(0.8f, 1);
+                _audioSource.volume = Random.Range(0.8f*_stepVolume, _stepVolume);
                 _audioSource.PlayOneShot(_audioTracks.footsteps[Random.Range(0, _audioTracks.footsteps.Length - 1)]);
                 _footstepTimer = reproductionTime;
             }

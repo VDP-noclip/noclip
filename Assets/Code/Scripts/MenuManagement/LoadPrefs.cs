@@ -22,6 +22,8 @@ public class LoadPrefs : MonoBehaviour
 
     private void Awake()
     {
+        //DELETE THIS
+        PlayerPrefs.DeleteAll();
         // Reset player-prefs if "playerPrefsVersion" is lower than the one that we want
         int storedPlayerPrefsVersion = PlayerPrefs.GetInt("playerPrefsVersion", _requiredPlayerPrefsVersion - 1);
         if (storedPlayerPrefsVersion < _requiredPlayerPrefsVersion)
