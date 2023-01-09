@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 //using list
 using System.Collections.Generic;
+using UnityEngine.Serialization;
+
 public class RealityMovementCalibration : MonoBehaviour
 {
     //[SerializeField] private bool _calibration = true;
@@ -59,6 +61,8 @@ public class RealityMovementCalibration : MonoBehaviour
     private float _gravity = 9.81f;  // This is used for the movement force 
     private float _horizontalInput;
     private float _verticalInput;
+
+    [FormerlySerializedAs("_activeAudio")] public bool _JumpAudioActive = false;
 
     private Vector3 _moveDirection;
 
@@ -425,7 +429,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
     private void Jump()
     {
-        
+        _JumpAudioActive = true;
         _exitingOnSlope = true;
         // reset y velocity
         _rigidbody.velocity = new Vector3(_rigidbody.velocity.x, 0f, _rigidbody.velocity.z);
@@ -472,7 +476,7 @@ public class RealityMovementCalibration : MonoBehaviour
 
         return false;
     }
-    
+
     //slider gameobject
     private GameObject _speedSlider;
     private GameObject _jumpForceSlider;
