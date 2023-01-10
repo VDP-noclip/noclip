@@ -314,7 +314,7 @@ public class NoclipManager : MonoBehaviour
     private void SendHint(string hintText)
     {
         if (_hintsAreEnabled)
-            EventManager.TriggerEvent("DisplayHint", _noclipOptions.howToActivateNoclip);
+            EventManager.TriggerEvent("DisplayHint", hintText);
         else
             Debug.Log("Hint disabled: " + hintText);
 
