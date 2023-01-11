@@ -25,7 +25,7 @@ namespace Code.Scripts.GuiManagement
             if (_scoreText != null)
             {
                 float currentScore = ScoreManager.GetTotalScore();
-                _scoreText.text = $"Score: {Mathf.Round(currentScore)} \n";
+                _scoreText.text = $"SCORE: {Mathf.Round(currentScore)} \n";
             }
             
             if (_scoreInfo != null)
