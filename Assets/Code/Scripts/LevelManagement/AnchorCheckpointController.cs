@@ -23,11 +23,14 @@ public class AnchorCheckpointController : MonoBehaviour
     public void ReactToPlayerCollision()
     {
         Debug.Log("You entered end anchor: " + gameObject.name);
-        EventManager.TriggerEvent("SetNewTimeLimitConstraint", _maxTimeToFinishPuzzle.ToString());
         Physics.SyncTransforms();  // needed?
         if (_alreadyHitThisCheckpoint)
+        {
+            EventManager.TriggerEvent("ResetTimeLimitConstraints");
             return;
+        }
         _alreadyHitThisCheckpoint = true;
+        EventManager.TriggerEvent("SetNewTimeLimitConstraint", _maxTimeToFinishPuzzle.ToString());
         _audioSource.PlayOneShot(_audioTracks.finishPuzzle);
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
         _noclipEnabler.SetActive(true);

@@ -1,4 +1,5 @@
 using System.Collections;
+using Code.Scripts.Score;
 using JetBrains.Annotations;
 using POLIMIGameCollective;
 using UnityEngine;
@@ -73,6 +74,7 @@ namespace Code.Scripts.PlayerManagement
             }
 
             _maxTimeToFinishPuzzle = maxTimeToFinishPuzzle;
+            ScoreManager.UpdateScoreWhenPuzzleIsCompleted(_realityTimeLeftInThisPuzzle);
             ResetTimeLimitConstraints();
         }
 
@@ -90,6 +92,7 @@ namespace Code.Scripts.PlayerManagement
             EventManager.TriggerEvent("DisplayHint", "you ran out of time (right click to skip animation)");
             _respawningManager.RespawnAllTransforms();
             ResetTimeLimitConstraints();
+            ScoreManager.UpdateScoreAfterOutOfTime();
             yield return null;
         }
 
