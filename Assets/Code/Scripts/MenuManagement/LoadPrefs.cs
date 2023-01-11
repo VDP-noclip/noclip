@@ -22,8 +22,8 @@ public class LoadPrefs : MonoBehaviour
 
     private void Awake()
     {
-        //DELETE THIS
-        //PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();  // For debug purposes
+        
         // Reset player-prefs if "playerPrefsVersion" is lower than the one that we want
         int storedPlayerPrefsVersion = PlayerPrefs.GetInt("playerPrefsVersion", _requiredPlayerPrefsVersion - 1);
         if (storedPlayerPrefsVersion < _requiredPlayerPrefsVersion)
@@ -31,12 +31,11 @@ public class LoadPrefs : MonoBehaviour
             PlayerPrefs.DeleteAll();
             PlayerPrefs.SetInt("playerPrefsVersion", _requiredPlayerPrefsVersion);
         }
-            
         
-        if (! PlayerPrefs.HasKey("soundtrackVolume"))
+        if (!PlayerPrefs.HasKey("soundtrackVolume"))
             PlayerPrefs.SetFloat("soundtrackVolume", _defaultPlayerPrefs.soundTracksVolumeDecibel);
         
-        if (! PlayerPrefs.HasKey("effectsVolume"))
+        if (!PlayerPrefs.HasKey("effectsVolume"))
             PlayerPrefs.SetFloat("effectsVolume", _defaultPlayerPrefs.effectsVolumeDecibel);
         
         if (!PlayerPrefs.HasKey("globalVolume"))
@@ -50,6 +49,9 @@ public class LoadPrefs : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("masterSensitivity"))
             PlayerPrefs.SetFloat("masterSensitivity", _defaultPlayerPrefs.masterSensitivity);
+        
+        if (!PlayerPrefs.HasKey("difficultyLevel"))
+            PlayerPrefs.SetInt("difficultyLevel", _defaultPlayerPrefs.difficultyLevel);
 
         // full screen
         if (!PlayerPrefs.HasKey("masterFullscreen"))
