@@ -1,14 +1,10 @@
 ﻿name: Build and publish project
 
-# This part must be uncommented
-#on:
-#  push:
-#    tags:
-#      - '**'
-
-# Check if the workflow work (this part will be removed):
+ This part must be uncommented
 on:
-  push
+  push:
+    tags:
+      - 'v**'  # Tags that start with v refer to a new version
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -21,7 +17,7 @@ jobs:
         targetPlatform:
           - StandaloneWindows64
           - StandaloneOSX
-          - WebGL
+          # - WebGL # This does not work...
     steps:
       - name: Checkout
         uses: actions/checkout@v3
