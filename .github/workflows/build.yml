@@ -1,4 +1,6 @@
-﻿name: Build project
+﻿# This action is used to check if the project builds, we trigger it on PRs and pushes
+
+name: Build project
 
 on:
   push:
