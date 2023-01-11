@@ -23,7 +23,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
     [SerializeField] private float _speedAudioActivation = 2f;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioTracks _audioTracks;
-    // [SerializeField] [Range(0, 100)] private int _fartingProbability;
+    [SerializeField] [Range(0, 100)] private int _fartingProbability = 0;
     private float _footstepTimer;
     private float _moveSpeed;
     private Vector3 _cameraPosition;
@@ -99,12 +99,11 @@ public class RealityMovementFeedbacks : MonoBehaviour
             if (_lastState == MovementState.Air) 
             {
                 _audioSource.volume = 1.5f;
-                _audioSource.PlayOneShot(_audioTracks.landSound);
-                // var u = Random.Range(0, 100);
-                // if (u < _fartingProbability)
-                //     _audioSource.PlayOneShot(_audioTracks.easterEggFart);
-                // else
-                //     _audioSource.PlayOneShot(_audioTracks.landSound);
+                var u = Random.Range(0, 100);
+                if (u < _fartingProbability)
+                    _audioSource.PlayOneShot(_audioTracks.easterEggFart);
+                else
+                    _audioSource.PlayOneShot(_audioTracks.landSound);
             }
             
         }
