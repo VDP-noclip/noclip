@@ -1,9 +1,14 @@
 ﻿name: Build and publish project
 
+# This part must be uncommented
+#on:
+#  push:
+#    tags:
+#      - '**'
+
+# Check if the workflow work (this part will be removed):
 on:
-  push:
-    tags:
-      - '**'
+  push
 
 jobs:
   buildForAllSupportedPlatforms:
