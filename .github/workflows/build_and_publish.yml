@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - 'v**'  # Tags that start with v refer to a new version
-    branches: [ "spig-stefano/automatically-build-and-publish-on-tags" ]  # COMMENT THIS LINE BEFORE MERGING IN MAIN
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -36,9 +35,8 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildName: noclip-${{ matrix.targetPlatform }}
       - name: Upload noclip build artifact for '${{ matrix.targetPlatform }}'
         uses: actions/upload-artifact@v2
         with:
-          name: noclip-${{ matrix.targetPlatform }}
-          path: build/noclip-${{ matrix.targetPlatform }}
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
