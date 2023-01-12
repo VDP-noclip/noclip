@@ -12,5 +12,6 @@ namespace Code.ScriptableObjects
         [Range(0, 2)] public int masterQuality = 1;
         public bool masterFullScreen = true;
         [Range(0, 7)] public float masterSensitivity = 3;
+        [Range(0, 2)] public int difficultyLevel = 1;
     }
 }
