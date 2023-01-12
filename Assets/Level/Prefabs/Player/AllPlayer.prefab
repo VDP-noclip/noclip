@@ -225,7 +225,6 @@ MonoBehaviour:
   _orientation: {fileID: 6423799784713560806}
   _xSensitivity: 1
   _ySensitivity: 1
-  _sensitivity: 0.5
 --- !u!81 &436167084411905872
 AudioListener:
   m_ObjectHideFlags: 0
@@ -629,6 +628,7 @@ MonoBehaviour:
   _headbobVariationSprinting: 0.12
   _headbobVariationWalking: 0.06
   _headbobFrequency: 1
+  _stepVolume: 1
   _speedAudioActivation: 2
   _audioSource: {fileID: 58928047651188944}
   _audioTracks: {fileID: 11400000, guid: d8e5c5935073caa46837cc48517045fd, type: 2}
@@ -645,6 +645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fdc0a5fc89142545baa8f56e67838c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _easyModeTimeLeftMultiplier: 1
+  _normalModeTimeLeftMultiplier: 1
+  _difficultModeTimeLeftMultiplier: 1
 --- !u!82 &58928047651188944
 AudioSource:
   m_ObjectHideFlags: 0
@@ -970,7 +973,6 @@ MonoBehaviour:
   _orientation: {fileID: 5584800721946916309}
   _xSensitivity: 1
   _ySensitivity: 1
-  _sensitivity: 1
 --- !u!114 &3046797087946575208
 MonoBehaviour:
   m_ObjectHideFlags: 0
