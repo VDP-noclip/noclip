@@ -26,8 +26,8 @@ public class Credits : MonoBehaviour
         if (other.gameObject == _realityBody)
         {
             //debug log credits
-            Debug.Log("Credits");
-            EventManager.TriggerEvent("StartCredits");
+            Debug.Log("CreditsOld");
+            //EventManager.TriggerEvent("StartCredits");
         }
     }
 }

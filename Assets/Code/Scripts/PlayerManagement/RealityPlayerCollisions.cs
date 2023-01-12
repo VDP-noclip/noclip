@@ -31,6 +31,12 @@ public class RealityPlayerCollisions : MonoBehaviour
             //_respawningManager.RespawnAllTransforms();
             EventManager.TriggerEvent("FadeOutRespawn");
         }
+        else if (other.CompareTag("Credits"))
+        {
+            //_respawningManager.RespawnAllTransforms();
+            Debug.Log("Credits");
+            EventManager.TriggerEvent("StartCredits");
+        }
         else if (other.CompareTag("ProgressSaver"))
         {
             Debug.Log("I'm saving this scene: " + SceneManager.GetActiveScene().name);
