@@ -48,6 +48,17 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
     }
     
+    //OnTriggerStay
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Credits"))
+        {
+            //_respawningManager.RespawnAllTransforms();
+            Debug.Log("Credits");
+            EventManager.TriggerEvent("StartCredits");
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("NoclipEnabler"))
