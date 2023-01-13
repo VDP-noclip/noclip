@@ -34,6 +34,12 @@ public class RealityPlayerCollisions : MonoBehaviour
         else if (other.CompareTag("Credits"))
         {
             //_respawningManager.RespawnAllTransforms();
+            Debug.Log("CreditsStart");
+            EventManager.TriggerEvent("StartCredits");
+        }
+        else if (other.CompareTag("Credits"))
+        {
+            //_respawningManager.RespawnAllTransforms();
             Debug.Log("Credits");
             EventManager.TriggerEvent("StartCredits");
         }
@@ -45,17 +51,6 @@ public class RealityPlayerCollisions : MonoBehaviour
         else if (other.CompareTag("GoalPlatform"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-    }
-    
-    //OnTriggerStay
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Credits"))
-        {
-            //_respawningManager.RespawnAllTransforms();
-            Debug.Log("Credits");
-            EventManager.TriggerEvent("StartCredits");
         }
     }
 
