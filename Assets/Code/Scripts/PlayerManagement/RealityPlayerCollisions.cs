@@ -28,19 +28,11 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("OutOfBounds"))
         {
-            //_respawningManager.RespawnAllTransforms();
             EventManager.TriggerEvent("FadeOutRespawn");
         }
         else if (other.CompareTag("Credits"))
         {
-            //_respawningManager.RespawnAllTransforms();
-            Debug.Log("CreditsStart");
-            EventManager.TriggerEvent("StartCredits");
-        }
-        else if (other.CompareTag("Credits"))
-        {
-            //_respawningManager.RespawnAllTransforms();
-            Debug.Log("Credits");
+            Debug.Log("StartCredits");
             EventManager.TriggerEvent("StartCredits");
         }
         else if (other.CompareTag("ProgressSaver"))
