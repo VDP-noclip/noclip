@@ -42,6 +42,24 @@ namespace Code.Scripts.PlayerManagement
 
         void Update()
         {
+            if (Application.isEditor)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    Debug.Log("Hi developer, you have set the difficulty to easy!");
+                    PlayerPrefs.SetInt("difficultyLevel", 0);
+                } else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    Debug.Log("Hi developer, you have set the difficulty to normal!");
+                    PlayerPrefs.SetInt("difficultyLevel", 1);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    Debug.Log("Hi developer, you have set the difficulty to difficult!");
+                    PlayerPrefs.SetInt("difficultyLevel", 2);
+                }
+            }
+            
             if (!_timeLimitForPuzzleEnabled || !_isRunning)
                 return;
 
