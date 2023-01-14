@@ -38,6 +38,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject exitContainer;
     [SerializeField] private GameObject feedbackContainer;
     [SerializeField] private GameObject controlsContainer;
+    [SerializeField] private GameObject statisticsContainer;
 
     [Header("Audio To Play")] 
     [SerializeField] private AudioSource noclipEcho;
@@ -259,7 +260,6 @@ public class MenuController : MonoBehaviour
         PlayerPrefs.SetFloat("globalVolume", volume);
 
         globalVolumeSlider.value = volume;
-        Debug.Log("YOOOOOOOOOOOOO");
 
         StartCoroutine(ConfirmationBox());
     }
@@ -422,6 +422,7 @@ public class MenuController : MonoBehaviour
         private IEnumerator _FadeInUI()
         {
             _fadeIsRunning = true;
+            EventManager.TriggerEvent("HideScoreGui");
             StartCoroutine(FadeInAndOutCoroutine(mainCanvas, true, 0.1f));
             yield return StartCoroutine(WaitForRealSeconds(0.07f));
             StartCoroutine(FadeInAndOutCoroutine(mainGradient, true, 0.1f));
@@ -440,6 +441,8 @@ public class MenuController : MonoBehaviour
             StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.1f));
             yield return StartCoroutine(WaitForRealSeconds(0.07f));
             StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(statisticsContainer, true, 0.1f));
             yield return StartCoroutine(WaitForRealSeconds(0.1f));
             StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
             noclipEcho.Play();
@@ -460,6 +463,8 @@ public class MenuController : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(enterButton, false, 0.05f));
             yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(statisticsContainer, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(controlsButton, false, 0.05f));
             yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(feedbackButton, false, 0.05f));
@@ -474,6 +479,7 @@ public class MenuController : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(mainCanvas, false, 0.05f));
             _fadeIsRunning = false;
+            EventManager.TriggerEvent("ShowScoreGui");
         }
         
         public static IEnumerator WaitForRealSeconds(float time)

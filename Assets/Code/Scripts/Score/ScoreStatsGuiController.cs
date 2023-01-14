@@ -1,4 +1,5 @@
-﻿using Code.Scripts.Score;
+﻿using System;
+using Code.Scripts.Score;
 using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
@@ -11,27 +12,24 @@ namespace Code.Scripts.GuiManagement
 
         private void Start()
         {
-            EventManager.StartListening("RequestGuiUpdateScore", RequestGuiUpdateScore);
-            RequestGuiUpdateScore();
+            EventManager.StartListening("RequestGuiUpdateScore", UpdateScoreStatsText);
+            UpdateScoreStatsText();
         }
 
         private void OnEnable()
         {
-            RequestGuiUpdateScore();
+            UpdateScoreStatsText();
         }
 
-        private void RequestGuiUpdateScore()
+        private void UpdateScoreStatsText()
         {
-            float currentScore = ScoreManager.GetTotalScore();
-            float[] puzzleStats = ScoreManager.GetStats();
-            float? bestscore = ScoreManager.GetBestScore();
-            _scoreStats.text = $"Current score: {currentScore}\n" +
-                               $"Best score: {bestscore}\n \n \n" +
-                               $"N. of deaths: {puzzleStats[0]}\n" +
-                               $"N. ran out of time: {puzzleStats[1]}\n" +
-                               $"N. of noclips: {puzzleStats[2]}\n" +
-                               $"N. of skipped puzzles: {puzzleStats[3]}\n" +
-                               $"N. of completed puzzles: {puzzleStats[3]}";
+            int bestScore = Mathf.RoundToInt(PlayerPrefs.GetFloat("bestScore"));
+            _scoreStats.text = $"Best score: {bestScore}\n \n \n" +
+                               $"N. of deaths: {PlayerPrefs.GetInt("outOfBoundsCounter")}\n" +
+                               $"N. ran out of time: {PlayerPrefs.GetInt("outOfTimeCounter")}\n" +
+                               $"N. of noclips: {PlayerPrefs.GetInt("noclipActivationsCounter")}\n" +
+                               $"N. of skipped puzzles: {PlayerPrefs.GetInt("skippedPuzzlesCounter")}\n" +
+                               $"N. of completed puzzles: {PlayerPrefs.GetInt("completedPuzzlesCounter")}";
         }
     }
 }

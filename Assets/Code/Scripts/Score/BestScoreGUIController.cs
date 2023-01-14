@@ -1,4 +1,5 @@
 ﻿using System;
+using POLIMIGameCollective;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace Code.Scripts.Score
 
         private void Start()
         {
+            EventManager.StartListening("RequestGuiUpdateScore", DisplayBestScore);
             DisplayBestScore();
         }
 

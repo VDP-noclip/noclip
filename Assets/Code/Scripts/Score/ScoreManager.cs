@@ -33,10 +33,6 @@ namespace Code.Scripts.Score
         private float _totalScore;
         private float _currentPuzzleScore;
         
-        private int _outOfBoundsCounter;
-        private int _outOfTimeCounter;
-        private int _noclipActivationsCounter;
-        private int _skippedPuzzlesCounter;
         private bool _currentPuzzleWasSkipped;
         
         private int _currentPuzzleIndex;
@@ -83,40 +79,38 @@ namespace Code.Scripts.Score
             return instance._currentPuzzleScore;
         }
 
-        public static float[] GetStats()
+        public static void ResetStats()
         {
-            return new float[]
-            {
-                instance._outOfBoundsCounter, 
-                instance._outOfTimeCounter, 
-                instance._noclipActivationsCounter,
-                instance._skippedPuzzlesCounter,
-                instance._currentPuzzleIndex
-            };
+            PlayerPrefs.SetInt("outOfBoundsCounter", 0);
+            PlayerPrefs.SetInt("outOfTimeCounter", 0);
+            PlayerPrefs.SetInt("noclipActivationsCounter", 0);
+            PlayerPrefs.SetInt("skippedPuzzlesCounter", 0);
+            PlayerPrefs.SetInt("completedPuzzlesCounter", 0);
+            EventManager.TriggerEvent("RequestGuiUpdateScore");
         }
         
         public static void UpdateScoreAfterOutOfBounds()
         {
-            instance._outOfBoundsCounter += 1;
+            IncrementByOnePlayerPrefs("outOfBoundsCounter");
             UpdateScore(-instance._outOfBoundsPenalty);
         }
 
         public static void UpdateScoreAfterOutOfTime()
         {
-            instance._outOfTimeCounter += 1;
+            IncrementByOnePlayerPrefs("outOfTimeCounter");
             UpdateScore(-instance._outOfTimePenalty);
         }
         
         public static void UpdateScoreAfterNoclipActivation()
         {
-            instance._noclipActivationsCounter += 1;
+            IncrementByOnePlayerPrefs("noclipActivationsCounter");
             UpdateScore(-instance._noclipActivationPenalty);
         }
         
         public static void UpdateScoreAfterPuzzleSkipped()
         {
             instance._currentPuzzleWasSkipped = true;
-            instance._skippedPuzzlesCounter += 1;
+            IncrementByOnePlayerPrefs("skippedPuzzlesCounter");
             UpdateScore(-instance._puzzleSkippedPenalty);
         }
 
@@ -126,7 +120,12 @@ namespace Code.Scripts.Score
             {
                 UpdateScore(timeLeftWhenPuzzleIsCompleted * instance._timeLeftMultiplier);
             }
-            StoreAndResetCurrentPuzzleStatistics();
+            instance._puzzleScores.Add(instance._currentPuzzleIndex, instance._currentPuzzleScore);
+            instance._currentPuzzleIndex += 1;
+            instance._currentPuzzleScore = 0;
+            instance._currentPuzzleWasSkipped = false;
+            IncrementByOnePlayerPrefs("completedPuzzlesCounter");
+            EventManager.TriggerEvent("RequestGuiUpdateScore");
         }
 
         public static void SaveBestScore()
@@ -134,11 +133,6 @@ namespace Code.Scripts.Score
             if (instance._totalScore > PlayerPrefs.GetFloat("bestScore"))
                 PlayerPrefs.SetFloat("bestScore", instance._totalScore);
             
-        }
-
-        public static float? GetBestScore()
-        {
-            return PlayerPrefs.GetFloat("bestScore", instance._totalScore);
         }
 
         private static void UpdateScore(float deltaScore)
@@ -149,14 +143,11 @@ namespace Code.Scripts.Score
             Debug.Log($"Puzzle score: {instance._currentPuzzleIndex} : {GetCurrentPuzzleScore()}. Total score: {GetTotalScore()}");
             EventManager.TriggerEvent("RequestGuiUpdateScore");
         }
-
-        private static void StoreAndResetCurrentPuzzleStatistics()
+        
+        
+        public static void IncrementByOnePlayerPrefs(string key)
         {
-            instance._puzzleScores.Add(instance._currentPuzzleIndex, instance._currentPuzzleScore);
-            instance._currentPuzzleIndex += 1;
-            instance._currentPuzzleScore = 0;
-            instance._currentPuzzleWasSkipped = false;
-            EventManager.TriggerEvent("RequestGuiUpdateScore");
+            PlayerPrefs.SetInt(key, PlayerPrefs.GetInt(key) + 1);
         }
     }
 }
