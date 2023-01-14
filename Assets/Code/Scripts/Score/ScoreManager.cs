@@ -82,16 +82,6 @@ namespace Code.Scripts.Score
             return instance._currentPuzzleScore;
         }
 
-        public static void ResetStats()
-        {
-            PlayerPrefs.SetInt("outOfBoundsCounter", 0);
-            PlayerPrefs.SetInt("outOfTimeCounter", 0);
-            PlayerPrefs.SetInt("noclipActivationsCounter", 0);
-            PlayerPrefs.SetInt("skippedPuzzlesCounter", 0);
-            PlayerPrefs.SetInt("completedPuzzlesCounter", 0);
-            EventManager.TriggerEvent("RequestGuiUpdateScore");
-        }
-        
         public static void UpdateScoreAfterOutOfBounds()
         {
             IncrementByOnePlayerPrefs("outOfBoundsCounter");
