@@ -24,12 +24,12 @@ namespace Code.Scripts.GuiManagement
         private void UpdateScoreStatsText()
         {
             int bestScore = Mathf.RoundToInt(PlayerPrefs.GetFloat("bestScore"));
-            _scoreStats.text = $"Best score: {bestScore}\n \n \n" +
-                               $"N. of deaths: {PlayerPrefs.GetInt("outOfBoundsCounter")}\n" +
-                               $"N. ran out of time: {PlayerPrefs.GetInt("outOfTimeCounter")}\n" +
-                               $"N. of noclips: {PlayerPrefs.GetInt("noclipActivationsCounter")}\n" +
-                               $"N. of skipped puzzles: {PlayerPrefs.GetInt("skippedPuzzlesCounter")}\n" +
-                               $"N. of completed puzzles: {PlayerPrefs.GetInt("completedPuzzlesCounter")}";
+            _scoreStats.text = $"PERSONAL BEST: {bestScore}\n \n" +
+                               $"TIMEOUTS: {PlayerPrefs.GetInt("outOfTimeCounter")}\n" +
+                               $"DEATHS: {PlayerPrefs.GetInt("outOfBoundsCounter")}\n" +
+                               $"NOCLIPS: {PlayerPrefs.GetInt("noclipActivationsCounter")}\n" +
+                               $"PUZZLES SKIPPED: {PlayerPrefs.GetInt("skippedPuzzlesCounter")}\n" +
+                               $"PUZZLES COMPLETED: {PlayerPrefs.GetInt("completedPuzzlesCounter")}";
         }
     }
 }

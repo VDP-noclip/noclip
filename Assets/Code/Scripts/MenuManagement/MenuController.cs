@@ -32,6 +32,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject exitButton;
     [SerializeField] private GameObject feedbackButton;
     [SerializeField] private GameObject controlsButton;
+    [SerializeField] private GameObject statisticsButton;
     [SerializeField] private GameObject pressedExit;
     [SerializeField] private GameObject pressedOptions;
     [SerializeField] private GameObject popoutContainer;
@@ -178,6 +179,7 @@ public class MenuController : MonoBehaviour
         exitContainer.SetActive(false);
         feedbackContainer.SetActive(false);
         controlsContainer.SetActive(false);
+        statisticsContainer.SetActive(false);
         
         StartCoroutine(FadeOutUI());
         
@@ -442,6 +444,8 @@ public class MenuController : MonoBehaviour
             yield return StartCoroutine(WaitForRealSeconds(0.07f));
             StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
             yield return StartCoroutine(WaitForRealSeconds(0.07f));
+            StartCoroutine(FadeInAndOutCoroutine(statisticsButton, true, 0.1f));
+            yield return StartCoroutine(WaitForRealSeconds(0.07f));
             StartCoroutine(FadeInAndOutCoroutine(statisticsContainer, true, 0.1f));
             yield return StartCoroutine(WaitForRealSeconds(0.1f));
             StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
@@ -464,6 +468,8 @@ public class MenuController : MonoBehaviour
             StartCoroutine(FadeInAndOutCoroutine(enterButton, false, 0.05f));
             yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(statisticsContainer, false, 0.05f));
+            yield return new WaitForSecondsRealtime(0.05f);
+            StartCoroutine(FadeInAndOutCoroutine(statisticsButton, false, 0.05f));
             yield return new WaitForSecondsRealtime(0.05f);
             StartCoroutine(FadeInAndOutCoroutine(controlsButton, false, 0.05f));
             yield return new WaitForSecondsRealtime(0.05f);
