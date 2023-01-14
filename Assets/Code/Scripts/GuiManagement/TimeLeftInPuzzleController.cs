@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using POLIMIGameCollective;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +11,10 @@ namespace Code.Scripts.GuiManagement
         //[SerializeField] private TMP_Text _timerText;
         [SerializeField] private Image _timerImage;
         [SerializeField] private AudioSource _timerAudio;
-        [Tooltip(" This number indicates the remaining time for the beginning of the audio and the blinking. It is in percentage")]
-        [SerializeField] private float _clockTickThreshold = 0.33f;
+        [Tooltip("This number indicates the remaining time for the beginning of the audio and the blinking. It is in percentage")]
+        [SerializeField] [Range(0, 100)] private int _clockTickThresholdPercentage = 33;
+        [Tooltip("The clock effect time, computed with the percentage above, won't last more than _maxClockEffectTime.")]
+        [SerializeField] private float _maxClockEffectTime = 4f;
         [SerializeField] private float _blinkingTimeFrequency = 0.5f;
         [SerializeField] private bool _blinkWhiteBlack = false;
         [SerializeField] private float _maxPitch = 1.5f;
@@ -24,6 +24,7 @@ namespace Code.Scripts.GuiManagement
         private float _timeLeftInPuzzle;
         private float _totalTimeForPuzzle;
         private bool _isClockActive;
+        private float _clockTickThreshold;
         
         // For Blinking Crossair Coroutine
         private Color _crossairOriginalColor;
@@ -129,6 +130,8 @@ namespace Code.Scripts.GuiManagement
                 _isActive = true;
                 _timeLeftInPuzzle = totalTimeForPuzzle;
                 _totalTimeForPuzzle = totalTimeForPuzzle;
+                var clockThresholdComputedFromPercentage = _totalTimeForPuzzle * _clockTickThresholdPercentage / 100;
+                _clockTickThreshold = Math.Min(_maxClockEffectTime, clockThresholdComputedFromPercentage);
                 UpdateRenderValues();
             }
             else
@@ -142,7 +145,7 @@ namespace Code.Scripts.GuiManagement
         {
             _timerImage.fillAmount = _timeLeftInPuzzle / _totalTimeForPuzzle;
 
-            if ((_timeLeftInPuzzle / _totalTimeForPuzzle) <= _clockTickThreshold && !_isClockActive)
+            if (_timeLeftInPuzzle <= _clockTickThreshold && !_isClockActive)
             { 
                 _timerAudio.Play();
                 if (_blinkWhiteBlack)
