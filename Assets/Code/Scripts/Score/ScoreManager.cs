@@ -27,8 +27,11 @@ namespace Code.Scripts.Score
         [Tooltip("When the player skips the puzzle, we remove points")]
         [SerializeField] private float _puzzleSkippedPenalty = 200f;
         
-        [Tooltip("When we finish the puzzle, we multiply this by the amount of time left to compute a positive score")]
+        [Tooltip("When we finish a puzzle, we multiply this by the amount of time left to compute a positive score")]
         [SerializeField] private float _timeLeftMultiplier = 10f;
+        
+        [Tooltip("When we finish a puzzle, we give this fixed quantity to the user (if it was not skipped)")]
+        [SerializeField] private float _bonusForPuzzleCompletion = 10f;
 
         private float _totalScore;
         private float _currentPuzzleScore;
@@ -118,7 +121,9 @@ namespace Code.Scripts.Score
         {
             if (!instance._currentPuzzleWasSkipped)
             {
-                UpdateScore(timeLeftWhenPuzzleIsCompleted * instance._timeLeftMultiplier);
+                var deltaScoreAfterPuzzleCompleted = instance._bonusForPuzzleCompletion +
+                                                     timeLeftWhenPuzzleIsCompleted * instance._timeLeftMultiplier;
+                UpdateScore(deltaScoreAfterPuzzleCompleted);
             }
             instance._puzzleScores.Add(instance._currentPuzzleIndex, instance._currentPuzzleScore);
             instance._currentPuzzleIndex += 1;
