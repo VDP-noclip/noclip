@@ -28,8 +28,12 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("OutOfBounds"))
         {
-            //_respawningManager.RespawnAllTransforms();
             EventManager.TriggerEvent("FadeOutRespawn");
+        }
+        else if (other.CompareTag("Credits"))
+        {
+            Debug.Log("StartCredits");
+            EventManager.TriggerEvent("StartCredits");
         }
         else if (other.CompareTag("ProgressSaver"))
         {
@@ -41,7 +45,7 @@ public class RealityPlayerCollisions : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
-    
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("NoclipEnabler"))
