@@ -9,10 +9,11 @@ namespace Code.Scripts.PlayerManagement
         [SerializeField] private float _normalModeTimeLeftMultiplier = 1.5f;
         [SerializeField] private float _difficultModeTimeLeftMultiplier = 1f;
 
-        // If True, the player needs to finish the puzzle before _maxTimeToFinishPuzzle
+        // If True, the player needs to finish the puzzle before _realityTimeLeftInThisPuzzle
         private bool _timeLimitForPuzzleEnabled;
-        private float _maxTimeToFinishPuzzle;
-
+        
+        // Original time limit set from the checkpoint (before the difficulty factor multiplication)
+        private float _originalMaxTimeToFinishPuzzle;
         private float _realityTimeLeftInThisPuzzle;
         private bool _isRunning;
 
@@ -46,9 +47,7 @@ namespace Code.Scripts.PlayerManagement
                 return;
 
             _realityTimeLeftInThisPuzzle -= Time.deltaTime;
-
-            //if (_realityTimeLeftInThisPuzzle <= 0)
-            //    StartCoroutine(GameLostCoroutine());
+            
             if (_realityTimeLeftInThisPuzzle <= _fadeTime && !_fading)
             {
                 EventManager.TriggerEvent("FadeOutRespawn");
@@ -62,20 +61,11 @@ namespace Code.Scripts.PlayerManagement
         /// </summary>
         private void SetNewTimeLimitConstraint(string maxTimeToFinishPuzzleStr)
         {
-            var maxTimeToFinishPuzzle = float.Parse(maxTimeToFinishPuzzleStr);
-            maxTimeToFinishPuzzle = AdjustTimeToFinishPuzzleBasedOnDifficulty(maxTimeToFinishPuzzle);
-            if (maxTimeToFinishPuzzle == 0)
-            {
-                Debug.Log("TimeConstraints: No time limits for this puzzle!");
+            _originalMaxTimeToFinishPuzzle = float.Parse(maxTimeToFinishPuzzleStr);
+            if (_originalMaxTimeToFinishPuzzle == 0)
                 _timeLimitForPuzzleEnabled = false;
-            }
             else
-            {
-                Debug.Log($"Setting time constraint for this puzzle to {maxTimeToFinishPuzzle}");
                 _timeLimitForPuzzleEnabled = true;
-            }
-
-            _maxTimeToFinishPuzzle = maxTimeToFinishPuzzle;
             ResetTimeLimitConstraints();
         }
 
@@ -98,10 +88,10 @@ namespace Code.Scripts.PlayerManagement
 
         private void ResetTimeLimitConstraints()
         {
-            Debug.Log($"Resetting time limit constraints. Time to finish is {_maxTimeToFinishPuzzle}");
-            _realityTimeLeftInThisPuzzle = _maxTimeToFinishPuzzle;
+            _realityTimeLeftInThisPuzzle = AdjustTimeToFinishPuzzleBasedOnDifficulty(_originalMaxTimeToFinishPuzzle);
+            Debug.Log($"Resetting time limit constraints. Time to finish is {_originalMaxTimeToFinishPuzzle}");
             _isRunning = false;
-            EventManager.TriggerEvent("GuiResetTimer", _maxTimeToFinishPuzzle.ToString());
+            EventManager.TriggerEvent("GuiResetTimer", _realityTimeLeftInThisPuzzle.ToString());
             _fading = false;
         }
 
