@@ -83,6 +83,7 @@ public class MenuController : MonoBehaviour
 
     private bool _fadeIsRunning;
     private bool _isPaused;
+    private int _prevDifficultyLevel;
 
     // When the Menu starts the game will iterate through various available resolutions.
     // When done, it'll set the settings' dropdown menu (graphics) to whatever resolution has been found.
@@ -100,6 +101,7 @@ public class MenuController : MonoBehaviour
         SetSoundVolume(PlayerPrefs.GetFloat("soundtrackVolume"));
         SetFullScreen(PlayerPrefs.GetInt("masterFullscreen") == 1);
         SetQuality(PlayerPrefs.GetInt("masterQuality"));
+        SetDifficulty(PlayerPrefs.GetInt("difficultyLevel"));
         
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
@@ -146,6 +148,7 @@ public class MenuController : MonoBehaviour
         _isStartPressed = false;
         _isSettingsPressed = false;
         _isQuitPressed = false;
+        _prevDifficultyLevel = PlayerPrefs.GetInt("difficultyLevel");
         
         Time.timeScale = 0;
         AudioListener.pause = false;
@@ -317,6 +320,13 @@ public class MenuController : MonoBehaviour
         QualitySettings.SetQualityLevel(qualityIndex);
         qualityDropdown.value = qualityIndex;
     }
+    
+    public void SetDifficulty(int difficultyLevel)
+    {
+        Debug.Log($"Difficulty set to level: {difficultyLevel}");
+        PlayerPrefs.SetInt("difficultyLevel", difficultyLevel);
+        qualityDropdown.value = difficultyLevel;
+    }
 
     // When prompted, the player can reset various settings' values.
     // This button changes based on the menutype it's given.
@@ -486,6 +496,7 @@ public class MenuController : MonoBehaviour
             StartCoroutine(FadeInAndOutCoroutine(mainCanvas, false, 0.05f));
             _fadeIsRunning = false;
             EventManager.TriggerEvent("ShowScoreGui");
+            FadeOutRespawnOnDifficultyChange();
         }
         
         public static IEnumerator WaitForRealSeconds(float time)
@@ -597,4 +608,19 @@ public class MenuController : MonoBehaviour
                     yield return null;
                 }
         }
+    
+    private void FadeOutRespawnOnDifficultyChange()
+    {
+        // We don't need to do anything from the main menu, as the player will enter in the checkpoint
+        if (!_isPauseMenu)
+            return;
+        
+        if (PlayerPrefs.GetInt("difficultyLevel") == _prevDifficultyLevel)
+        {
+            Debug.Log("No need of respawning!");
+            return;
+        }
+        _prevDifficultyLevel = PlayerPrefs.GetInt("difficultyLevel");
+        EventManager.TriggerEvent("FadeOutRespawn");
+    }
 }
