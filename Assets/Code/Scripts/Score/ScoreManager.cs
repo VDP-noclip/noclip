@@ -25,10 +25,10 @@ namespace Code.Scripts.Score
         [SerializeField] private float _noclipActivationPenalty = 10f;
                
         [Tooltip("When the player skips the puzzle, we remove points")]
-        [SerializeField] private float _puzzleSkippedPenalty = 200f;
+        [SerializeField] private float _puzzleSkippedPenalty = 250f;
         
         [Tooltip("When we finish a puzzle, we multiply this by the amount of time left to compute a positive score")]
-        [SerializeField] private float _timeLeftMultiplier = 10f;
+        [SerializeField] private float _timeLeftMultiplier = 5f;
         
         [Tooltip("When we finish a puzzle, we give this fixed quantity to the user (if it was not skipped)")]
         [SerializeField] private float _bonusForPuzzleCompletion = 10f;
