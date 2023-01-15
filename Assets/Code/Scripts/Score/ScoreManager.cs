@@ -66,6 +66,7 @@ namespace Code.Scripts.Score
         private void Init()
         {
             _totalScore = _initialScore;
+            PlayerPrefs.SetFloat("currentScore", _initialScore);
             if (!PlayerPrefs.HasKey("bestScore"))
             {
                 PlayerPrefs.SetFloat("bestScore", _totalScore);
@@ -133,6 +134,7 @@ namespace Code.Scripts.Score
         private static void UpdateScore(float deltaScore)
         {
             instance._totalScore += deltaScore;
+            PlayerPrefs.SetFloat("currentScore", instance._totalScore);
             instance._currentPuzzleScore += deltaScore;
             SaveBestScore();
             Debug.Log($"Puzzle score: {instance._currentPuzzleIndex} : {GetCurrentPuzzleScore()}. Total score: {GetTotalScore()}");

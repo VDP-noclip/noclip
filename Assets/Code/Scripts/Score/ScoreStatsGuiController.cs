@@ -24,7 +24,9 @@ namespace Code.Scripts.GuiManagement
         private void UpdateScoreStatsText()
         {
             int bestScore = Mathf.RoundToInt(PlayerPrefs.GetFloat("bestScore"));
-            _scoreStats.text = $"PERSONAL BEST: {bestScore}\n \n" +
+            int currentScore = Mathf.RoundToInt(PlayerPrefs.GetFloat("currentScore"));
+            _scoreStats.text = $"CURRENT SCORE: {currentScore}\n" +
+                               $"PERSONAL BEST: {bestScore}\n \n" +
                                $"TIMEOUTS: {PlayerPrefs.GetInt("outOfTimeCounter")}\n" +
                                $"DEATHS: {PlayerPrefs.GetInt("outOfBoundsCounter")}\n" +
                                $"NOCLIPS: {PlayerPrefs.GetInt("noclipActivationsCounter")}\n" +
