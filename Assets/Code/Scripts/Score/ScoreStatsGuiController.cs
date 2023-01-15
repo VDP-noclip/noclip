@@ -9,6 +9,7 @@ namespace Code.Scripts.GuiManagement
     public class ScoreStatsGuiController : MonoBehaviour
     {
         [SerializeField] private TMP_Text _scoreStats;
+        [SerializeField] private bool _showCurrentScore;
 
         private void Start()
         {
@@ -25,13 +26,17 @@ namespace Code.Scripts.GuiManagement
         {
             int bestScore = Mathf.RoundToInt(PlayerPrefs.GetFloat("bestScore"));
             int currentScore = Mathf.RoundToInt(PlayerPrefs.GetFloat("currentScore"));
-            _scoreStats.text = $"CURRENT SCORE: {currentScore}\n" +
-                               $"PERSONAL BEST: {bestScore}\n \n" +
-                               $"TIMEOUTS: {PlayerPrefs.GetInt("outOfTimeCounter")}\n" +
-                               $"DEATHS: {PlayerPrefs.GetInt("outOfBoundsCounter")}\n" +
-                               $"NOCLIPS: {PlayerPrefs.GetInt("noclipActivationsCounter")}\n" +
-                               $"PUZZLES SKIPPED: {PlayerPrefs.GetInt("skippedPuzzlesCounter")}\n" +
-                               $"PUZZLES COMPLETED: {PlayerPrefs.GetInt("completedPuzzlesCounter")}";
+            if (_showCurrentScore)
+                _scoreStats.text = $"CURRENT SCORE: {currentScore}\n";
+            else
+                _scoreStats.text = "";
+            _scoreStats.text += $"PERSONAL BEST: {bestScore}\n \n" +
+                                "STATS \n" +
+                                $"- TIMEOUTS: {PlayerPrefs.GetInt("outOfTimeCounter")}\n" +
+                                $"- DEATHS: {PlayerPrefs.GetInt("outOfBoundsCounter")}\n" +
+                                $"- NOCLIPS: {PlayerPrefs.GetInt("noclipActivationsCounter")}\n" +
+                                $"- PUZZLES SKIPPED: {PlayerPrefs.GetInt("skippedPuzzlesCounter")}\n" +
+                                $"- PUZZLES COMPLETED: {PlayerPrefs.GetInt("completedPuzzlesCounter")}";
         }
     }
 }
