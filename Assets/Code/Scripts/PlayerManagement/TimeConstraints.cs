@@ -1,3 +1,6 @@
+using System.Collections;
+using Code.Scripts.Score;
+using JetBrains.Annotations;
 using POLIMIGameCollective;
 using UnityEngine;
 
@@ -19,6 +22,12 @@ namespace Code.Scripts.PlayerManagement
 
         private float _fadeTime;
         private bool _fading;
+        
+        /// <summary>
+        /// _bonusTimeForScoreManager is the delta between the maximum time to finish the puzzle in the current
+        /// difficulty, and the time to finish the puzzle in the easiest mode.
+        /// </summary>
+        private float _bonusTimeForScoreManager;
 
         private void Awake()
         {
@@ -68,6 +77,7 @@ namespace Code.Scripts.PlayerManagement
             
             if (_realityTimeLeftInThisPuzzle <= _fadeTime && !_fading)
             {
+                ScoreManager.UpdateScoreAfterOutOfTime();
                 EventManager.TriggerEvent("FadeOutRespawn");
                 _fading = true;
             }
@@ -79,6 +89,7 @@ namespace Code.Scripts.PlayerManagement
         /// </summary>
         private void SetNewTimeLimitConstraint(string maxTimeToFinishPuzzleStr)
         {
+            ScoreManager.UpdateScoreWhenPuzzleIsCompleted(_realityTimeLeftInThisPuzzle + _bonusTimeForScoreManager);
             _originalMaxTimeToFinishPuzzle = float.Parse(maxTimeToFinishPuzzleStr);
             if (_originalMaxTimeToFinishPuzzle == 0)
                 _timeLimitForPuzzleEnabled = false;
@@ -93,10 +104,15 @@ namespace Code.Scripts.PlayerManagement
             switch (difficultyLevel)
             {
                 case 0:
+                    _bonusTimeForScoreManager = 0;
                     return originalMaxTimetoFinishPuzzle * _easyModeTimeLeftMultiplier;
                 case 1:
+                    _bonusTimeForScoreManager = _originalMaxTimeToFinishPuzzle * 
+                                                (_easyModeTimeLeftMultiplier - _normalModeTimeLeftMultiplier);
                     return originalMaxTimetoFinishPuzzle * _normalModeTimeLeftMultiplier;
                 case 2:
+                    _bonusTimeForScoreManager = _originalMaxTimeToFinishPuzzle * 
+                                                (_easyModeTimeLeftMultiplier - _difficultModeTimeLeftMultiplier);
                     return originalMaxTimetoFinishPuzzle * _difficultModeTimeLeftMultiplier;
                 default:
                     Debug.LogWarning($"Difficulty level '{difficultyLevel}' not in the known range! Using normal");
@@ -112,8 +128,7 @@ namespace Code.Scripts.PlayerManagement
             EventManager.TriggerEvent("GuiResetTimer", _realityTimeLeftInThisPuzzle.ToString());
             _fading = false;
         }
-
-
+        
         /// <summary>
         /// Start the internal timer and triggers the GUI
         /// </summary>

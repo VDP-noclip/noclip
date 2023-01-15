@@ -1,3 +1,4 @@
+using Code.Scripts.Score;
 using POLIMIGameCollective;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,6 +29,7 @@ public class RealityPlayerCollisions : MonoBehaviour
         }
         else if (other.CompareTag("OutOfBounds"))
         {
+            ScoreManager.UpdateScoreAfterOutOfBounds();
             EventManager.TriggerEvent("FadeOutRespawn");
         }
         else if (other.CompareTag("Credits"))
