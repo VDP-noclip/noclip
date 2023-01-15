@@ -47,6 +47,7 @@ public class MenuController : MonoBehaviour
     [Header("Gameplay Settings")]
     [SerializeField] private Slider controllerSensitivitySlider = null;
     [SerializeField] private Slider controllerFovSlider = null;
+    [SerializeField] private TMP_Dropdown difficultyDropdown = null;
 
     [Header("Graphics Settings")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -325,7 +326,7 @@ public class MenuController : MonoBehaviour
     {
         Debug.Log($"Difficulty set to level: {difficultyLevel}");
         PlayerPrefs.SetInt("difficultyLevel", difficultyLevel);
-        qualityDropdown.value = difficultyLevel;
+        difficultyDropdown.value = difficultyLevel;
     }
 
     // When prompted, the player can reset various settings' values.
