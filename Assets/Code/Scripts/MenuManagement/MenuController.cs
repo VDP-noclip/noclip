@@ -102,7 +102,7 @@ public class MenuController : MonoBehaviour
         SetFullScreen(PlayerPrefs.GetInt("masterFullscreen") == 1);
         SetQuality(PlayerPrefs.GetInt("masterQuality"));
         SetDifficulty(PlayerPrefs.GetInt("difficultyLevel"));
-        
+
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
@@ -115,7 +115,7 @@ public class MenuController : MonoBehaviour
             string option = resolutions[i].width + " x " + resolutions[i].height;
             options.Add(option);
 
-            if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height)
+            if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height && resolutions[i].refreshRate == 60)
             {
                 currentResolutionIndex = i;
             }
