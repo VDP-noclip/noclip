@@ -18,6 +18,7 @@ public class AnimationsController : MonoBehaviour
     [SerializeField] private GameObject exitButton;
     [SerializeField] private GameObject feedbackButton;
     [SerializeField] private GameObject controlsButton;
+    [SerializeField] private GameObject statisticsButton;
     
     [Header("Audio To Play")] 
     [SerializeField] private AudioSource noclipEcho;
@@ -42,6 +43,8 @@ public class AnimationsController : MonoBehaviour
                 StartCoroutine(FadeInAndOutCoroutine(feedbackButton, true, 0.1f));
                 yield return new WaitForSecondsRealtime(0.2f);
                 StartCoroutine(FadeInAndOutCoroutine(controlsButton, true, 0.1f));
+                yield return new WaitForSecondsRealtime(0.2f);
+                StartCoroutine(FadeInAndOutCoroutine(statisticsButton, true, 0.1f));
                 yield return new WaitForSecondsRealtime(1f);
                 StartCoroutine(FadeInAndOutCoroutine(logoBlur, true, 0.1f));
                 noclipEcho.Play();
@@ -65,6 +68,8 @@ public class AnimationsController : MonoBehaviour
             StartCoroutine(FadeInAndOutCoroutine(feedbackButton, false, 0.5f));
             yield return new WaitForSecondsRealtime(0.5f);
             StartCoroutine(FadeInAndOutCoroutine(controlsButton, false, 0.5f));
+            yield return new WaitForSecondsRealtime(0.5f);
+            StartCoroutine(FadeInAndOutCoroutine(statisticsButton, false, 0.5f));
             yield return new WaitForSecondsRealtime(1f);
             StartCoroutine(FadeInAndOutCoroutine(logoBlur, false, 0.5f));
             noclipEcho.Play();

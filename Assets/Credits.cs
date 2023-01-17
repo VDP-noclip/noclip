@@ -10,24 +10,29 @@ public class Credits : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _realityBody = GameObject.Find("RealityBody");
+        //_realityBody = GameObject.Find("RealityBody");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    //if this object collides with _allPlayer
-    private void OnTriggerEnter(Collider other)
+    //triggerstay
+    private void OnTriggerStay(Collider other)
     {
         //if _allPlayer collides with this object
-        if (other.gameObject == _realityBody)
+        if (other.CompareTag("RealityPlayer"))
         {
             //debug log credits
             Debug.Log("Credits");
             EventManager.TriggerEvent("StartCredits");
         }
     }
+    //if this object collides with _allPlayer
+    /*private void OnTriggerEnter(Collider other)
+    {
+        //if _allPlayer collides with this object
+        if (other.gameObject == _realityBody)
+        {
+            //debug log credits
+            Debug.Log("CreditsOld");
+            //EventManager.TriggerEvent("StartCredits");
+        }
+    }*/
 }

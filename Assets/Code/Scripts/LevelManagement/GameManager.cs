@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using Code.Scripts.Score;
 
 /// <summary>
 /// Contains a list of areas to be loaded sequentially. Each area will contain several puzzles and scenes.
@@ -114,6 +115,7 @@ public class GameManager : MonoBehaviour
     public void SetAreaFinished()
     {
         _gameState = GameState.AreaFinished;
+        ScoreManager.SaveBestScore();
     }
 
     public void SetGravity(float gravity)

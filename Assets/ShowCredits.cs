@@ -101,6 +101,6 @@ public class ShowCredits : MonoBehaviour
     {
         _started = true;
         //log credits
-        Debug.Log("Start Credits");
+        Debug.Log("Start Credits (inside ShowCredits)");
     }
 }
