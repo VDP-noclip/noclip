@@ -123,7 +123,7 @@ namespace Code.Scripts.PlayerManagement
         private void ResetTimeLimitConstraints()
         {
             _realityTimeLeftInThisPuzzle = AdjustTimeToFinishPuzzleBasedOnDifficulty(_originalMaxTimeToFinishPuzzle);
-            Debug.Log($"Resetting time limit constraints. Time to finish is {_originalMaxTimeToFinishPuzzle}");
+            Debug.Log($"Resetting time limit constraints. Time to finish is {_realityTimeLeftInThisPuzzle}");
             _isRunning = false;
             EventManager.TriggerEvent("GuiResetTimer", _realityTimeLeftInThisPuzzle.ToString());
             _fading = false;
