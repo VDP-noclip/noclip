@@ -327,6 +327,7 @@ public class MenuController : MonoBehaviour
         Debug.Log($"Difficulty set to level: {difficultyLevel}");
         PlayerPrefs.SetInt("difficultyLevel", difficultyLevel);
         difficultyDropdown.value = difficultyLevel;
+        StartCoroutine(ConfirmationBox());
     }
 
     // When prompted, the player can reset various settings' values.
