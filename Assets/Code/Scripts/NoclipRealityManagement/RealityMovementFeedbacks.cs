@@ -26,6 +26,8 @@ public class RealityMovementFeedbacks : MonoBehaviour
     [SerializeField] [Range(0, 100)] private int _fartingProbability = 0;
     private float _footstepTimer;
     private float _moveSpeed;
+    private float _jumpTimeAudio;
+    private bool _canPlayAudioJump = false;
     private Vector3 _cameraPosition;
 
     [Space]
@@ -39,6 +41,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
     {
         _realityMovementCalibration = GetComponent<RealityMovementCalibration>();
         _cameraPosition = _camera.transform.localPosition;
+        _jumpTimeAudio = 0;
     }
 
     // Update is called once per frame
@@ -47,8 +50,7 @@ public class RealityMovementFeedbacks : MonoBehaviour
         _moveSpeed = _realityMovementCalibration.GetVelocity();
         HandleHeadbob();
         HandleFootstep();
-        
-        
+        HandleJumpSound();
     }
 
     /// <summary>
@@ -109,12 +111,22 @@ public class RealityMovementFeedbacks : MonoBehaviour
         }
         else // if the reality player is in air
         {
-            _audioSource.Stop();
+            //_audioSource.Stop();
             _footstepTimer = reproductionTime;
         }
         
         _lastState = _realityMovementCalibration.GetState(); // Saves the last state of the player because it is used for the land sound
-        
-        
+    }
+
+    private void HandleJumpSound()
+    {
+        _jumpTimeAudio -= Time.deltaTime;
+        if (_realityMovementCalibration._JumpAudioActive && _jumpTimeAudio < 0)
+        {
+            Debug.Log("Jump sound");
+            _audioSource.PlayOneShot(_audioTracks.JumpSound);
+            _jumpTimeAudio = _audioTracks.JumpSound.length;
+            _realityMovementCalibration._JumpAudioActive = false;
+        }
     }
 }

@@ -10,7 +10,10 @@ namespace Code.ScriptableObjects
         [Header("Array of sounds for the footseps, chosen randomly at each step")]
         public AudioClip[] footsteps;
         
-        [Header("Sound the player makes when landing")]
+        [Header("Sound the player makes when he jumps")]
+        public AudioClip JumpSound;
+        
+        [Header("Sound the player makes when he lends")]
         public AudioClip landSound;
 
         [Header("Soundtrack that the user hears when he is inside noclip enabler. Added to the area soundtrack")]
