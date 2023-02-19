@@ -31,6 +31,7 @@ public class AnchorCheckpointController : MonoBehaviour
         }
         _alreadyHitThisCheckpoint = true;
         EventManager.TriggerEvent("SetNewTimeLimitConstraint", _maxTimeToFinishPuzzle.ToString());
+        EventManager.TriggerEvent("ResetDeathsInPuzzle");
         _audioSource.PlayOneShot(_audioTracks.finishPuzzle);
         GameObject.Find("Puzzles").GetComponent<LevelManager>().LoadNextPuzzle();
         _noclipEnabler.SetActive(true);

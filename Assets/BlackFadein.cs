@@ -24,7 +24,7 @@ public class BlackFadein : MonoBehaviour
         GameObject allPlayer = GameObject.Find("AllPlayer");
         //get RespawningManager script from AllPlayer
         _respawningManager = allPlayer.GetComponent<RespawningManager>();
-        EventManager.StartListening("FadeOutRespawn", FadingTrue);
+        EventManager.StartListening("OneDeathInPuzzle", FadingTrue);
         //FadeCancel
         EventManager.StartListening("FadeCancel", FadeCancel);
     }

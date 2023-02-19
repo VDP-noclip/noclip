@@ -485,6 +485,7 @@ GameObject:
   - component: {fileID: 1859858155171913071}
   - component: {fileID: 1605300696017855998}
   - component: {fileID: 4880782302493197380}
+  - component: {fileID: 7816381738904104305}
   - component: {fileID: 58928047651188944}
   - component: {fileID: 2057979637123435346}
   m_Layer: 0
@@ -632,6 +633,7 @@ MonoBehaviour:
   _speedAudioActivation: 2
   _audioSource: {fileID: 58928047651188944}
   _audioTracks: {fileID: 11400000, guid: d8e5c5935073caa46837cc48517045fd, type: 2}
+  _fartingProbability: 0
   _camera: {fileID: 5100550035080717454}
 --- !u!114 &4880782302493197380
 MonoBehaviour:
@@ -648,6 +650,24 @@ MonoBehaviour:
   _easyModeTimeLeftMultiplier: 3
   _normalModeTimeLeftMultiplier: 2
   _difficultModeTimeLeftMultiplier: 1
+--- !u!114 &7816381738904104305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8332031875421162927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3984cd3e65c4a288e18e2b6ea848cd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _numberOfDeathsToTriggerHint: 7
+  _skipDialogueHintText: I see that you are struggling... You can skip the puzzle,
+    you know?
+  _showHintDelay: 3
+  _skipButtonImage: {fileID: 3731158725815558443, guid: e69f97739c66ca64bb5fba79ab453213,
+    type: 3}
 --- !u!82 &58928047651188944
 AudioSource:
   m_ObjectHideFlags: 0

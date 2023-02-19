@@ -30,7 +30,7 @@ public class RealityPlayerCollisions : MonoBehaviour
         else if (other.CompareTag("OutOfBounds"))
         {
             ScoreManager.UpdateScoreAfterOutOfBounds();
-            EventManager.TriggerEvent("FadeOutRespawn");
+            EventManager.TriggerEvent("OneDeathInPuzzle");
         }
         else if (other.CompareTag("Credits"))
         {

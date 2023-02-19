@@ -78,7 +78,7 @@ namespace Code.Scripts.PlayerManagement
             if (_realityTimeLeftInThisPuzzle <= _fadeTime && !_fading)
             {
                 ScoreManager.UpdateScoreAfterOutOfTime();
-                EventManager.TriggerEvent("FadeOutRespawn");
+                EventManager.TriggerEvent("OneDeathInPuzzle");
                 _fading = true;
             }
         }
