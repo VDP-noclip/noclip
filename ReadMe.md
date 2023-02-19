@@ -1,6 +1,6 @@
 ![Build](https://github.com/VDP-noclip/noclip/actions/workflows/build.yml/badge.svg?branch=develop)
 
-<img src="https://user-images.githubusercontent.com/115568998/219373234-77d815c1-0852-468f-923c-6268f6df5613.png" width="300" align="center">
+<img src="https://user-images.githubusercontent.com/115568998/219373234-77d815c1-0852-468f-923c-6268f6df5613.png" width="600" align="center">
 
 # Noclip
 NOCLIP is an experimental first-person game in which you break its boundaries to discover a secret reality. You can find and download the game on [itch](https://polimi-game-collective.itch.io/noclip).
