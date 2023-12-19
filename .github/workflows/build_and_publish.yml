@@ -1,12 +1,9 @@
-﻿# This action is used to check if the project builds, we trigger it on PRs and pushes
-
-name: Build project
+﻿name: Build and publish project
 
 on:
   push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+    tags:
+      - 'v**'  # Tags that start with v refer to a new version
 
 jobs:
   buildForAllSupportedPlatforms:
@@ -18,6 +15,8 @@ jobs:
         # See 'game-ci/unity-builder' docs for an overview of the available platforms
         targetPlatform:
           - StandaloneWindows64
+          - StandaloneOSX
+          # - WebGL # This does not work...
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,8 +35,8 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-      # - name: Upload noclip build artifact for '${{ matrix.targetPlatform }}'
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: Build-${{ matrix.targetPlatform }}
-      #     path: build/${{ matrix.targetPlatform }}
+      - name: Upload noclip build artifact for '${{ matrix.targetPlatform }}'
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
